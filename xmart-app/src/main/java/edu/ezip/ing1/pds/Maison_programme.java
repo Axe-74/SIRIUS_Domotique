@@ -2,7 +2,7 @@ package edu.ezip.ing1.pds;
 
 import java.util.Observable;
 
-public class Maison extends Observable {
+public class Maison_programme extends Observable {
     static TypePiece TypePiece;
     String NomProgramme;
     static TypeChauffage TypeChauffage;
@@ -12,7 +12,7 @@ public class Maison extends Observable {
     static JoursSemaine JoursSemaine;
 
 
-    public Maison(String nomProgramme, TypePiece typePiece, TypeChauffage typeChauffage, int temperaturePiece, JoursSemaine joursSemaine, int heureDebut, int heureFin) {
+    public Maison_programme(String nomProgramme, TypePiece typePiece, TypeChauffage typeChauffage, int temperaturePiece, JoursSemaine joursSemaine, int heureDebut, int heureFin) {
         NomProgramme = nomProgramme;
         TypePiece = typePiece;
         TypeChauffage = typeChauffage;
@@ -24,10 +24,6 @@ public class Maison extends Observable {
 
     public enum TypePiece {
         ENTREE, CUISINE, SALON, SALLE_DE_BAIN, CHAMBRE_PARENTS, CHAMBRE_ENFANTS_1, CHAMBRE_ENFANTS_2, CHAMBRE_ENFANTS_3, CHAMBRE_ENFANTS_4
-    };
-
-    public enum capteurs {
-        CAPTEURS1, CAPTEURS2, CAPTEURS3
     };
 
     public enum TypeChauffage {
