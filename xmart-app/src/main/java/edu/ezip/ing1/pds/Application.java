@@ -23,7 +23,7 @@ public class Application {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(400, 300);
         frame.setLocationRelativeTo(null);
-        System.out.println("bonjour");
+
 
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new CardLayout());
