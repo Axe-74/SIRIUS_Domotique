@@ -54,8 +54,23 @@ public class Application {
         Automations_and_programsPanel.add(btnViewPrograms);
         Automations_and_programsPanel.add(btnBacktoMainmenu);
 
-
         mainPanel.add(Automations_and_programsPanel, "Automations_and_ProgramsPanel");
+
+        // Capteurs Menu Panel
+        JPanel CapteursPanel = new JPanel();
+        CapteursPanel.setLayout(new GridLayout(4, 1));
+
+        JButton btnNewCapteur = new JButton("Définir un nouveau capteur");
+        JButton btnVoirCapteurs = new JButton("Voir les capteurs");
+        JButton btnChangerEtat = new JButton("Changer l'état des capteurs");
+        JButton btnRetourCapteurs = new JButton("Retour");
+
+        CapteursPanel.add(btnNewCapteur);
+        CapteursPanel.add(btnVoirCapteurs);
+        CapteursPanel.add(btnChangerEtat);
+        CapteursPanel.add(btnRetourCapteurs);
+
+        mainPanel.add(CapteursPanel, "CapteursPanel");
 
         // Automation Definition Panel
         JPanel AutomationPanel = new JPanel();
@@ -146,6 +161,41 @@ public class Application {
 
         mainPanel.add(programPanel, "ProgramPanel");
 
+        // NewCapteur Panel
+        JPanel NewCapteursPanel = new JPanel();
+        NewCapteursPanel.setLayout(new GridLayout(5, 2));
+
+        JLabel lblNomCapteur = new JLabel("Nom du capteur:");
+        JTextField txtNomCapteur = new JTextField();
+
+        JLabel lblTypeCapteur = new JLabel("Type du capteur: ");
+        JComboBox<String> cbTypeCapteur = new JComboBox<>(new String[]{
+                "Capteur de mouvement", "Capteur de luminosité", "Capteur de température"
+        });
+
+        JLabel lblEtatCapteur = new JLabel("Etat du capteur:");
+        JCheckBox cbEtatCapteur = new JCheckBox();
+        cbEtatCapteur.setSelected(true);
+
+        JLabel lblExplicationOFF = new JLabel("Pas coché = OFF");
+        JLabel lblExplicationON = new JLabel("Coché = ON");
+
+        JButton btnSaveCapteur = new JButton("Enregistrer");
+        JButton btnBackToMenu_NewCapteur = new JButton("Retour au menu");
+
+        NewCapteursPanel.add(lblNomCapteur);
+        NewCapteursPanel.add(txtNomCapteur);
+        NewCapteursPanel.add(lblTypeCapteur);
+        NewCapteursPanel.add(cbTypeCapteur);
+        NewCapteursPanel.add(lblEtatCapteur);
+        NewCapteursPanel.add(cbEtatCapteur);
+        NewCapteursPanel.add(lblExplicationOFF);
+        NewCapteursPanel.add(lblExplicationON);
+        NewCapteursPanel.add(btnSaveCapteur);
+        NewCapteursPanel.add(btnBackToMenu_NewCapteur);
+
+        mainPanel.add(NewCapteursPanel, "NewCapteursPanel");
+
         //View Programm panel
         JPanel viewProgramsPanel = new JPanel();
         viewProgramsPanel.setLayout(new BorderLayout());
@@ -161,6 +211,47 @@ public class Application {
 
         mainPanel.add(viewProgramsPanel, "ViewProgramsPanel");
 
+        // Voir Capteurs
+        JPanel voirCapteurPanel = new JPanel();
+        voirCapteurPanel.setLayout(new BorderLayout());
+
+        JTextArea txtCapteurs = new JTextArea();
+        txtCapteurs.setEditable(false);
+
+        JScrollPane scrollPane_capteurs = new JScrollPane(txtCapteurs);
+        JButton btnBackToMenu_VoirCapteurs = new JButton("Retour au menu");
+
+        voirCapteurPanel.add(scrollPane_capteurs, BorderLayout.CENTER);
+        voirCapteurPanel.add(btnBackToMenu_VoirCapteurs, BorderLayout.SOUTH);
+
+        mainPanel.add(voirCapteurPanel, "voirCapteurPanel");
+
+        // Changer Etat Capteur
+        JPanel EtatCapteurPanel = new JPanel();
+        EtatCapteurPanel.setLayout(new GridLayout(3, 2));
+
+        JLabel lblChoixCapteur = new JLabel("Capteur:");
+        JLabel lblEtatCapteur_EtatCapteur = new JLabel("Etat:");
+
+        JComboBox<String> cbCapteursExistants = new JComboBox<>(new String[]{
+                "Capteur 1", "Capteur 2", "Capteur 3"
+        });
+        JComboBox<String> cbEtatCapteur_ChangerEtat = new JComboBox<>(new String[]{
+                "0", "1"
+        });
+
+        JLabel lblExplicationONOFF = new JLabel("0 = OFF, 1 = ON");
+        JButton btnBackToMenu_ChangerEtat = new JButton("Retour au menu");
+
+        EtatCapteurPanel.add(lblChoixCapteur);
+        EtatCapteurPanel.add(lblEtatCapteur_EtatCapteur);
+        EtatCapteurPanel.add(cbCapteursExistants);
+        EtatCapteurPanel.add(cbEtatCapteur_ChangerEtat);
+        EtatCapteurPanel.add(lblExplicationONOFF);
+        EtatCapteurPanel.add(btnBackToMenu_ChangerEtat);
+
+        mainPanel.add(EtatCapteurPanel, "EtatCapteurPanel");
+
 
         // Events
         CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
@@ -173,6 +264,14 @@ public class Application {
         btnBackToMenuAutomationProgramm.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_Program.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBacktoMainmenu.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
+        btnSensorsManagement.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
+        btnBackToMenu_NewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
+        btnBackToMenu_VoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
+        btnBackToMenu_ChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
+        btnVoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "voirCapteurPanel"));
+        btnNewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
+        btnChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "ChangerEtatPanel"));
+        btnRetourCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
         btnViewPrograms.addActionListener(e -> {
             StringBuilder sb_program = new StringBuilder();
             if (programmes.isEmpty()) {
