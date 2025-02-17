@@ -1,0 +1,6 @@
+databaseName: "prototype_sirius"
+host: "127.0.0.1"
+port: 5432
+username : "root"
+password: "Zozoleplubo@2005"
+poolSize: 1
