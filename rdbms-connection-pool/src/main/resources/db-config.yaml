@@ -1,6 +1,6 @@
-databaseName: "prototype_sirius"
+databaseName: "pds"
 host: "127.0.0.1"
-port: 5432
+port: 3306
 username : "root"
-password: "Zozoleplubo@2005"
+password: ""
 poolSize: 1

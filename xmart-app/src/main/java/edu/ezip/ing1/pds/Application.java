@@ -72,6 +72,21 @@ public class Application {
 
         mainPanel.add(CapteursPanel, "CapteursPanel");
 
+        // Gestion de la maison Menu Panel
+        JPanel HouseManagementPanel = new JPanel();
+        HouseManagementPanel.setLayout(new GridLayout(3, 1));
+
+        JButton btnNewRoom = new JButton("Nouvelle pièce");
+        JButton btnViewRoom = new JButton("Mes pièces");
+        JButton btnBackToMenu_Room = new JButton("Retour");
+
+        HouseManagementPanel.add(btnNewRoom);
+        HouseManagementPanel.add(btnViewRoom);
+        HouseManagementPanel.add(btnBackToMenu_Room);
+
+
+        mainPanel.add(HouseManagementPanel, "HouseManagementPanel");
+
         // Automation Definition Panel
         JPanel AutomationPanel = new JPanel();
         AutomationPanel.setLayout(new GridLayout(4, 2));
@@ -196,6 +211,35 @@ public class Application {
 
         mainPanel.add(NewCapteursPanel, "NewCapteursPanel");
 
+        // Nouvelle piece panel
+        JPanel room = new JPanel();
+        room.setLayout(new GridLayout(4, 2));
+
+        JLabel lblNameRoom = new JLabel("Nom de la pièce :");
+        JTextField txtNameRoom = new JTextField();
+
+        JLabel lblTypeRoom = new JLabel("Type de pièce : ");
+        JComboBox<String> cbTypeRoom = new JComboBox<>(new String[]{
+                "Capteur de mouvement", "Capteur de luminosité", "Capteur de température"
+        });
+
+        JLabel lblSurfaceRoom = new JLabel("Surface de la pièce (en m²) :");
+        JSpinner spSurfaceRoom = new JSpinner(new SpinnerNumberModel(0, 0, 200, 1));
+
+        JButton btnBackToMenuNewRoom = new JButton("Retour au menu");
+        JButton btnSaveRoom = new JButton("Enregistrer");
+
+        room.add(lblNameRoom);
+        room.add(txtNameRoom);
+        room.add(lblTypeRoom);
+        room.add(cbTypeRoom);
+        room.add(lblSurfaceRoom);
+        room.add(spSurfaceRoom);
+        room.add(btnBackToMenuNewRoom);
+        room.add(btnSaveRoom);
+
+        mainPanel.add(room, "RoomPanel");
+
         //View Programm panel
         JPanel viewProgramsPanel = new JPanel();
         viewProgramsPanel.setLayout(new BorderLayout());
@@ -225,6 +269,15 @@ public class Application {
         voirCapteurPanel.add(btnBackToMenu_VoirCapteurs, BorderLayout.SOUTH);
 
         mainPanel.add(voirCapteurPanel, "voirCapteurPanel");
+
+        // Voir piece panel
+        JPanel viewRoomPanel = new JPanel();
+        viewRoomPanel.setLayout(new BorderLayout());
+
+        JButton btnBackToMenuViewRoom = new JButton("Retour");
+        viewRoomPanel.add(btnBackToMenuViewRoom, BorderLayout.SOUTH);
+
+        mainPanel.add(viewRoomPanel, "ViewProgramsPanel");
 
         // Changer Etat Capteur
         JPanel EtatCapteurPanel = new JPanel();
@@ -271,6 +324,11 @@ public class Application {
         btnVoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "voirCapteurPanel"));
         btnNewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
         btnChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "ChangerEtatPanel"));
+        btnHouseManagement.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
+        btnNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomPanel"));
+        btnBackToMenu_Room.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
+        btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
+        btnBackToMenuViewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnRetourCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
         btnViewPrograms.addActionListener(e -> {
             StringBuilder sb_program = new StringBuilder();
