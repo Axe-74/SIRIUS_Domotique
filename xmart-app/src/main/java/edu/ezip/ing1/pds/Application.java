@@ -49,12 +49,17 @@ public class Application {
         JButton btnNewPrograms = new JButton("Définir un nouveau programme");
         JButton btnViewPrograms = new JButton("Voir les programmes");
         JButton btnBacktoMainmenu = new JButton("Retour au menu principal");
+        JButton btnDeleteProgram = new JButton("Supprimer un programme");
+        JButton btnDeleteAutomation = new JButton("Supprimer une automatisation");
 
         Automations_and_programsPanel.add(btnNewAutomations);
         Automations_and_programsPanel.add(btnViewAutomations);
         Automations_and_programsPanel.add(btnNewPrograms);
         Automations_and_programsPanel.add(btnViewPrograms);
         Automations_and_programsPanel.add(btnBacktoMainmenu);
+        Automations_and_programsPanel.add(btnDeleteAutomation);
+        Automations_and_programsPanel.add(btnDeleteProgram);
+
 
         mainPanel.add(Automations_and_programsPanel, "Automations_and_ProgramsPanel");
 
@@ -321,7 +326,54 @@ public class Application {
         btnBackToMenu_Room.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
         btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnRetourCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
+        btnDeleteProgram.addActionListener(e -> {
+            if (programmes.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Aucun programme à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
+            // Afficher les programmes existants
+            String[] programmeNames = programmes.stream().map(p -> p.NomProgramme).toArray(String[]::new);
+            String selectedProgram = (String) JOptionPane.showInputDialog(frame, "Sélectionnez un programme à supprimer:",
+                    "Supprimer un programme", JOptionPane.QUESTION_MESSAGE, null, programmeNames, programmeNames[0]);
+
+            if (selectedProgram != null) {
+                // Supprimer le programme sélectionné
+                programmes.removeIf(p -> p.NomProgramme.equals(selectedProgram));
+
+                // Sauvegarder la nouvelle liste
+                try {
+                    Saveprogramms(programmes);
+                    JOptionPane.showMessageDialog(frame, "Programme supprimé avec succès.");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame, "Erreur lors de la suppression : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
+        btnDeleteAutomation.addActionListener(e -> {
+            if (automatisations.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Aucune automatisation à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Afficher les automatisations existantes
+            String[] automationNames = automatisations.stream().map(a -> a.NomAutomatisation).toArray(String[]::new);
+            String selectedAutomation = (String) JOptionPane.showInputDialog(frame, "Sélectionnez une automatisation à supprimer:",
+                    "Supprimer une automatisation", JOptionPane.QUESTION_MESSAGE, null, automationNames, automationNames[0]);
+
+            if (selectedAutomation != null) {
+                // Supprimer l'automatisation sélectionnée
+                automatisations.removeIf(a -> a.NomAutomatisation.equals(selectedAutomation));
+
+                // Sauvegarder la nouvelle liste
+                try {
+                    Saveautomation(automatisations);
+                    JOptionPane.showMessageDialog(frame, "Automatisation supprimée avec succès.");
+                } catch (Exception ex) {
+                    JOptionPane.showMessageDialog(frame, "Erreur lors de la suppression : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                }
+            }
+        });
         btnViewPrograms.addActionListener(e -> {
             StringBuilder sb_program = new StringBuilder();
             if (programmes.isEmpty()) {
@@ -340,7 +392,6 @@ public class Application {
             txtPrograms.setText(sb_program.toString());
             cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
-
         btnVoirCapteurs.addActionListener(e -> {
             StringBuilder sb_VoirCapteurs = new StringBuilder();
             if (capteurs.isEmpty()) {
@@ -356,7 +407,6 @@ public class Application {
             txtCapteurs.setText(sb_VoirCapteurs.toString());
             cardLayout.show(mainPanel, "voirCapteurPanel");
         });
-
         btnViewRoom.addActionListener(e -> {
             StringBuilder sb_room= new StringBuilder();
             if (rooms.isEmpty()) {
@@ -384,7 +434,6 @@ public class Application {
             }
             cardLayout.show(mainPanel, "ViewRoomPanel");
         });
-
         btnSaveProgram.addActionListener(e -> {
     //Récupération des données entrées
             String nomProgramme = txtProgramName.getText().trim();
