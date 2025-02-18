@@ -17,10 +17,6 @@ public class Maison_Room extends Observable {
         Entree, Salon, Cuisine, Salle_de_bain, Toilettes, Chambre, Autre
     }
 
-    public void setTypeRoom(TypeRoom typeRoom) {
-        TypeRoom = typeRoom;
-    }
-
     public static TypeRoom findByNameTypeRoom(String name) {
         TypeRoom result = null;
         for (TypeRoom typeRoom : TypeRoom.values())

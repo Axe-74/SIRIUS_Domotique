@@ -22,7 +22,7 @@ public class Application {
     public void initialize() {
         frame = new JFrame("Domotique maison");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(400, 300);
+        frame.setSize(375, 700);
         frame.setLocationRelativeTo(null);
 
         JPanel mainPanel = new JPanel();
@@ -271,21 +271,6 @@ public class Application {
 
         mainPanel.add(voirCapteurPanel, "voirCapteurPanel");
 
-        // Voir piece panel
-        JPanel viewRoomPanel = new JPanel();
-        viewRoomPanel.setLayout(new BorderLayout());
-
-        JTextArea txtRooms = new JTextArea();
-        txtRooms.setEditable(false);
-
-        JScrollPane scrollPaneRoom = new JScrollPane(txtRooms);
-
-        JButton btnBackToMenuViewRoom = new JButton("Retour");
-        viewRoomPanel.add(scrollPaneRoom, BorderLayout.CENTER);
-        viewRoomPanel.add(btnBackToMenuViewRoom, BorderLayout.SOUTH);
-
-        mainPanel.add(viewRoomPanel, "ViewRoomPanel");
-
         // Changer Etat Capteur
         JPanel EtatCapteurPanel = new JPanel();
         EtatCapteurPanel.setLayout(new GridLayout(3, 2));
@@ -335,7 +320,6 @@ public class Application {
         btnNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomPanel"));
         btnBackToMenu_Room.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
         btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
-        btnBackToMenuViewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnRetourCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
 
         btnViewPrograms.addActionListener(e -> {
@@ -378,14 +362,26 @@ public class Application {
             if (rooms.isEmpty()) {
                 sb_room.append("Aucune pièce enregistrée.\n");
             } else {
-                sb_room.append("Pièces enregistrées :\n");
+                JPanel ViewRoomPanel = new JPanel();
+                ViewRoomPanel.setLayout(new FlowLayout());
+
                 for (Maison_Room room : rooms) {
-                    sb_room.append("Nom : ").append(room.NameRoom).append("\n")
-                            .append("Type : ").append(room.TypeRoom).append("\n")
-                            .append("Surface : ").append(room.RoomSurface).append(" m²").append("\n\n");
+                    JButton btnRoom_i = new JButton(room.NameRoom);
+                    ViewRoomPanel.add(btnRoom_i);
+                    mainPanel.add(ViewRoomPanel, "ViewRoomPanel");
+
+                    JPanel Inroom_iPanel = new JPanel();
+                    Inroom_iPanel.setLayout(new FlowLayout());
+                    JButton btnBackToMenuInRoom_i = new JButton("Retour");
+                    Inroom_iPanel.add(btnBackToMenuInRoom_i, BorderLayout.SOUTH);
+                    btnBackToMenuInRoom_i.addActionListener(ev -> cardLayout.show(mainPanel, "ViewRoomPanel"));
+                    mainPanel.add(Inroom_iPanel, "Inroom_iPanel");
+                    btnRoom_i.addActionListener(ev -> cardLayout.show(mainPanel, "Inroom_iPanel"));
                 }
+                JButton btnBackToMenuViewRoom = new JButton("Retour");
+                ViewRoomPanel.add(btnBackToMenuViewRoom);
+                btnBackToMenuViewRoom.addActionListener(ev -> cardLayout.show(mainPanel, "HouseManagementPanel"));
             }
-            txtRooms.setText(sb_room.toString());
             cardLayout.show(mainPanel, "ViewRoomPanel");
         });
 
@@ -576,6 +572,7 @@ public class Application {
             throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + e.getMessage());
         }
     }
+
     private void sauvegarderCapteurs(ArrayList<Maison_Capteurs> capteurs) {
         try (PrintWriter writer = new PrintWriter(new FileWriter("capteurs.txt", false))) { // écrase le contenu précédent
             for (Maison_Capteurs capt : capteurs) {
