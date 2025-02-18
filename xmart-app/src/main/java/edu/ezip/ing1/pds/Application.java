@@ -82,7 +82,7 @@ public class Application {
         JLabel lblSensor_activation = new JLabel("Activation du capteur: ");
         JComboBox<Maison_Automatisation.TypeCapteurs> cbSensor_activation = new JComboBox<>(Maison_Automatisation.TypeCapteurs.values());
 
-        JLabel lblSensor_programme = new JLabel("Execution du programme:");
+        JLabel lblSensor_program = new JLabel("Execution du programme:");
         JComboBox<Maison_Automatisation.TypeProgramme> cbSensor_programme = new JComboBox<>(Maison_Automatisation.TypeProgramme.values());
 
         JButton btnSaveAutomation = new JButton("Enregistrer");
@@ -92,7 +92,7 @@ public class Application {
         AutomationPanel.add(txtAutomationName);
         AutomationPanel.add(lblSensor_activation);
         AutomationPanel.add(cbSensor_activation);
-        AutomationPanel.add(lblSensor_programme);
+        AutomationPanel.add(lblSensor_program);
         AutomationPanel.add(cbSensor_programme);
         AutomationPanel.add(btnSaveAutomation);
         AutomationPanel.add(btnBackToMenu_Automation);
@@ -114,8 +114,8 @@ public class Application {
         mainPanel.add(viewAutomationPanel, "ViewAutomationPanel");
 
         // Program Definition Panel
-        JPanel programPanel = new JPanel();
-        programPanel.setLayout(new GridLayout(8, 2));
+        JPanel ProgramPanel = new JPanel();
+        ProgramPanel.setLayout(new GridLayout(8, 2));
 
         JLabel lblProgramName = new JLabel("Nom du programme:");
         JTextField txtProgramName = new JTextField();
@@ -142,24 +142,24 @@ public class Application {
         JButton btnSaveProgram = new JButton("Enregistrer");
         JButton btnBackToMenu_Program = new JButton("Retour au menu");
 
-        programPanel.add(lblProgramName);
-        programPanel.add(txtProgramName);
-        programPanel.add(lblPiece);
-        programPanel.add(cbPiece);
-        programPanel.add(lblChauffage);
-        programPanel.add(cbChauffage);
-        programPanel.add(lblTemperature);
-        programPanel.add(spTemperature);
-        programPanel.add(lblJour);
-        programPanel.add(cbJour);
-        programPanel.add(lblHeureDebut);
-        programPanel.add(spHeureDebut);
-        programPanel.add(lblHeureFin);
-        programPanel.add(spHeureFin);
-        programPanel.add(btnSaveProgram);
-        programPanel.add(btnBackToMenu_Program);
+        ProgramPanel.add(lblProgramName);
+        ProgramPanel.add(txtProgramName);
+        ProgramPanel.add(lblPiece);
+        ProgramPanel.add(cbPiece);
+        ProgramPanel.add(lblChauffage);
+        ProgramPanel.add(cbChauffage);
+        ProgramPanel.add(lblTemperature);
+        ProgramPanel.add(spTemperature);
+        ProgramPanel.add(lblJour);
+        ProgramPanel.add(cbJour);
+        ProgramPanel.add(lblHeureDebut);
+        ProgramPanel.add(spHeureDebut);
+        ProgramPanel.add(lblHeureFin);
+        ProgramPanel.add(spHeureFin);
+        ProgramPanel.add(btnSaveProgram);
+        ProgramPanel.add(btnBackToMenu_Program);
 
-        mainPanel.add(programPanel, "ProgramPanel");
+        mainPanel.add(ProgramPanel, "ProgramPanel");
 
         // NewCapteur Panel
         JPanel NewCapteursPanel = new JPanel();
@@ -354,7 +354,7 @@ public class Application {
             automatisation.add(nouvelleAutomatisation);
 
             try {
-                Saveprogramms(programmes);
+                Saveautomation(automatisation);
                 JOptionPane.showMessageDialog(frame, "Automatisation enregistré avec succès!");
                 cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
             } catch (Exception ex) {
@@ -375,7 +375,7 @@ public class Application {
                 writer.println(auto.NomAutomatisation + ";" + auto.TypeCapteurs + ";" + auto.TypeProgramme);
             }
         } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + e.getMessage());
+            throw new RuntimeException("Erreur lors de la sauvegarde des automatisations : " + e.getMessage());
         }
     }
 
