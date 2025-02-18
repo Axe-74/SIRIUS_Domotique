@@ -10,11 +10,12 @@ public class Application {
     public ArrayList<Maison_programme> programmes = new ArrayList<Maison_programme>();
     public ArrayList<Maison_Automatisation> automatisations = new ArrayList<Maison_Automatisation>();
     public ArrayList<Maison_Capteurs> capteurs = new ArrayList<>(); {}
-
+    public ArrayList<Maison_Room> rooms = new ArrayList<>();
 
     public Application() {
         automatisations = loadautomatisation();
         programmes = loadprogramms();
+        rooms = loadrooms();
         initialize();
     }
 
@@ -213,16 +214,15 @@ public class Application {
         mainPanel.add(NewCapteursPanel, "NewCapteursPanel");
 
         // Nouvelle piece panel
-        JPanel room = new JPanel();
-        room.setLayout(new GridLayout(4, 2));
+        JPanel pnlRoom = new JPanel();
+        pnlRoom.setLayout(new GridLayout(4, 2));
 
         JLabel lblNameRoom = new JLabel("Nom de la pièce :");
         JTextField txtNameRoom = new JTextField();
 
         JLabel lblTypeRoom = new JLabel("Type de pièce : ");
-        JComboBox<String> cbTypeRoom = new JComboBox<>(new String[]{
-                "Capteur de mouvement", "Capteur de luminosité", "Capteur de température"
-        });
+        JComboBox<Maison_Room.TypeRoom> cbTypeRoom = new JComboBox<>(Maison_Room.TypeRoom.values());
+
 
         JLabel lblSurfaceRoom = new JLabel("Surface de la pièce (en m²) :");
         JSpinner spSurfaceRoom = new JSpinner(new SpinnerNumberModel(0, 0, 200, 1));
@@ -230,16 +230,16 @@ public class Application {
         JButton btnBackToMenuNewRoom = new JButton("Retour au menu");
         JButton btnSaveRoom = new JButton("Enregistrer");
 
-        room.add(lblNameRoom);
-        room.add(txtNameRoom);
-        room.add(lblTypeRoom);
-        room.add(cbTypeRoom);
-        room.add(lblSurfaceRoom);
-        room.add(spSurfaceRoom);
-        room.add(btnBackToMenuNewRoom);
-        room.add(btnSaveRoom);
+        pnlRoom.add(lblNameRoom);
+        pnlRoom.add(txtNameRoom);
+        pnlRoom.add(lblTypeRoom);
+        pnlRoom.add(cbTypeRoom);
+        pnlRoom.add(lblSurfaceRoom);
+        pnlRoom.add(spSurfaceRoom);
+        pnlRoom.add(btnBackToMenuNewRoom);
+        pnlRoom.add(btnSaveRoom);
 
-        mainPanel.add(room, "RoomPanel");
+        mainPanel.add(pnlRoom, "RoomPanel");
 
         //View Programm panel
         JPanel viewProgramsPanel = new JPanel();
@@ -275,7 +275,13 @@ public class Application {
         JPanel viewRoomPanel = new JPanel();
         viewRoomPanel.setLayout(new BorderLayout());
 
+        JTextArea txtRooms = new JTextArea();
+        txtRooms.setEditable(false);
+
+        JScrollPane scrollPaneRoom = new JScrollPane(txtRooms);
+
         JButton btnBackToMenuViewRoom = new JButton("Retour");
+        viewRoomPanel.add(scrollPaneRoom, BorderLayout.CENTER);
         viewRoomPanel.add(btnBackToMenuViewRoom, BorderLayout.SOUTH);
 
         mainPanel.add(viewRoomPanel, "ViewRoomPanel");
@@ -367,6 +373,22 @@ public class Application {
             cardLayout.show(mainPanel, "voirCapteurPanel");
         });
 
+        btnViewRoom.addActionListener(e -> {
+            StringBuilder sb_room= new StringBuilder();
+            if (rooms.isEmpty()) {
+                sb_room.append("Aucune pièce enregistrée.\n");
+            } else {
+                sb_room.append("Pièces enregistrées :\n");
+                for (Maison_Room room : rooms) {
+                    sb_room.append("Nom : ").append(room.NameRoom).append("\n")
+                            .append("Type : ").append(room.TypeRoom).append("\n")
+                            .append("Surface : ").append(room.RoomSurface).append(" m²").append("\n\n");
+                }
+            }
+            txtRooms.setText(sb_room.toString());
+            cardLayout.show(mainPanel, "ViewRoomPanel");
+        });
+
         btnSaveProgram.addActionListener(e -> {
     //Récupération des données entrées
             String nomProgramme = txtProgramName.getText().trim();
@@ -420,6 +442,35 @@ public class Application {
                 sauvegarderCapteurs(capteurs);
                 JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
                 cardLayout.show(mainPanel, "CapteursPanel");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
+        btnSaveRoom.addActionListener(e -> {
+            String nameRoom = txtNameRoom.getText().trim();
+            Maison_Room.TypeRoom roomSelect = (Maison_Room.TypeRoom) cbTypeRoom.getSelectedItem();
+            int roomSurface = (int) spSurfaceRoom.getValue();
+
+            // Validation des données
+            if (nameRoom.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez nommer la pièce.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            if (roomSurface <= 0) {
+                JOptionPane.showMessageDialog(frame, "La surface de la pièce doit être positive.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            // Créer et sauvegarder la piece
+            Maison_Room nouvellePiece = new Maison_Room(nameRoom, roomSelect, roomSurface);
+            rooms.add(nouvellePiece);
+
+            try {
+                Saverooms(rooms);
+                JOptionPane.showMessageDialog(frame, "Pièce enregistré avec succès!");
+                cardLayout.show(mainPanel, "HouseManagementPanel");
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
@@ -536,6 +587,17 @@ public class Application {
         }
     }
 
+    private void Saverooms(ArrayList<Maison_Room> rooms) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("pieces.txt", false))) {
+            for (Maison_Room room : rooms) {
+                System.out.println("Nom de la pièce : " + room.NameRoom);
+                writer.println(room.NameRoom + ";" + room.TypeRoom + ";" + room.RoomSurface);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la sauvegarde des pièces : " + e.getMessage());
+        }
+    }
+
     private ArrayList<Maison_programme> loadprogramms() {
         // Charger les programmes depuis un fichier ou une source de données
         //ArrayList<Maison> programmes = new ArrayList<>();
@@ -568,6 +630,33 @@ public class Application {
         return programmes;
     }
 
+    private ArrayList<Maison_Room> loadrooms() {
+        try (Scanner scanner = new Scanner(new File("pieces.txt"))) {
+            while (scanner.hasNextLine()) {
+                String ligne = scanner.nextLine();
+                String[] donnees = ligne.split(";");
+
+                // Vérification du nombre de données avant de traiter
+                if (donnees.length == 3) {
+                    try {
+                        String typeRoom = String.valueOf(Maison_Room.findByNameTypeRoom(donnees[1]));
+
+                        Maison_Room room = new Maison_Room(donnees[0], Maison_Room.TypeRoom.valueOf(donnees[1]), Integer.parseInt(donnees[2]) );
+                        rooms.add(room);
+                    } catch (Exception e) {
+                        System.out.println("Erreur dans le traitement d'une ligne : " + ligne);
+                    }
+                } else {
+                    System.out.println("Ligne mal formatée : " + ligne);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Fichier pieces.txt non trouvé : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement des pièces : " + e.getMessage());
+        }
+        return rooms;
+    }
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Application::new);
