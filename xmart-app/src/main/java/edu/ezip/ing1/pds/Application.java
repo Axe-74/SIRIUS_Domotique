@@ -8,12 +8,12 @@ import java.io.*;
 public class Application {
     public JFrame frame;
     public ArrayList<Maison_programme> programmes = new ArrayList<Maison_programme>();
-    public ArrayList<Maison_Automatisation> automatisation = new ArrayList<Maison_Automatisation>();
+    public ArrayList<Maison_Automatisation> automatisations = new ArrayList<Maison_Automatisation>();
     public ArrayList<Maison_Capteurs> capteurs = new ArrayList<>(); {}
 
 
     public Application() {
-        automatisation = loadautomatisation();
+        automatisations = loadautomatisation();
         programmes = loadprogramms();
         initialize();
     }
@@ -427,14 +427,14 @@ public class Application {
 
         btnViewAutomations.addActionListener(e -> {
             StringBuilder sb_automation= new StringBuilder();
-            if (automatisation.isEmpty()) {
+            if (automatisations.isEmpty()) {
                 sb_automation.append("Aucune automatisation enregistré.\n");
             } else {
                 sb_automation.append("Automatisations enregistrés :\n");
-                for (Maison_Automatisation auto : automatisation) {
+                for (Maison_Automatisation auto : automatisations) {
                     sb_automation.append("Nom : ").append(auto.NomAutomatisation).append("\n")
                             .append("Capteur écouté ").append(auto.TypeCapteurs).append("\n")
-                            .append("Programme executé : ").append(auto.TypeProgramme).append("\n");
+                            .append("Programme executé : ").append(auto.TypeProgramme).append("\n\n");
                 }
             }
             txtPrograms.setText(sb_automation.toString());
@@ -454,10 +454,10 @@ public class Application {
 
             // Créer et sauvegarder le programme
             Maison_Automatisation nouvelleAutomatisation = new Maison_Automatisation(nomAutomation, capteurSelect, programmeSelect);
-            automatisation.add(nouvelleAutomatisation);
+            automatisations.add(nouvelleAutomatisation);
 
             try {
-                Saveautomation(automatisation);
+                Saveautomation(automatisations);
                 JOptionPane.showMessageDialog(frame, "Automatisation enregistré avec succès!");
                 cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
             } catch (Exception ex) {
@@ -485,19 +485,19 @@ public class Application {
     private ArrayList<Maison_Automatisation> loadautomatisation() {
         // Charger les programmes depuis un fichier ou une source de données
         //ArrayList<Maison> programmes = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new File("automatisation.txt"))) {
-            while (scanner.hasNextLine()) {
-                String ligne = scanner.nextLine();
+        try (Scanner scanner_auto = new Scanner(new File("automatisation.txt"))) {
+            while (scanner_auto.hasNextLine()) {
+                String ligne = scanner_auto.nextLine();
                 String[] donnees = ligne.split(";");
 
                 // Vérification du nombre de données avant de traiter
-                if (donnees.length == 7) {
+                if (donnees.length == 3) {
                     try {
                         String typecapteurs = String.valueOf(Maison_Automatisation.findByNameTypeCapteurs(donnees[1]));
                         String typeprogramme = String.valueOf(Maison_Automatisation.findByNameTypeProgramme(donnees[2]));
 
                         Maison_Automatisation auto = new Maison_Automatisation(donnees[0], Maison_Automatisation.TypeCapteurs.valueOf(donnees[1]), Maison_Automatisation.TypeProgramme.valueOf(donnees[2]));
-                        automatisation.add(auto);
+                        automatisations.add(auto);
                     } catch (Exception e) {
                         System.out.println("Erreur dans le traitement d'une ligne : " + ligne);
                     }
@@ -510,7 +510,7 @@ public class Application {
         } catch (Exception e) {
             System.out.println("Erreur lors du chargement des automatisation : " + e.getMessage());
         }
-        return automatisation;
+        return automatisations;
     }
 
 
@@ -539,9 +539,9 @@ public class Application {
     private ArrayList<Maison_programme> loadprogramms() {
         // Charger les programmes depuis un fichier ou une source de données
         //ArrayList<Maison> programmes = new ArrayList<>();
-        try (Scanner scanner = new Scanner(new File("programmes.txt"))) {
-            while (scanner.hasNextLine()) {
-                String ligne = scanner.nextLine();
+        try (Scanner scanner_program = new Scanner(new File("programmes.txt"))) {
+            while (scanner_program.hasNextLine()) {
+                String ligne = scanner_program.nextLine();
                 String[] donnees = ligne.split(";");
 
                 // Vérification du nombre de données avant de traiter
