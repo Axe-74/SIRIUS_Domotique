@@ -9,6 +9,7 @@ public class Application {
     public JFrame frame;
     public ArrayList<Maison_programme> programmes = new ArrayList<Maison_programme>();
     public ArrayList<Maison_Automatisation> automatisation = new ArrayList<Maison_Automatisation>();
+    public ArrayList<Maison_Capteurs> capteurs = new ArrayList<>(); {}
 
 
     public Application() {
@@ -184,8 +185,8 @@ public class Application {
         JTextField txtNomCapteur = new JTextField();
 
         JLabel lblTypeCapteur = new JLabel("Type du capteur: ");
-        JComboBox<String> cbTypeCapteur = new JComboBox<>(new String[]{
-                "Capteur de mouvement", "Capteur de luminosité", "Capteur de température"
+        JComboBox<Maison_Capteurs.TypeCapteur> cbTypeCapteur = new JComboBox<>(new Maison_Capteurs.TypeCapteur[]{
+                Maison_Capteurs.TypeCapteur.TEMPERATURE, Maison_Capteurs.TypeCapteur.LUMINOSITE, Maison_Capteurs.TypeCapteur.MOUVEMENT
         });
 
         JLabel lblEtatCapteur = new JLabel("Etat du capteur:");
@@ -277,7 +278,7 @@ public class Application {
         JButton btnBackToMenuViewRoom = new JButton("Retour");
         viewRoomPanel.add(btnBackToMenuViewRoom, BorderLayout.SOUTH);
 
-        mainPanel.add(viewRoomPanel, "ViewProgramsPanel");
+        mainPanel.add(viewRoomPanel, "ViewRoomPanel");
 
         // Changer Etat Capteur
         JPanel EtatCapteurPanel = new JPanel();
@@ -330,6 +331,7 @@ public class Application {
         btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnBackToMenuViewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnRetourCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
+
         btnViewPrograms.addActionListener(e -> {
             StringBuilder sb_program = new StringBuilder();
             if (programmes.isEmpty()) {
@@ -348,7 +350,25 @@ public class Application {
             txtPrograms.setText(sb_program.toString());
             cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
+
+        btnVoirCapteurs.addActionListener(e -> {
+            StringBuilder sb_VoirCapteurs = new StringBuilder();
+            if (capteurs.isEmpty()) {
+                sb_VoirCapteurs.append("Aucun capteur enregistré.\n");
+            } else {
+                sb_VoirCapteurs.append("Capteurs enregistrés :\n");
+                for (Maison_Capteurs capt : capteurs) {
+                    sb_VoirCapteurs.append("Nom : ").append(capt.NomCapteur).append("\n")
+                            .append("Type : ").append(capt.TypeCapteur).append("\n")
+                            .append("Etat : ").append(capt.EtatCapteur).append("\n\n");
+                }
+            }
+            txtCapteurs.setText(sb_VoirCapteurs.toString());
+            cardLayout.show(mainPanel, "voirCapteurPanel");
+        });
+
         btnSaveProgram.addActionListener(e -> {
+    //Récupération des données entrées
             String nomProgramme = txtProgramName.getText().trim();
             Maison_programme.TypePiece pieceSelect = (Maison_programme.TypePiece) cbPiece.getSelectedItem();
             Maison_programme.TypeChauffage chauffageSelect = (Maison_programme.TypeChauffage) cbChauffage.getSelectedItem();
@@ -356,19 +376,16 @@ public class Application {
             Maison_programme.JoursSemaine joursSemaineSelect = (Maison_programme.JoursSemaine) cbJour.getSelectedItem();
             int heureDebut = (int) spHeureDebut.getValue();
             int heureFin = (int) spHeureFin.getValue();
-
-            // Validation des données
+    // Validation des données
             if (nomProgramme.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de programme.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
             if (heureDebut >= heureFin) {
                 JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            // Créer et sauvegarder le programme
+    // Créer et sauvegarder le programme
             Maison_programme nouveauProgramme = new Maison_programme(nomProgramme, pieceSelect, chauffageSelect, temperature, joursSemaineSelect, heureDebut, heureFin);
             programmes.add(nouveauProgramme);
 
@@ -380,6 +397,34 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         });
+
+        btnSaveCapteur.addActionListener(e -> {
+            //Récupération des données entrées
+            String nomCapteur = txtNomCapteur.getText().trim();
+            Maison_Capteurs.TypeCapteur capteurSelect = (Maison_Capteurs.TypeCapteur) cbTypeCapteur.getSelectedItem();
+            Maison_Capteurs.EtatCapteur etatSelect ;
+            if (cbEtatCapteur.isSelected()) {
+                etatSelect = Maison_Capteurs.EtatCapteur.ON;
+            } else {
+                etatSelect = Maison_Capteurs.EtatCapteur.OFF;
+            }
+            //Validation des données
+            if (nomCapteur.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+//    //Créer et sauvegarder le capteur
+            Maison_Capteurs nouveauCapteur = new Maison_Capteurs(nomCapteur, capteurSelect, etatSelect);
+            capteurs.add(nouveauCapteur);
+            try {
+                sauvegarderCapteurs(capteurs);
+                JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
+                cardLayout.show(mainPanel, "CapteursPanel");
+            } catch (Exception ex) {
+                JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            }
+        });
+
         btnViewAutomations.addActionListener(e -> {
             StringBuilder sb_automation= new StringBuilder();
             if (automatisation.isEmpty()) {
@@ -478,6 +523,16 @@ public class Application {
             }
         } catch (Exception e) {
             throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + e.getMessage());
+        }
+    }
+    private void sauvegarderCapteurs(ArrayList<Maison_Capteurs> capteurs) {
+        try (PrintWriter writer = new PrintWriter(new FileWriter("capteurs.txt", false))) { // écrase le contenu précédent
+            for (Maison_Capteurs capt : capteurs) {
+                System.out.println("Nom du capteur : " + capt.NomCapteur);
+                writer.println(capt.NomCapteur + ";" + capt.TypeCapteur + ";" + capt.EtatCapteur);
+            }
+        } catch (Exception e) {
+            throw new RuntimeException("Erreur lors de la sauvegarde des capteurs : " + e.getMessage());
         }
     }
 
