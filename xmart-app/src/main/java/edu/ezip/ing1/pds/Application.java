@@ -2,10 +2,7 @@ package edu.ezip.ing1.pds;
 
 import javax.swing.*;
 import java.awt.*;
-import java.sql.Connection;
-import java.sql.DriverManager;
-import java.sql.PreparedStatement;
-import java.sql.SQLException;
+import java.sql.*;
 import java.util.*;
 import java.io.*;
 
@@ -17,37 +14,12 @@ public class Application {
     public ArrayList<Maison_Room> rooms = new ArrayList<>();
 
     public Application()  {
-        automatisations = loadautomatisation();
-        programmes = loadprogramms();
-        rooms = loadrooms();
-        capteurs = loadcapteurs();
+//        automatisations = loadautomatisation();
+//        programmes = loadprogramms();
+//        rooms = loadrooms();
+//        capteurs = loadcapteurs();
         initialize();
     //    connectDB();
-    }
-
-    public void connectDB() {
-        String url = "jdbc:mysql://localhost:3306/domotique?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
-        String username = "root";
-        String password = "Zozoleplubo@2005";
-
-        try {
-            String query = "INSERT INTO programmes (nom_programme, type_piece, type_chauffage, temperature_piece, jour_semaine, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            // Chargement explicite du driver (non nécessaire avec MySQL 8.0+ si le JAR est dans le classpath)
-            Class.forName("com.mysql.cj.jdbc.Driver");
-
-            // Connexion à la base de données
-            Connection connection = DriverManager.getConnection(url, username, password);
-            System.out.println("Connection established!");
-
-            //Insert
-
-        } catch (ClassNotFoundException e) {
-            System.err.println("Driver class not found. Make sure the JAR is in the classpath.");
-            e.printStackTrace();
-        } catch (SQLException e) {
-            System.err.println("Failed to connect to the database.");
-            e.printStackTrace();
-        }
     }
 
     public void initialize() {
@@ -439,6 +411,30 @@ public class Application {
             cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
 
+        btnSensorsManagement.addActionListener(e -> {
+            String url = "jdbc:mysql://localhost:3308/domotique";
+            String username = "root";
+            String password = "";
+            //Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "SELECT * FROM capteurs";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        String nom = rs.getString("nom_capteur");
+                        String type = rs.getString("type_capteur");
+                        String etat = rs.getString("etat_capteur");
+                        Maison_Capteurs.TypeCapteur typeCap = Maison_Capteurs.TypeCapteur.valueOf(type);
+                        Maison_Capteurs.EtatCapteur etatCap = Maison_Capteurs.EtatCapteur.valueOf(etat);
+                        Maison_Capteurs capteur = new Maison_Capteurs(nom, typeCap, etatCap);
+                        capteurs.add(capteur);
+                    }
+                System.out.println("Import réussi!");
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+            }
+        });
+
         btnVoirCapteurs.addActionListener(e -> {
             StringBuilder sb_VoirCapteurs = new StringBuilder();
             if (capteurs.isEmpty()) {
@@ -451,6 +447,7 @@ public class Application {
                             .append("Etat : ").append(capt.EtatCapteur).append("\n\n");
                 }
             }
+            System.out.println(capteurs);
             txtCapteurs.setText(sb_VoirCapteurs.toString());
             cardLayout.show(mainPanel, "voirCapteurPanel");
         });
@@ -507,13 +504,13 @@ public class Application {
             programmes.add(nouveauProgramme);
 
             // Connect DB
-            String url = "jdbc:mysql://localhost:3306/domotique?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            String url = "jdbc:mysql://localhost:3308/domotique";
             String username = "root";
-            String password = "Zozoleplubo@2005";
+            String password = "";
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "INSERT INTO programmes (nom_programme, type_piece, type_chauffage, temperature_piece, jour_semaine, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query)) {
+                PreparedStatement stmt = conn.prepareStatement(query)) {
                 for (Maison_programme prog : programmes) {
                     stmt.setString(1, prog.NomProgramme);
                     stmt.setString(2, prog.TypePiece.toString());
@@ -554,9 +551,27 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-//    //Créer et sauvegarder le capteur
+            //Créer et sauvegarder le capteur
             Maison_Capteurs nouveauCapteur = new Maison_Capteurs(nomCapteur, capteurSelect, etatSelect);
             capteurs.add(nouveauCapteur);
+
+            // Connect DB
+            String url = "jdbc:mysql://localhost:3308/domotique";
+            String username = "root";
+            String password = "";
+            //Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                PreparedStatement stmt = conn.prepareStatement(query)) {
+                Maison_Capteurs capt = capteurs.get(capteurs.size() - 1);
+                stmt.setString(1, capt.NomCapteur);
+                stmt.setString(2, capt.TypeCapteur.toString());
+                stmt.setString(3, capt.EtatCapteur.toString());
+                stmt.executeUpdate();
+                System.out.println("Import réussi!");
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la sauvegarde des capteurs : " + ex.getMessage());
+            }
             try {
                 sauvegarderCapteurs(capteurs);
                 JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
@@ -807,7 +822,6 @@ public class Application {
         }
         return rooms;
     }
-
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Application::new);
