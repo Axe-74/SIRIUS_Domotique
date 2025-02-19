@@ -31,6 +31,12 @@ public class Application {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new CardLayout());
 
+        // BD definition log
+
+        String url = "jdbc:mysql://localhost:3306/domotique";
+        String username = "root";
+        String password = "Zozoleplubo@2005";
+
         // Main Menu panel
 
         JPanel menuPanel = new JPanel();
@@ -52,16 +58,14 @@ public class Application {
         JButton btnNewPrograms = new JButton("Définir un nouveau programme");
         JButton btnViewPrograms = new JButton("Voir les programmes");
         JButton btnBacktoMainmenu = new JButton("Retour au menu principal");
-        JButton btnDeleteProgram = new JButton("Supprimer un programme");
-        JButton btnDeleteAutomation = new JButton("Supprimer une automatisation");
+
 
         Automations_and_programsPanel.add(btnNewAutomations);
         Automations_and_programsPanel.add(btnViewAutomations);
         Automations_and_programsPanel.add(btnNewPrograms);
         Automations_and_programsPanel.add(btnViewPrograms);
         Automations_and_programsPanel.add(btnBacktoMainmenu);
-        Automations_and_programsPanel.add(btnDeleteAutomation);
-        Automations_and_programsPanel.add(btnDeleteProgram);
+
 
 
         mainPanel.add(Automations_and_programsPanel, "Automations_and_ProgramsPanel");
@@ -342,57 +346,32 @@ public class Application {
         btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
 
         //Boutons plus complexes
-        btnDeleteProgram.addActionListener(e -> {
-            if (programmes.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Aucun programme à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Afficher les programmes existants
-            String[] programmeNames = programmes.stream().map(p -> p.NomProgramme).toArray(String[]::new);
-            String selectedProgram = (String) JOptionPane.showInputDialog(frame, "Sélectionnez un programme à supprimer:",
-                    "Supprimer un programme", JOptionPane.QUESTION_MESSAGE, null, programmeNames, programmeNames[0]);
-
-            if (selectedProgram != null) {
-                // Supprimer le programme sélectionné
-                programmes.removeIf(p -> p.NomProgramme.equals(selectedProgram));
-
-                // Sauvegarder la nouvelle liste
-                try {
-                    Saveprogramms(programmes);
-                    JOptionPane.showMessageDialog(frame, "Programme supprimé avec succès.");
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(frame, "Erreur lors de la suppression : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
-
-        btnDeleteAutomation.addActionListener(e -> {
-            if (automatisations.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Aucune automatisation à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-
-            // Afficher les automatisations existantes
-            String[] automationNames = automatisations.stream().map(a -> a.NomAutomatisation).toArray(String[]::new);
-            String selectedAutomation = (String) JOptionPane.showInputDialog(frame, "Sélectionnez une automatisation à supprimer:",
-                    "Supprimer une automatisation", JOptionPane.QUESTION_MESSAGE, null, automationNames, automationNames[0]);
-
-            if (selectedAutomation != null) {
-                // Supprimer l'automatisation sélectionnée
-                automatisations.removeIf(a -> a.NomAutomatisation.equals(selectedAutomation));
-
-                // Sauvegarder la nouvelle liste
-                try {
-                    Saveautomation(automatisations);
-                    JOptionPane.showMessageDialog(frame, "Automatisation supprimée avec succès.");
-                } catch (Exception ex) {
-                    JOptionPane.showMessageDialog(frame, "Erreur lors de la suppression : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
-                }
-            }
-        });
 
         btnViewPrograms.addActionListener(e -> {
+            //Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "SELECT * FROM programmes";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nom_programme = rs.getString("nom_programme");
+                    String type_piece = rs.getString("type_piece");
+                    String type_chauffage = rs.getString("type_chauffage");
+                    int temperature_piece = rs.getInt("temperature_piece");
+                    String jour_semaine = rs.getString("jour_semaine");
+                    int heure_début = rs.getInt("heure_debut");
+                    int heure_fin = rs.getInt("heure_fin");
+
+                    Maison_programme.TypePiece typePiece = Maison_programme.TypePiece.valueOf(type_piece);
+                    Maison_programme.TypeChauffage typeChauffage = Maison_programme.TypeChauffage.valueOf(type_chauffage);
+                    Maison_programme.JoursSemaine jourSemaine = Maison_programme.JoursSemaine.valueOf(jour_semaine);
+                    Maison_programme programme = new Maison_programme(nom_programme,typePiece,typeChauffage, temperature_piece,jourSemaine,heure_début,heure_fin);
+                    programmes.add(programme);
+                }
+                System.out.println("Import réussi!");
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+            }
             StringBuilder sb_program = new StringBuilder();
             if (programmes.isEmpty()) {
                 sb_program.append("Aucun programme enregistré.\n");
@@ -412,9 +391,6 @@ public class Application {
         });
 
         btnSensorsManagement.addActionListener(e -> {
-            String url = "jdbc:mysql://localhost:3308/domotique";
-            String username = "root";
-            String password = "";
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "SELECT * FROM capteurs";
             try (Connection conn = DriverManager.getConnection(url, username, password);
@@ -503,15 +479,11 @@ public class Application {
             Maison_programme nouveauProgramme = new Maison_programme(nomProgramme, pieceSelect, chauffageSelect, temperature, joursSemaineSelect, heureDebut, heureFin);
             programmes.add(nouveauProgramme);
 
-            // Connect DB
-            String url = "jdbc:mysql://localhost:3308/domotique";
-            String username = "root";
-            String password = "";
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "INSERT INTO programmes (nom_programme, type_piece, type_chauffage, temperature_piece, jour_semaine, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)";
             try (Connection conn = DriverManager.getConnection(url, username, password);
                 PreparedStatement stmt = conn.prepareStatement(query)) {
-                for (Maison_programme prog : programmes) {
+                Maison_programme prog = programmes.get(programmes.size() - 1);
                     stmt.setString(1, prog.NomProgramme);
                     stmt.setString(2, prog.TypePiece.toString());
                     stmt.setString(3, prog.TypeChauffage.toString());
@@ -521,8 +493,7 @@ public class Application {
                     stmt.setInt(7, prog.HeureFin);
                     stmt.executeUpdate();
 
-                }
-                System.out.println("import reussi");
+                    System.out.println("import reussi");
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
             }
@@ -555,10 +526,6 @@ public class Application {
             Maison_Capteurs nouveauCapteur = new Maison_Capteurs(nomCapteur, capteurSelect, etatSelect);
             capteurs.add(nouveauCapteur);
 
-            // Connect DB
-            String url = "jdbc:mysql://localhost:3308/domotique";
-            String username = "root";
-            String password = "";
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)";
             try (Connection conn = DriverManager.getConnection(url, username, password);
@@ -612,6 +579,27 @@ public class Application {
         });
 
         btnViewAutomations.addActionListener(e -> {
+            //Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "SELECT * FROM automatisations";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nom_automatisation = rs.getString("nom_automatisation");
+                    String type_capteur = rs.getString("type_capteur");
+                    String type_programme_automatisation = rs.getString("type_programme");
+                    Maison_Automatisation.TypeCapteurs typeCapteurs = Maison_Automatisation.TypeCapteurs.valueOf(type_capteur);
+                    Maison_Automatisation.TypeProgramme typeProgrammeAutomatisation = Maison_Automatisation.TypeProgramme.valueOf(type_programme_automatisation);
+                    Maison_Automatisation auto = new Maison_Automatisation(nom_automatisation, typeCapteurs, typeProgrammeAutomatisation);
+                    automatisations.add(auto);
+                }
+                System.out.println("Import réussi!");
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+            }
+
+
+
             StringBuilder sb_automation= new StringBuilder();
             if (automatisations.isEmpty()) {
                 sb_automation.append("Aucune automatisation enregistré.\n");
@@ -642,6 +630,21 @@ public class Application {
             // Créer et sauvegarder le programme
             Maison_Automatisation nouvelleAutomatisation = new Maison_Automatisation(nomAutomation, capteurSelect, programmeSelect);
             automatisations.add(nouvelleAutomatisation);
+
+            //Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "INSERT INTO automatisations (nom_automatisation, type_capteurs, etat_capteurs) VALUES (?, ?, ?)";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query)) {
+                Maison_Automatisation auto = automatisations.get(automatisations.size() - 1);
+                stmt.setString(1, auto.NomAutomatisation);
+                stmt.setString(2, auto.TypeCapteurs.toString());
+                stmt.setString(3, auto.TypeCapteurs.toString());
+                stmt.executeUpdate();
+
+                System.out.println("import reussi");
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
+            }
 
             try {
                 Saveautomation(automatisations);

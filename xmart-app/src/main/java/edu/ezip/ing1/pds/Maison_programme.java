@@ -1,5 +1,7 @@
 package edu.ezip.ing1.pds;
 
+
+
 import java.util.Observable;
 
 public class Maison_programme extends Observable {
@@ -100,4 +102,3 @@ public class Maison_programme extends Observable {
         return "Nom : " + NomProgramme + ", Piece : " + TypePiece + ", Chauffage : " + TypeChauffage + ", Température : " + TemperaturePiece + "°C, Plage horaire : " + HeureDebut + "h à " + HeureFin + "h, Jour : " + JoursSemaine;
     }
 }
-
