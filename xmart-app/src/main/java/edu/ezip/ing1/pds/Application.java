@@ -16,13 +16,14 @@ public class Application {
         automatisations = loadautomatisation();
         programmes = loadprogramms();
         rooms = loadrooms();
+        capteurs = loadcapteurs();
         initialize();
     }
 
     public void initialize() {
         frame = new JFrame("Domotique maison");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        frame.setSize(375, 700);
+        frame.setSize(450, 350);
         frame.setLocationRelativeTo(null);
 
         JPanel mainPanel = new JPanel();
@@ -306,26 +307,39 @@ public class Application {
         // Events
         CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
 
-        btnAutomations_and_programs.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
-        btnNewAutomations.addActionListener(e -> cardLayout.show(mainPanel, "AutomationPanel"));
-        btnNewPrograms.addActionListener(e -> cardLayout.show(mainPanel, "ProgramPanel"));
+        //Retour à l'accueil
+        btnBacktoMainmenu.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
+        btnBackToMenu_Room.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
+        btnRetourCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
+
+        //Retour Menu Automatisations et Programmes
         btnBackToMenu_Automation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenuViewProgramm.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenuAutomationProgramm.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_Program.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
-        btnBacktoMainmenu.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
+        btnAutomations_and_programs.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
+
+        //Boutons Automatisations et Programmes
+        btnNewAutomations.addActionListener(e -> cardLayout.show(mainPanel, "AutomationPanel"));
+        btnNewPrograms.addActionListener(e -> cardLayout.show(mainPanel, "ProgramPanel"));
+
+        //Retour Menu Capteurs
         btnSensorsManagement.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
         btnBackToMenu_NewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
         btnBackToMenu_VoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
         btnBackToMenu_ChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
+
+        //Boutons Capteurs
         btnVoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "voirCapteurPanel"));
         btnNewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
         btnChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "ChangerEtatPanel"));
+
+        //Boutons Rooms
         btnHouseManagement.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomPanel"));
-        btnBackToMenu_Room.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
         btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
-        btnRetourCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "MenuPanel"));
+
+        //Boutons plus complexes
         btnDeleteProgram.addActionListener(e -> {
             if (programmes.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Aucun programme à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -350,6 +364,7 @@ public class Application {
                 }
             }
         });
+
         btnDeleteAutomation.addActionListener(e -> {
             if (automatisations.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Aucune automatisation à supprimer.", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -374,6 +389,7 @@ public class Application {
                 }
             }
         });
+
         btnViewPrograms.addActionListener(e -> {
             StringBuilder sb_program = new StringBuilder();
             if (programmes.isEmpty()) {
@@ -392,6 +408,7 @@ public class Application {
             txtPrograms.setText(sb_program.toString());
             cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
+
         btnVoirCapteurs.addActionListener(e -> {
             StringBuilder sb_VoirCapteurs = new StringBuilder();
             if (capteurs.isEmpty()) {
@@ -407,6 +424,7 @@ public class Application {
             txtCapteurs.setText(sb_VoirCapteurs.toString());
             cardLayout.show(mainPanel, "voirCapteurPanel");
         });
+
         btnViewRoom.addActionListener(e -> {
             StringBuilder sb_room= new StringBuilder();
             if (rooms.isEmpty()) {
@@ -434,6 +452,7 @@ public class Application {
             }
             cardLayout.show(mainPanel, "ViewRoomPanel");
         });
+
         btnSaveProgram.addActionListener(e -> {
     //Récupération des données entrées
             String nomProgramme = txtProgramName.getText().trim();
@@ -487,6 +506,7 @@ public class Application {
                 sauvegarderCapteurs(capteurs);
                 JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
                 cardLayout.show(mainPanel, "CapteursPanel");
+                System.out.println(capteurs);
             } catch (Exception ex) {
                 JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
@@ -536,6 +556,7 @@ public class Application {
             txtPrograms.setText(sb_automation.toString());
             cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
+
         btnSaveAutomation.addActionListener(e -> {
             String nomAutomation = txtAutomationName.getText().trim();
             Maison_Automatisation.TypeCapteurs capteurSelect = (Maison_Automatisation.TypeCapteurs) cbSensor_activation.getSelectedItem();
@@ -561,12 +582,13 @@ public class Application {
             }
         });
 
-
         cardLayout.show(mainPanel, "MenuPanel");
         frame.add(mainPanel);
         frame.setVisible(true);
     }
 
+
+    //Sauvegardes
     private void Saveautomation(ArrayList<Maison_Automatisation> automatisations) {
         try (PrintWriter writer = new PrintWriter(new FileWriter("automatisation.txt", false))) { // écrase le contenu précédent
             for (Maison_Automatisation auto : automatisations) {
@@ -577,38 +599,6 @@ public class Application {
             throw new RuntimeException("Erreur lors de la sauvegarde des automatisations : " + e.getMessage());
         }
     }
-
-    private ArrayList<Maison_Automatisation> loadautomatisation() {
-        // Charger les programmes depuis un fichier ou une source de données
-        //ArrayList<Maison> programmes = new ArrayList<>();
-        try (Scanner scanner_auto = new Scanner(new File("automatisation.txt"))) {
-            while (scanner_auto.hasNextLine()) {
-                String ligne = scanner_auto.nextLine();
-                String[] donnees = ligne.split(";");
-
-                // Vérification du nombre de données avant de traiter
-                if (donnees.length == 3) {
-                    try {
-                        String typecapteurs = String.valueOf(Maison_Automatisation.findByNameTypeCapteurs(donnees[1]));
-                        String typeprogramme = String.valueOf(Maison_Automatisation.findByNameTypeProgramme(donnees[2]));
-
-                        Maison_Automatisation auto = new Maison_Automatisation(donnees[0], Maison_Automatisation.TypeCapteurs.valueOf(donnees[1]), Maison_Automatisation.TypeProgramme.valueOf(donnees[2]));
-                        automatisations.add(auto);
-                    } catch (Exception e) {
-                        System.out.println("Erreur dans le traitement d'une ligne : " + ligne);
-                    }
-                } else {
-                    System.out.println("Ligne mal formatée : " + ligne);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Fichier programmes.txt non trouvé : " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Erreur lors du chargement des automatisation : " + e.getMessage());
-        }
-        return automatisations;
-    }
-
 
     private void Saveprogramms(ArrayList<Maison_programme> programmes) {
         try (PrintWriter writer = new PrintWriter(new FileWriter("programmes.txt", false))) { // écrase le contenu précédent
@@ -644,6 +634,38 @@ public class Application {
         }
     }
 
+    //Load
+    private ArrayList<Maison_Automatisation> loadautomatisation() {
+        // Charger les programmes depuis un fichier ou une source de données
+        //ArrayList<Maison> programmes = new ArrayList<>();
+        try (Scanner scanner_auto = new Scanner(new File("automatisation.txt"))) {
+            while (scanner_auto.hasNextLine()) {
+                String ligne = scanner_auto.nextLine();
+                String[] donnees = ligne.split(";");
+
+                // Vérification du nombre de données avant de traiter
+                if (donnees.length == 3) {
+                    try {
+                        String typecapteurs = String.valueOf(Maison_Automatisation.findByNameTypeCapteurs(donnees[1]));
+                        String typeprogramme = String.valueOf(Maison_Automatisation.findByNameTypeProgramme(donnees[2]));
+
+                        Maison_Automatisation auto = new Maison_Automatisation(donnees[0], Maison_Automatisation.TypeCapteurs.valueOf(donnees[1]), Maison_Automatisation.TypeProgramme.valueOf(donnees[2]));
+                        automatisations.add(auto);
+                    } catch (Exception e) {
+                        System.out.println("Erreur dans le traitement d'une ligne : " + ligne);
+                    }
+                } else {
+                    System.out.println("Ligne mal formatée : " + ligne);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Fichier programmes.txt non trouvé : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement des automatisation : " + e.getMessage());
+        }
+        return automatisations;
+    }
+
     private ArrayList<Maison_programme> loadprogramms() {
         // Charger les programmes depuis un fichier ou une source de données
         //ArrayList<Maison> programmes = new ArrayList<>();
@@ -676,6 +698,33 @@ public class Application {
         return programmes;
     }
 
+    private ArrayList<Maison_Capteurs> loadcapteurs() {
+        try (Scanner scanner = new Scanner(new File("capteurs.txt"))) {
+            while (scanner.hasNextLine()) {
+                String ligne = scanner.nextLine();
+                String[] donnees = ligne.split(";");
+                // Vérification du nombre de données avant de traiter
+                if (donnees.length == 3) {
+                    try {
+                        Maison_Capteurs.TypeCapteur typeCapteur = Maison_Capteurs.TypeCapteur.valueOf(donnees[1]);
+                        Maison_Capteurs.EtatCapteur etatCapteur = Maison_Capteurs.EtatCapteur.valueOf(donnees[2]);
+                        Maison_Capteurs capteur = new Maison_Capteurs(donnees[0], typeCapteur, etatCapteur);
+                        capteurs.add(capteur);
+                    } catch (Exception e) {
+                        System.out.println("Erreur dans le traitement d'une ligne : " + ligne);
+                    }
+                } else {
+                    System.out.println("Ligne mal formatée : " + ligne);
+                }
+            }
+        } catch (FileNotFoundException e) {
+            System.out.println("Fichier capteurs.txt non trouvé : " + e.getMessage());
+        } catch (Exception e) {
+            System.out.println("Erreur lors du chargement des capteurs : " + e.getMessage());
+        }
+        return capteurs;
+    }
+
     private ArrayList<Maison_Room> loadrooms() {
         try (Scanner scanner = new Scanner(new File("pieces.txt"))) {
             while (scanner.hasNextLine()) {
@@ -704,8 +753,11 @@ public class Application {
         return rooms;
     }
 
+
     public static void main(String[] args) {
         SwingUtilities.invokeLater(Application::new);
     }
 }
+
+
 
