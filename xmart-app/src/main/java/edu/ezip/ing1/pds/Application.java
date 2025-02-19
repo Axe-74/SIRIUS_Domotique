@@ -2,6 +2,10 @@ package edu.ezip.ing1.pds;
 
 import javax.swing.*;
 import java.awt.*;
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import java.util.*;
 import java.io.*;
 
@@ -12,12 +16,38 @@ public class Application {
     public ArrayList<Maison_Capteurs> capteurs = new ArrayList<>(); {}
     public ArrayList<Maison_Room> rooms = new ArrayList<>();
 
-    public Application() {
+    public Application()  {
         automatisations = loadautomatisation();
         programmes = loadprogramms();
         rooms = loadrooms();
         capteurs = loadcapteurs();
         initialize();
+    //    connectDB();
+    }
+
+    public void connectDB() {
+        String url = "jdbc:mysql://localhost:3306/domotique?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+        String username = "root";
+        String password = "Zozoleplubo@2005";
+
+        try {
+            String query = "INSERT INTO programmes (nom_programme, type_piece, type_chauffage, temperature_piece, jour_semaine, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            // Chargement explicite du driver (non nécessaire avec MySQL 8.0+ si le JAR est dans le classpath)
+            Class.forName("com.mysql.cj.jdbc.Driver");
+
+            // Connexion à la base de données
+            Connection connection = DriverManager.getConnection(url, username, password);
+            System.out.println("Connection established!");
+
+            //Insert
+
+        } catch (ClassNotFoundException e) {
+            System.err.println("Driver class not found. Make sure the JAR is in the classpath.");
+            e.printStackTrace();
+        } catch (SQLException e) {
+            System.err.println("Failed to connect to the database.");
+            e.printStackTrace();
+        }
     }
 
     public void initialize() {
@@ -454,7 +484,8 @@ public class Application {
         });
 
         btnSaveProgram.addActionListener(e -> {
-    //Récupération des données entrées
+
+            //Récupération des données entrées
             String nomProgramme = txtProgramName.getText().trim();
             Maison_programme.TypePiece pieceSelect = (Maison_programme.TypePiece) cbPiece.getSelectedItem();
             Maison_programme.TypeChauffage chauffageSelect = (Maison_programme.TypeChauffage) cbChauffage.getSelectedItem();
@@ -471,9 +502,33 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-    // Créer et sauvegarder le programme
+            // Créer et sauvegarder le programme
             Maison_programme nouveauProgramme = new Maison_programme(nomProgramme, pieceSelect, chauffageSelect, temperature, joursSemaineSelect, heureDebut, heureFin);
             programmes.add(nouveauProgramme);
+
+            // Connect DB
+            String url = "jdbc:mysql://localhost:3306/domotique?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC";
+            String username = "root";
+            String password = "Zozoleplubo@2005";
+            //Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "INSERT INTO programmes (nom_programme, type_piece, type_chauffage, temperature_piece, jour_semaine, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query)) {
+                for (Maison_programme prog : programmes) {
+                    stmt.setString(1, prog.NomProgramme);
+                    stmt.setString(2, prog.TypePiece.toString());
+                    stmt.setString(3, prog.TypeChauffage.toString());
+                    stmt.setInt(4, prog.TemperaturePiece);
+                    stmt.setString(5, prog.JoursSemaine.toString());
+                    stmt.setInt(6, prog.HeureDebut);
+                    stmt.setInt(7, prog.HeureFin);
+                    stmt.executeUpdate();
+
+                }
+                System.out.println("import reussi");
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
+            }
 
             try {
                 Saveprogramms(programmes);
