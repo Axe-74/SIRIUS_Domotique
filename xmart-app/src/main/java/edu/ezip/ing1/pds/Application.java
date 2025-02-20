@@ -469,6 +469,25 @@ public class Application {
         });
 
         btnViewRoom.addActionListener(e -> {
+            String query = "SELECT * FROM rooms";
+            rooms.clear();
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nom_room = rs.getString("nom_room");
+                    String type_room = rs.getString("type_room");
+                    int room_surface = rs.getInt("room_surface");
+                    Maison_Room.TypeRoom typeRoom = Maison_Room.TypeRoom.valueOf(type_room);
+                    Maison_Room room = new Maison_Room(nom_room,typeRoom,room_surface);
+                    rooms.add(room);
+                }
+                rs.close();
+                stmt.close();
+                System.out.println("Import réussi!");
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération des pièce : " + ex.getMessage());
+            }
             StringBuilder sb_room= new StringBuilder();
             if (rooms.isEmpty()) {
                 sb_room.append("Aucune pièce enregistrée.\n");
@@ -551,8 +570,10 @@ public class Application {
                 stmt.setString(1,etat_select);
                 stmt.setString(2, cap_select);
                 stmt.executeUpdate();
-                System.out.println("import reussi");
+                System.out.println("Import réussi!");
                 stmt.close();
+                JOptionPane.showMessageDialog(frame, "L'état du capteur à été modifié avec succès!");
+                cardLayout.show(mainPanel, "CapteursPanel");
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
             }
@@ -603,25 +624,20 @@ public class Application {
             try (Connection conn = DriverManager.getConnection(url, username, password);
                 PreparedStatement stmt = conn.prepareStatement(query)) {
                 Maison_programme prog = programmes.get(programmes.size() - 1);
-                    stmt.setString(1, prog.NomProgramme);
-                    stmt.setString(2, prog.TypePiece.toString());
-                    stmt.setString(3, prog.TypeChauffage.toString());
-                    stmt.setInt(4, prog.TemperaturePiece);
-                    stmt.setString(5, prog.JoursSemaine.toString());
-                    stmt.setInt(6, prog.HeureDebut);
-                    stmt.setInt(7, prog.HeureFin);
-                    stmt.executeUpdate();
-                    System.out.println("import reussi");
-                    stmt.close();
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
-            }
-            try {
-                Saveprogramms(programmes);
+                stmt.setString(1, prog.NomProgramme);
+                stmt.setString(2, prog.TypePiece.toString());
+                stmt.setString(3, prog.TypeChauffage.toString());
+                stmt.setInt(4, prog.TemperaturePiece);
+                stmt.setString(5, prog.JoursSemaine.toString());
+                stmt.setInt(6, prog.HeureDebut);
+                stmt.setInt(7, prog.HeureFin);
+                stmt.executeUpdate();
+                System.out.println("import reussi");
+                stmt.close();
                 JOptionPane.showMessageDialog(frame, "Programme enregistré avec succès!");
                 cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
             }
         });
 
@@ -668,16 +684,11 @@ public class Application {
                 stmt.setString(3, auto.TypeProgramme.toString());
                 stmt.executeUpdate();
                 stmt.close();
+                JOptionPane.showMessageDialog(frame, "Automatisation enregistré avec succès!");
+                cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
                 System.out.println("import reussi");
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
-            }
-            try {
-                Saveautomation(automatisations);
-                JOptionPane.showMessageDialog(frame, "Automatisation enregistré avec succès!");
-                cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -728,17 +739,11 @@ public class Application {
                 stmt.setString(3, capt.EtatCapteur.toString());
                 stmt.executeUpdate();
                 System.out.println("Import réussi!");
+                JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
+                cardLayout.show(mainPanel, "CapteursPanel");
                 stmt.close();
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la sauvegarde des capteurs : " + ex.getMessage());
-            }
-            try {
-                sauvegarderCapteurs(capteurs);
-                JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
-                cardLayout.show(mainPanel, "CapteursPanel");
-                System.out.println(capteurs);
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
             }
         });
 
@@ -759,12 +764,22 @@ public class Application {
             // Création et sauvegarde de la piece
             Maison_Room nouvellePiece = new Maison_Room(nameRoom, roomSelect, roomSurface);
             rooms.add(nouvellePiece);
-            try {
-                Saverooms(rooms);
+
+            //Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "INSERT INTO rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query)) {
+                Maison_Room room = rooms.get(rooms.size() - 1);
+                stmt.setString(1, room.NameRoom);
+                stmt.setString(2, room.TypeRoom.toString());
+                stmt.setInt(3, room.RoomSurface);
+                stmt.executeUpdate();
+                System.out.println("Import réussi!");
                 JOptionPane.showMessageDialog(frame, "Pièce enregistré avec succès!");
                 cardLayout.show(mainPanel, "HouseManagementPanel");
-            } catch (Exception ex) {
-                JOptionPane.showMessageDialog(frame, "Erreur lors de la sauvegarde : " + ex.getMessage(), "Erreur", JOptionPane.ERROR_MESSAGE);
+                stmt.close();
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la sauvegarde des pièces : " + ex.getMessage());
             }
         });
 
@@ -774,52 +789,6 @@ public class Application {
         frame.setVisible(true);
     }
 
-
-    //Sauvegardes
-    private void Saveautomation(ArrayList<Maison_Automatisation> automatisations) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("automatisation.txt", false))) { // écrase le contenu précédent
-            for (Maison_Automatisation auto : automatisations) {
-                System.out.println("Nom de l'automatisation : " + auto.NomAutomatisation);
-                writer.println(auto.NomAutomatisation + ";" + auto.TypeCapteurs + ";" + auto.TypeProgramme);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la sauvegarde des automatisations : " + e.getMessage());
-        }
-    }
-
-    private void Saveprogramms(ArrayList<Maison_programme> programmes) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("programmes.txt", false))) { // écrase le contenu précédent
-            for (Maison_programme prog : programmes) {
-                System.out.println("Nom du programme : " + prog.NomProgramme);
-                writer.println(prog.NomProgramme + ";" + prog.TypePiece + ";" + prog.TypeChauffage + ";" +
-                        prog.TemperaturePiece + ";" + prog.JoursSemaine + ";" + prog.HeureDebut + ";" + prog.HeureFin);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + e.getMessage());
-        }
-    }
-
-    private void sauvegarderCapteurs(ArrayList<Maison_Capteurs> capteurs) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("capteurs.txt", false))) { // écrase le contenu précédent
-            for (Maison_Capteurs capt : capteurs) {
-                System.out.println("Nom du capteur : " + capt.NomCapteur);
-                writer.println(capt.NomCapteur + ";" + capt.TypeCapteur + ";" + capt.EtatCapteur);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la sauvegarde des capteurs : " + e.getMessage());
-        }
-    }
-
-    private void Saverooms(ArrayList<Maison_Room> rooms) {
-        try (PrintWriter writer = new PrintWriter(new FileWriter("pieces.txt", false))) {
-            for (Maison_Room room : rooms) {
-                System.out.println("Nom de la pièce : " + room.NameRoom);
-                writer.println(room.NameRoom + ";" + room.TypeRoom + ";" + room.RoomSurface);
-            }
-        } catch (Exception e) {
-            throw new RuntimeException("Erreur lors de la sauvegarde des pièces : " + e.getMessage());
-        }
-    }
 
     //Load
     private ArrayList<Maison_Automatisation> loadautomatisation() {
