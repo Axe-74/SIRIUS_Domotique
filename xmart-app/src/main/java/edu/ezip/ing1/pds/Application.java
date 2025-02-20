@@ -12,6 +12,9 @@ public class Application {
     public ArrayList<Maison_Automatisation> automatisations = new ArrayList<Maison_Automatisation>();
     public ArrayList<Maison_Capteurs> capteurs = new ArrayList<>(); {}
     public ArrayList<Maison_Room> rooms = new ArrayList<>();
+    public ArrayList<String> automatisationsNoms = new ArrayList<>();
+    public ArrayList<String> capteursNoms = new ArrayList<>();
+    public ArrayList<String> programmesNoms = new ArrayList<>();
 
     public Application()  {
 //        automatisations = loadautomatisation();
@@ -31,7 +34,7 @@ public class Application {
         mainPanel.setLayout(new CardLayout());
 
         // BD connexion
-        String url = "jdbc:mysql://172.31.253.58:3306/domotique";
+        String url = "jdbc:mysql://172.31.250.26:3306/domotique";
         String username = "sirius";
         String password = "domotique";
 
@@ -367,6 +370,7 @@ public class Application {
         btnViewPrograms.addActionListener(e -> {
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "SELECT * FROM programmes";
+            programmes.clear();
             try (Connection conn = DriverManager.getConnection(url, username, password);
                  PreparedStatement stmt = conn.prepareStatement(query);
                  ResultSet rs = stmt.executeQuery()) {
@@ -385,6 +389,8 @@ public class Application {
                     Maison_programme programme = new Maison_programme(nom_programme,typePiece,typeChauffage, temperature_piece,jourSemaine,heure_début,heure_fin);
                     programmes.add(programme);
                 }
+                rs.close();
+                stmt.close();
                 System.out.println("Import réussi!");
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
@@ -410,6 +416,7 @@ public class Application {
         btnViewAutomations.addActionListener(e -> {
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "SELECT * FROM automatisations";
+            automatisations.clear();
             try (Connection conn = DriverManager.getConnection(url, username, password);
                  PreparedStatement stmt = conn.prepareStatement(query);
                  ResultSet rs = stmt.executeQuery()) {
@@ -422,9 +429,11 @@ public class Application {
                     Maison_Automatisation auto = new Maison_Automatisation(nom_automatisation, typeCapteurs, typeProgrammeAutomatisation);
                     automatisations.add(auto);
                 }
+                rs.close();
+                stmt.close();
                 System.out.println("Import réussi!");
             } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+                throw new RuntimeException("Erreur lors de la récupération des automatisations : " + ex.getMessage());
             }
 
             StringBuilder sb_automation= new StringBuilder();
@@ -491,6 +500,7 @@ public class Application {
         btnSensorsManagement.addActionListener(e -> {
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "SELECT * FROM capteurs";
+            capteurs.clear();
             try (Connection conn = DriverManager.getConnection(url, username, password);
                 PreparedStatement stmt = conn.prepareStatement(query);
                 ResultSet rs = stmt.executeQuery()) {
@@ -503,6 +513,8 @@ public class Application {
                         Maison_Capteurs capteur = new Maison_Capteurs(nom, typeCap, etatCap);
                         capteurs.add(capteur);
                     }
+                    rs.close();
+                    stmt.close();
                 System.out.println("Import réussi!");
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
@@ -528,6 +540,23 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            String query1 = "SELECT nom_programme FROM programmes;";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query1);
+                 ResultSet  rs = stmt.executeQuery()){
+                while (rs.next()){
+                    String nom_programme_comparaison = rs.getString("nom_programme");;
+                    programmesNoms.add(nom_programme_comparaison);
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
+            }
+            for (String pN : programmesNoms){
+                if (pN.equals(nomProgramme)) {
+                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
             // Création et sauvegarde du programme
             Maison_programme nouveauProgramme = new Maison_programme(nomProgramme, pieceSelect, chauffageSelect, temperature, joursSemaineSelect, heureDebut, heureFin);
             programmes.add(nouveauProgramme);
@@ -546,6 +575,7 @@ public class Application {
                     stmt.setInt(7, prog.HeureFin);
                     stmt.executeUpdate();
                     System.out.println("import reussi");
+                    stmt.close();
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
             }
@@ -573,6 +603,24 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            String query1 = "SELECT nom_capteur FROM capteurs;";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query1);
+                 ResultSet  rs = stmt.executeQuery()){
+                while (rs.next()){
+                    String nom_capteur_comparaison = rs.getString("nom_capteur");;
+                    capteursNoms.add(nom_capteur_comparaison);
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
+            }
+            for (String cN : capteursNoms){
+                if (cN.equals(nomCapteur)) {
+                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
             //Création et sauvegarde du capteur
             Maison_Capteurs nouveauCapteur = new Maison_Capteurs(nomCapteur, capteurSelect, etatSelect);
             capteurs.add(nouveauCapteur);
@@ -587,6 +635,7 @@ public class Application {
                 stmt.setString(3, capt.EtatCapteur.toString());
                 stmt.executeUpdate();
                 System.out.println("Import réussi!");
+                stmt.close();
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la sauvegarde des capteurs : " + ex.getMessage());
             }
@@ -636,19 +685,39 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom d'automatisation.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
+            String query1 = "SELECT nom_automatisation FROM automatisations;";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query1);
+                 ResultSet  rs = stmt.executeQuery()){
+                while (rs.next()){
+                    String nom_automatisation_comparaison = rs.getString("nom_automatisation");;
+                    automatisationsNoms.add(nom_automatisation_comparaison);
+                }
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
+            }
+            for (String aN : automatisationsNoms){
+                if (aN.equals(nomAutomation)) {
+                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+
+
             // Création et sauvegarde de l'automatisation
             Maison_Automatisation nouvelleAutomatisation = new Maison_Automatisation(nomAutomation, capteurSelect, programmeSelect);
             automatisations.add(nouvelleAutomatisation);
-
+            System.out.println(automatisations);
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)";
             try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query)) {
+                 PreparedStatement stmt = conn.prepareStatement(query)){
                 Maison_Automatisation auto = automatisations.get(automatisations.size() - 1);
                 stmt.setString(1, auto.NomAutomatisation);
                 stmt.setString(2, auto.TypeCapteurs.toString());
                 stmt.setString(3, auto.TypeProgramme.toString());
                 stmt.executeUpdate();
+                stmt.close();
                 System.out.println("import reussi");
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
