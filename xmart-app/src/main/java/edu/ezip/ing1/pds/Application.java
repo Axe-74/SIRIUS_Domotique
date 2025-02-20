@@ -19,7 +19,6 @@ public class Application {
 //        rooms = loadrooms();
 //        capteurs = loadcapteurs();
         initialize();
-    //    connectDB();
     }
 
     public void initialize() {
@@ -31,14 +30,13 @@ public class Application {
         JPanel mainPanel = new JPanel();
         mainPanel.setLayout(new CardLayout());
 
-        // BD definition log
+        // BD connexion
+        String url = "jdbc:mysql://172.31.253.58:3306/domotique";
+        String username = "sirius";
+        String password = "domotique";
 
-        String url = "jdbc:mysql://localhost:3306/domotique";
-        String username = "root";
-        String password = "Zozoleplubo@2005";
 
-        // Main Menu panel
-
+// Main Menu panel
         JPanel menuPanel = new JPanel();
         menuPanel.setLayout(new GridLayout(3, 1));
         JButton btnAutomations_and_programs = new JButton(" Automatisations et programmes");
@@ -49,7 +47,9 @@ public class Application {
         menuPanel.add(btnHouseManagement);
         mainPanel.add(menuPanel, "MenuPanel");
 
-        // Automations and programs Menu Panel
+
+
+// Automations and programs Menu Panel
         JPanel Automations_and_programsPanel = new JPanel();
         Automations_and_programsPanel.setLayout(new GridLayout(5, 1));
 
@@ -59,18 +59,17 @@ public class Application {
         JButton btnViewPrograms = new JButton("Voir les programmes");
         JButton btnBacktoMainmenu = new JButton("Retour au menu principal");
 
-
         Automations_and_programsPanel.add(btnNewAutomations);
         Automations_and_programsPanel.add(btnViewAutomations);
         Automations_and_programsPanel.add(btnNewPrograms);
         Automations_and_programsPanel.add(btnViewPrograms);
         Automations_and_programsPanel.add(btnBacktoMainmenu);
 
-
-
         mainPanel.add(Automations_and_programsPanel, "Automations_and_ProgramsPanel");
 
-        // Capteurs Menu Panel
+
+
+// Capteurs Menu Panel
         JPanel CapteursPanel = new JPanel();
         CapteursPanel.setLayout(new GridLayout(4, 1));
 
@@ -86,7 +85,9 @@ public class Application {
 
         mainPanel.add(CapteursPanel, "CapteursPanel");
 
-        // Gestion de la maison Menu Panel
+
+
+// Gestion de la maison Menu Panel
         JPanel HouseManagementPanel = new JPanel();
         HouseManagementPanel.setLayout(new GridLayout(3, 1));
 
@@ -98,10 +99,11 @@ public class Application {
         HouseManagementPanel.add(btnViewRoom);
         HouseManagementPanel.add(btnBackToMenu_Room);
 
-
         mainPanel.add(HouseManagementPanel, "HouseManagementPanel");
 
-        // Automation Definition Panel
+
+
+// Automation Definition Panel
         JPanel AutomationPanel = new JPanel();
         AutomationPanel.setLayout(new GridLayout(4, 2));
 
@@ -128,7 +130,9 @@ public class Application {
 
         mainPanel.add(AutomationPanel, "AutomationPanel");
 
-        //View Automation panel
+
+
+//View Automation panel
         JPanel viewAutomationPanel = new JPanel();
         viewAutomationPanel.setLayout(new BorderLayout());
 
@@ -142,7 +146,9 @@ public class Application {
 
         mainPanel.add(viewAutomationPanel, "ViewAutomationPanel");
 
-        // Program Definition Panel
+
+
+// Program Definition Panel
         JPanel ProgramPanel = new JPanel();
         ProgramPanel.setLayout(new GridLayout(8, 2));
 
@@ -167,7 +173,6 @@ public class Application {
         JLabel lblHeureFin = new JLabel("Heure de fin:");
         JSpinner spHeureFin = new JSpinner(new SpinnerNumberModel(0, 0, 24, 1));
 
-
         JButton btnSaveProgram = new JButton("Enregistrer");
         JButton btnBackToMenu_Program = new JButton("Retour au menu");
 
@@ -190,7 +195,9 @@ public class Application {
 
         mainPanel.add(ProgramPanel, "ProgramPanel");
 
-        // NewCapteur Panel
+
+
+// NewCapteur Panel
         JPanel NewCapteursPanel = new JPanel();
         NewCapteursPanel.setLayout(new GridLayout(5, 2));
 
@@ -225,7 +232,9 @@ public class Application {
 
         mainPanel.add(NewCapteursPanel, "NewCapteursPanel");
 
-        // Nouvelle piece panel
+
+
+// Nouvelle piece panel
         JPanel pnlRoom = new JPanel();
         pnlRoom.setLayout(new GridLayout(4, 2));
 
@@ -234,7 +243,6 @@ public class Application {
 
         JLabel lblTypeRoom = new JLabel("Type de pièce : ");
         JComboBox<Maison_Room.TypeRoom> cbTypeRoom = new JComboBox<>(Maison_Room.TypeRoom.values());
-
 
         JLabel lblSurfaceRoom = new JLabel("Surface de la pièce (en m²) :");
         JSpinner spSurfaceRoom = new JSpinner(new SpinnerNumberModel(0, 0, 200, 1));
@@ -253,7 +261,9 @@ public class Application {
 
         mainPanel.add(pnlRoom, "RoomPanel");
 
-        //View Programm panel
+
+
+//View Programm panel
         JPanel viewProgramsPanel = new JPanel();
         viewProgramsPanel.setLayout(new BorderLayout());
 
@@ -268,7 +278,9 @@ public class Application {
 
         mainPanel.add(viewProgramsPanel, "ViewProgramsPanel");
 
-        // Voir Capteurs
+
+
+// Voir Capteurs
         JPanel voirCapteurPanel = new JPanel();
         voirCapteurPanel.setLayout(new BorderLayout());
 
@@ -283,7 +295,9 @@ public class Application {
 
         mainPanel.add(voirCapteurPanel, "voirCapteurPanel");
 
-        // Changer Etat Capteur
+
+
+// Changer Etat Capteur
         JPanel EtatCapteurPanel = new JPanel();
         EtatCapteurPanel.setLayout(new GridLayout(3, 2));
 
@@ -308,6 +322,8 @@ public class Application {
         EtatCapteurPanel.add(btnBackToMenu_ChangerEtat);
 
         mainPanel.add(EtatCapteurPanel, "EtatCapteurPanel");
+
+
 
 
         // Events
@@ -338,7 +354,7 @@ public class Application {
         //Boutons Capteurs
         btnVoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "voirCapteurPanel"));
         btnNewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
-        btnChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "ChangerEtatPanel"));
+        btnChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "EtatCapteurPanel"));
 
         //Boutons Rooms
         btnHouseManagement.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
@@ -347,6 +363,7 @@ public class Application {
 
         //Boutons plus complexes
 
+        //Boutons Affichage
         btnViewPrograms.addActionListener(e -> {
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "SELECT * FROM programmes";
@@ -390,25 +407,39 @@ public class Application {
             cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
 
-        btnSensorsManagement.addActionListener(e -> {
+        btnViewAutomations.addActionListener(e -> {
             //Connection connection = DriverManager.getConnection(url, username, password);
-            String query = "SELECT * FROM capteurs";
+            String query = "SELECT * FROM automatisations";
             try (Connection conn = DriverManager.getConnection(url, username, password);
-                PreparedStatement stmt = conn.prepareStatement(query);
-                ResultSet rs = stmt.executeQuery()) {
-                    while (rs.next()) {
-                        String nom = rs.getString("nom_capteur");
-                        String type = rs.getString("type_capteur");
-                        String etat = rs.getString("etat_capteur");
-                        Maison_Capteurs.TypeCapteur typeCap = Maison_Capteurs.TypeCapteur.valueOf(type);
-                        Maison_Capteurs.EtatCapteur etatCap = Maison_Capteurs.EtatCapteur.valueOf(etat);
-                        Maison_Capteurs capteur = new Maison_Capteurs(nom, typeCap, etatCap);
-                        capteurs.add(capteur);
-                    }
+                 PreparedStatement stmt = conn.prepareStatement(query);
+                 ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nom_automatisation = rs.getString("nom_automatisation");
+                    String type_capteur = rs.getString("type_capteur");
+                    String type_programme_automatisation = rs.getString("type_programme");
+                    Maison_Automatisation.TypeCapteurs typeCapteurs = Maison_Automatisation.TypeCapteurs.valueOf(type_capteur);
+                    Maison_Automatisation.TypeProgramme typeProgrammeAutomatisation = Maison_Automatisation.TypeProgramme.valueOf(type_programme_automatisation);
+                    Maison_Automatisation auto = new Maison_Automatisation(nom_automatisation, typeCapteurs, typeProgrammeAutomatisation);
+                    automatisations.add(auto);
+                }
                 System.out.println("Import réussi!");
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
             }
+
+            StringBuilder sb_automation= new StringBuilder();
+            if (automatisations.isEmpty()) {
+                sb_automation.append("Aucune automatisation enregistré.\n");
+            } else {
+                sb_automation.append("Automatisations enregistrés :\n");
+                for (Maison_Automatisation auto : automatisations) {
+                    sb_automation.append("Nom : ").append(auto.NomAutomatisation).append("\n")
+                            .append("Capteur écouté ").append(auto.TypeCapteurs).append("\n")
+                            .append("Programme executé : ").append(auto.TypeProgramme).append("\n\n");
+                }
+            }
+            txtPrograms.setText(sb_automation.toString());
+            cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
 
         btnVoirCapteurs.addActionListener(e -> {
@@ -456,8 +487,30 @@ public class Application {
             cardLayout.show(mainPanel, "ViewRoomPanel");
         });
 
-        btnSaveProgram.addActionListener(e -> {
+        //Bouton récupération BD
+        btnSensorsManagement.addActionListener(e -> {
+            //Connection connection = DriverManager.getConnection(url, username, password);
+            String query = "SELECT * FROM capteurs";
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                PreparedStatement stmt = conn.prepareStatement(query);
+                ResultSet rs = stmt.executeQuery()) {
+                    while (rs.next()) {
+                        String nom = rs.getString("nom_capteur");
+                        String type = rs.getString("type_capteur");
+                        String etat = rs.getString("etat_capteur");
+                        Maison_Capteurs.TypeCapteur typeCap = Maison_Capteurs.TypeCapteur.valueOf(type);
+                        Maison_Capteurs.EtatCapteur etatCap = Maison_Capteurs.EtatCapteur.valueOf(etat);
+                        Maison_Capteurs capteur = new Maison_Capteurs(nom, typeCap, etatCap);
+                        capteurs.add(capteur);
+                    }
+                System.out.println("Import réussi!");
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+            }
+        });
 
+        //Boutons Sauvegarde
+        btnSaveProgram.addActionListener(e -> {
             //Récupération des données entrées
             String nomProgramme = txtProgramName.getText().trim();
             Maison_programme.TypePiece pieceSelect = (Maison_programme.TypePiece) cbPiece.getSelectedItem();
@@ -466,7 +519,7 @@ public class Application {
             Maison_programme.JoursSemaine joursSemaineSelect = (Maison_programme.JoursSemaine) cbJour.getSelectedItem();
             int heureDebut = (int) spHeureDebut.getValue();
             int heureFin = (int) spHeureFin.getValue();
-    // Validation des données
+            // Validation des données
             if (nomProgramme.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de programme.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -475,7 +528,7 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            // Créer et sauvegarder le programme
+            // Création et sauvegarde du programme
             Maison_programme nouveauProgramme = new Maison_programme(nomProgramme, pieceSelect, chauffageSelect, temperature, joursSemaineSelect, heureDebut, heureFin);
             programmes.add(nouveauProgramme);
 
@@ -492,12 +545,10 @@ public class Application {
                     stmt.setInt(6, prog.HeureDebut);
                     stmt.setInt(7, prog.HeureFin);
                     stmt.executeUpdate();
-
                     System.out.println("import reussi");
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
             }
-
             try {
                 Saveprogramms(programmes);
                 JOptionPane.showMessageDialog(frame, "Programme enregistré avec succès!");
@@ -508,7 +559,7 @@ public class Application {
         });
 
         btnSaveCapteur.addActionListener(e -> {
-            //Récupération des données entrées
+            //Récupération des données
             String nomCapteur = txtNomCapteur.getText().trim();
             Maison_Capteurs.TypeCapteur capteurSelect = (Maison_Capteurs.TypeCapteur) cbTypeCapteur.getSelectedItem();
             Maison_Capteurs.EtatCapteur etatSelect ;
@@ -522,7 +573,7 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            //Créer et sauvegarder le capteur
+            //Création et sauvegarde du capteur
             Maison_Capteurs nouveauCapteur = new Maison_Capteurs(nomCapteur, capteurSelect, etatSelect);
             capteurs.add(nouveauCapteur);
 
@@ -550,25 +601,22 @@ public class Application {
         });
 
         btnSaveRoom.addActionListener(e -> {
+            //Récupération des données
             String nameRoom = txtNameRoom.getText().trim();
             Maison_Room.TypeRoom roomSelect = (Maison_Room.TypeRoom) cbTypeRoom.getSelectedItem();
             int roomSurface = (int) spSurfaceRoom.getValue();
-
             // Validation des données
             if (nameRoom.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Veuillez nommer la pièce.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
             if (roomSurface <= 0) {
                 JOptionPane.showMessageDialog(frame, "La surface de la pièce doit être positive.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            // Créer et sauvegarder la piece
+            // Création et sauvegarde de la piece
             Maison_Room nouvellePiece = new Maison_Room(nameRoom, roomSelect, roomSurface);
             rooms.add(nouvellePiece);
-
             try {
                 Saverooms(rooms);
                 JOptionPane.showMessageDialog(frame, "Pièce enregistré avec succès!");
@@ -578,74 +626,33 @@ public class Application {
             }
         });
 
-        btnViewAutomations.addActionListener(e -> {
-            //Connection connection = DriverManager.getConnection(url, username, password);
-            String query = "SELECT * FROM automatisations";
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query);
-                 ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String nom_automatisation = rs.getString("nom_automatisation");
-                    String type_capteur = rs.getString("type_capteur");
-                    String type_programme_automatisation = rs.getString("type_programme");
-                    Maison_Automatisation.TypeCapteurs typeCapteurs = Maison_Automatisation.TypeCapteurs.valueOf(type_capteur);
-                    Maison_Automatisation.TypeProgramme typeProgrammeAutomatisation = Maison_Automatisation.TypeProgramme.valueOf(type_programme_automatisation);
-                    Maison_Automatisation auto = new Maison_Automatisation(nom_automatisation, typeCapteurs, typeProgrammeAutomatisation);
-                    automatisations.add(auto);
-                }
-                System.out.println("Import réussi!");
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
-            }
-
-
-
-            StringBuilder sb_automation= new StringBuilder();
-            if (automatisations.isEmpty()) {
-                sb_automation.append("Aucune automatisation enregistré.\n");
-            } else {
-                sb_automation.append("Automatisations enregistrés :\n");
-                for (Maison_Automatisation auto : automatisations) {
-                    sb_automation.append("Nom : ").append(auto.NomAutomatisation).append("\n")
-                            .append("Capteur écouté ").append(auto.TypeCapteurs).append("\n")
-                            .append("Programme executé : ").append(auto.TypeProgramme).append("\n\n");
-                }
-            }
-            txtPrograms.setText(sb_automation.toString());
-            cardLayout.show(mainPanel, "ViewProgramsPanel");
-        });
-
         btnSaveAutomation.addActionListener(e -> {
+            // Récupération des données
             String nomAutomation = txtAutomationName.getText().trim();
             Maison_Automatisation.TypeCapteurs capteurSelect = (Maison_Automatisation.TypeCapteurs) cbSensor_activation.getSelectedItem();
             Maison_Automatisation.TypeProgramme programmeSelect = (Maison_Automatisation.TypeProgramme) cbSensor_programme.getSelectedItem();
-
-
             // Validation des données
             if (nomAutomation.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom d'automatisation.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-            // Créer et sauvegarder le programme
+            // Création et sauvegarde de l'automatisation
             Maison_Automatisation nouvelleAutomatisation = new Maison_Automatisation(nomAutomation, capteurSelect, programmeSelect);
             automatisations.add(nouvelleAutomatisation);
 
             //Connection connection = DriverManager.getConnection(url, username, password);
-            String query = "INSERT INTO automatisations (nom_automatisation, type_capteurs, etat_capteurs) VALUES (?, ?, ?)";
+            String query = "INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)";
             try (Connection conn = DriverManager.getConnection(url, username, password);
                  PreparedStatement stmt = conn.prepareStatement(query)) {
                 Maison_Automatisation auto = automatisations.get(automatisations.size() - 1);
                 stmt.setString(1, auto.NomAutomatisation);
                 stmt.setString(2, auto.TypeCapteurs.toString());
-                stmt.setString(3, auto.TypeCapteurs.toString());
+                stmt.setString(3, auto.TypeProgramme.toString());
                 stmt.executeUpdate();
-
                 System.out.println("import reussi");
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
             }
-
             try {
                 Saveautomation(automatisations);
                 JOptionPane.showMessageDialog(frame, "Automatisation enregistré avec succès!");
@@ -655,6 +662,7 @@ public class Application {
             }
         });
 
+        //FIN
         cardLayout.show(mainPanel, "MenuPanel");
         frame.add(mainPanel);
         frame.setVisible(true);
