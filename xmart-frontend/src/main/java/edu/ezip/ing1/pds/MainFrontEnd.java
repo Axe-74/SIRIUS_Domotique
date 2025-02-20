@@ -23,22 +23,22 @@ public class MainFrontEnd {
     private static final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 
     public static void main(String[] args) throws IOException, InterruptedException {
-//        final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
-//        logger.debug("Load Network config file : {}", networkConfig.toString());
-//
-//        final StudentService studentService = new StudentService(networkConfig);
-//        studentService.insertStudents();
-//        Students students = studentService.selectStudents();
-//        final AsciiTable asciiTable = new AsciiTable();
-//        for (final Student student : students.getStudents()) {
-//            asciiTable.addRule();
-//            asciiTable.addRow(student.getFirstname(), student.getName(), student.getGroup());
-//        }
-//        asciiTable.addRule();
-//        logger.debug("\n{}\n", asciiTable.render());
+        final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
+        logger.debug("Load Network config file : {}", networkConfig.toString());
 
-        Application mainApp = new Application();
-        mainApp.initialize();
+        final StudentService studentService = new StudentService(networkConfig);
+        studentService.insertStudents();
+        Students students = studentService.selectStudents();
+        final AsciiTable asciiTable = new AsciiTable();
+        for (final Student student : students.getStudents()) {
+            asciiTable.addRule();
+            asciiTable.addRow(student.getFirstname(), student.getName(), student.getGroup());
+        }
+        asciiTable.addRule();
+        logger.debug("\n{}\n", asciiTable.render());
+
+//        Application mainApp = new Application();
+//        mainApp.initialize();
 
         //logger.debug("Load Network...");
         //App. aa = new app("");
