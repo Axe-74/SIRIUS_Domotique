@@ -16,6 +16,7 @@ public class Application {
     public ArrayList<String> capteursNoms = new ArrayList<>();
     public ArrayList<String> programmesNoms = new ArrayList<>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
+    public ArrayList<String> capteurs_affichage = new ArrayList<>();
 
     public Application()  {
 //        automatisations = loadautomatisation();
@@ -35,7 +36,7 @@ public class Application {
         mainPanel.setLayout(new CardLayout());
 
         // BD connexion
-        String url = "jdbc:mysql://172.31.249.168:3306/domotique";
+        String url = "jdbc:mysql://172.31.250.179:3306/domotique";
         String username = "sirius";
         String password = "domotique";
 
@@ -453,14 +454,37 @@ public class Application {
 
         btnVoirCapteurs.addActionListener(e -> {
             StringBuilder sb_VoirCapteurs = new StringBuilder();
-            if (capteurs.isEmpty()) {
+            String query2 = "SELECT * FROM capteurs";
+            capteurs_affichage.clear();
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query2);
+                 ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nom = rs.getString("nom_capteur");
+                    String type = rs.getString("type_capteur");
+                    String etat = rs.getString("etat_capteur");
+                    Maison_Capteurs.TypeCapteur typeCap = Maison_Capteurs.TypeCapteur.valueOf(type);
+                    Maison_Capteurs.EtatCapteur etatCap = Maison_Capteurs.EtatCapteur.valueOf(etat);
+                    capteurs_affichage.add(nom);
+                    capteurs_affichage.add(type);
+                    capteurs_affichage.add(etat);}
+                rs.close();
+                stmt.close();
+                System.out.println("Import réussi!");
+                System.out.println(capteurs_affichage);
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+            }
+            if (capteurs_affichage.isEmpty()) {
                 sb_VoirCapteurs.append("Aucun capteur enregistré.\n");
             } else {
                 sb_VoirCapteurs.append("Capteurs enregistrés :\n");
-                for (Maison_Capteurs capt : capteurs) {
-                    sb_VoirCapteurs.append("Nom : ").append(capt.NomCapteur).append("\n")
-                            .append("Type : ").append(capt.TypeCapteur).append("\n")
-                            .append("Etat : ").append(capt.EtatCapteur).append("\n\n");
+                int i = 0;
+                while (i<capteurs_affichage.size()) {
+                    sb_VoirCapteurs.append("Nom : ").append(capteurs_affichage.get(i)).append("\n")
+                            .append("Type : ").append(capteurs_affichage.get(i+1)).append("\n")
+                            .append("Etat : ").append(capteurs_affichage.get(i+2)).append("\n\n");
+                    i+=3;
                 }
             }
             System.out.println(capteurs);
@@ -554,6 +578,32 @@ public class Application {
                 rs.close();
                 stmt.close();
                 System.out.println("Import réussi!");
+            } catch (SQLException ex) {
+                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+            }
+            String query2 = "SELECT * FROM capteurs";
+            capteurs_affichage.clear();
+            try (Connection conn = DriverManager.getConnection(url, username, password);
+                 PreparedStatement stmt = conn.prepareStatement(query2);
+                 ResultSet rs = stmt.executeQuery()) {
+                while (rs.next()) {
+                    String nom = rs.getString("nom_capteur");
+                    String type = rs.getString("type_capteur");
+                    String etat = rs.getString("etat_capteur");
+                    System.out.println(nom);
+                    System.out.println(etat);
+                    System.out.println("Type récupéré : " + type);
+                    Maison_Capteurs.TypeCapteur typeCap = Maison_Capteurs.TypeCapteur.valueOf(type);
+                    Maison_Capteurs.EtatCapteur etatCap = Maison_Capteurs.EtatCapteur.valueOf(etat);
+                    Maison_Capteurs capteur = new Maison_Capteurs(nom, typeCap, etatCap);
+                    System.out.println(capteur);
+                    capteurs_affichage.add(nom);
+                    capteurs_affichage.add(type);
+                    capteurs_affichage.add(etat);}
+                rs.close();
+                stmt.close();
+                System.out.println("Import réussi!");
+                System.out.println(capteurs_affichage);
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
             }
@@ -787,126 +837,6 @@ public class Application {
         cardLayout.show(mainPanel, "MenuPanel");
         frame.add(mainPanel);
         frame.setVisible(true);
-    }
-
-
-    //Load
-    private ArrayList<Maison_Automatisation> loadautomatisation() {
-        // Charger les programmes depuis un fichier ou une source de données
-        //ArrayList<Maison> programmes = new ArrayList<>();
-        try (Scanner scanner_auto = new Scanner(new File("automatisation.txt"))) {
-            while (scanner_auto.hasNextLine()) {
-                String ligne = scanner_auto.nextLine();
-                String[] donnees = ligne.split(";");
-
-                // Vérification du nombre de données avant de traiter
-                if (donnees.length == 3) {
-                    try {
-                        String typecapteurs = String.valueOf(Maison_Automatisation.findByNameTypeCapteurs(donnees[1]));
-                        String typeprogramme = String.valueOf(Maison_Automatisation.findByNameTypeProgramme(donnees[2]));
-
-                        Maison_Automatisation auto = new Maison_Automatisation(donnees[0], Maison_Automatisation.TypeCapteurs.valueOf(donnees[1]), Maison_Automatisation.TypeProgramme.valueOf(donnees[2]));
-                        automatisations.add(auto);
-                    } catch (Exception e) {
-                        System.out.println("Erreur dans le traitement d'une ligne : " + ligne);
-                    }
-                } else {
-                    System.out.println("Ligne mal formatée : " + ligne);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Fichier programmes.txt non trouvé : " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Erreur lors du chargement des automatisation : " + e.getMessage());
-        }
-        return automatisations;
-    }
-
-    private ArrayList<Maison_programme> loadprogramms() {
-        // Charger les programmes depuis un fichier ou une source de données
-        //ArrayList<Maison> programmes = new ArrayList<>();
-        try (Scanner scanner_program = new Scanner(new File("programmes.txt"))) {
-            while (scanner_program.hasNextLine()) {
-                String ligne = scanner_program.nextLine();
-                String[] donnees = ligne.split(";");
-
-                // Vérification du nombre de données avant de traiter
-                if (donnees.length == 7) {
-                    try {
-                        String typePiece = String.valueOf(Maison_programme.findByNameTypePiece(donnees[1]));
-                        String typeChauffage = String.valueOf(Maison_programme.findByNameTypeChauffage(donnees[2]));
-                        String joursSemaine = String.valueOf(Maison_programme.findByNameJoursSemaine(donnees[4]));
-
-                        Maison_programme prog = new Maison_programme(donnees[0], Maison_programme.TypePiece.valueOf(donnees[1]), Maison_programme.TypeChauffage.valueOf(donnees[2]), Integer.parseInt(donnees[3]), Maison_programme.JoursSemaine.valueOf(donnees[4]), Integer.parseInt(donnees[5]), Integer.parseInt(donnees[6]) );
-                        programmes.add(prog);
-                    } catch (Exception e) {
-                        System.out.println("Erreur dans le traitement d'une ligne : " + ligne);
-                    }
-                } else {
-                    System.out.println("Ligne mal formatée : " + ligne);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Fichier programmes.txt non trouvé : " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Erreur lors du chargement des programmes : " + e.getMessage());
-        }
-        return programmes;
-    }
-
-    private ArrayList<Maison_Capteurs> loadcapteurs() {
-        try (Scanner scanner = new Scanner(new File("capteurs.txt"))) {
-            while (scanner.hasNextLine()) {
-                String ligne = scanner.nextLine();
-                String[] donnees = ligne.split(";");
-                // Vérification du nombre de données avant de traiter
-                if (donnees.length == 3) {
-                    try {
-                        Maison_Capteurs.TypeCapteur typeCapteur = Maison_Capteurs.TypeCapteur.valueOf(donnees[1]);
-                        Maison_Capteurs.EtatCapteur etatCapteur = Maison_Capteurs.EtatCapteur.valueOf(donnees[2]);
-                        Maison_Capteurs capteur = new Maison_Capteurs(donnees[0], typeCapteur, etatCapteur);
-                        capteurs.add(capteur);
-                    } catch (Exception e) {
-                        System.out.println("Erreur dans le traitement d'une ligne : " + ligne);
-                    }
-                } else {
-                    System.out.println("Ligne mal formatée : " + ligne);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Fichier capteurs.txt non trouvé : " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Erreur lors du chargement des capteurs : " + e.getMessage());
-        }
-        return capteurs;
-    }
-
-    private ArrayList<Maison_Room> loadrooms() {
-        try (Scanner scanner = new Scanner(new File("pieces.txt"))) {
-            while (scanner.hasNextLine()) {
-                String ligne = scanner.nextLine();
-                String[] donnees = ligne.split(";");
-
-                // Vérification du nombre de données avant de traiter
-                if (donnees.length == 3) {
-                    try {
-                        String typeRoom = String.valueOf(Maison_Room.findByNameTypeRoom(donnees[1]));
-
-                        Maison_Room room = new Maison_Room(donnees[0], Maison_Room.TypeRoom.valueOf(donnees[1]), Integer.parseInt(donnees[2]) );
-                        rooms.add(room);
-                    } catch (Exception e) {
-                        System.out.println("Erreur dans le traitement d'une ligne : " + ligne);
-                    }
-                } else {
-                    System.out.println("Ligne mal formatée : " + ligne);
-                }
-            }
-        } catch (FileNotFoundException e) {
-            System.out.println("Fichier pieces.txt non trouvé : " + e.getMessage());
-        } catch (Exception e) {
-            System.out.println("Erreur lors du chargement des pièces : " + e.getMessage());
-        }
-        return rooms;
     }
 
     public static void main(String[] args) {
