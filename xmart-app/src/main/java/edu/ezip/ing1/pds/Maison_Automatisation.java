@@ -14,6 +14,18 @@ public class Maison_Automatisation extends Observable {
         TypeProgramme = typeprogramme;
     }
 
+    public Maison_Automatisation() {
+
+    }
+
+    public void NomAutomatisation(String string) {
+    }
+
+    public void TypeCapteurs(String string) {
+
+    }
+
+
     public enum TypeCapteurs {
         CAPTEURS_1, CAPTEURS_2, CAPTEURS_3, CAPTEURS_4
     };

@@ -9,9 +9,9 @@ public class Maison_Capteurs extends Observable {
     static EtatCapteur EtatCapteur;
 
     public Maison_Capteurs(String nomCapteur, TypeCapteur typeCapteur, EtatCapteur etatCapteur) {
-        NomCapteur = nomCapteur;
-        TypeCapteur = typeCapteur;
-        EtatCapteur = etatCapteur;
+        this.NomCapteur = nomCapteur;
+        this.TypeCapteur = typeCapteur;
+        this.EtatCapteur = etatCapteur;
     }
 
     public enum TypeCapteur {
