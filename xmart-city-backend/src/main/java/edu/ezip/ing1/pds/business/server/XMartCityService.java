@@ -9,6 +9,8 @@ import edu.ezip.ing1.pds.commons.Response;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+
+
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
@@ -22,7 +24,6 @@ public class XMartCityService {
     private final Logger logger = LoggerFactory.getLogger(LoggingLabel);
 
     private enum Queries {
-        //SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname FROM students t"),
         SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname, t.id FROM students t"),
         INSERT_STUDENT("INSERT into students (name, firstname, groupname) values (?, ?, ?)");
         private final String query;
@@ -89,10 +90,8 @@ public class XMartCityService {
             student.setName(res.getString(1));
             student.setFirstname(res.getString(2));
             student.setGroup(res.getString(3));
-            student.setId(res.getInt(4));
             students.add(student);
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(students));
     }
-
 }
