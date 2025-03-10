@@ -2,8 +2,8 @@ package edu.ezip.ing1.pds.business.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.ezip.ing1.pds.business.dto.Maison_Automatisation;
-import edu.ezip.ing1.pds.business.dto.Maison_Automatisations;
+import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation;
+import edu.ezip.ing1.pds.business.dto.MaisonAutomatisations;
 import edu.ezip.ing1.pds.business.dto.Student;
 import edu.ezip.ing1.pds.business.dto.Students;
 import edu.ezip.ing1.pds.commons.Request;
@@ -15,16 +15,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.sql.*;
-import java.util.LinkedHashMap;
-import java.util.Map;
 
 public class XMartCityService {
 
-    private final static String LoggingLabel = "B u s i n e s s - S e r v e r";
+    private final static String LoggingLabel = "B u s i n e s s - S e r v e r - XMartCityService";
     private final Logger logger = LoggerFactory.getLogger(LoggingLabel);
-
+    //SELECT_ALL_AUTOMATION("SELECT a.id, a.nom_automatisation, a.type_capteur, a.type_programme FROM automatisations a"),
     private enum Queries {
         //SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname FROM students t"),
         SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname, t.id FROM students t"),
@@ -65,6 +62,7 @@ public class XMartCityService {
                 break;
             case SELECT_ALL_AUTOMATION:
                 response = SelectAllAutomation(request, connection);
+                break;
             case INSERT_AUTOMATION:
                 response = InsertAutomation(request, connection);
             default:
@@ -107,7 +105,7 @@ public class XMartCityService {
 
     private Response InsertAutomation(final Request request, final Connection connection) throws SQLException, IOException {
         final ObjectMapper objectMapper = new ObjectMapper();
-        final Maison_Automatisation student = objectMapper.readValue(request.getRequestBody(), Maison_Automatisation.class);
+        final MaisonAutomatisation student = objectMapper.readValue(request.getRequestBody(), MaisonAutomatisation.class);
         final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_AUTOMATION.query);
         stmt.setString(1, student.getNomAutomatisation());
         stmt.setString(2, student.getTypeCapteur());
@@ -124,21 +122,22 @@ public class XMartCityService {
         final ObjectMapper objectMapper = new ObjectMapper();
         final Statement stmt = connection.createStatement();
         final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_AUTOMATION.query);
-        Maison_Automatisations maison_automatisations = new Maison_Automatisations();
+        MaisonAutomatisations maisonAutomatisations = new MaisonAutomatisations();
         while (res.next()) {
-            Maison_Automatisation maison_automatisation = new Maison_Automatisation();
-            maison_automatisation.setNomAutomatisation(res.getString(1));
-            maison_automatisation.setTypeCapteur(res.getString(2));
-            maison_automatisation.setTypeProgramme(res.getString(3));
+            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
+            maisonAutomatisation.setId(Integer.parseInt(res.getString(1)));
+            maisonAutomatisation.setNomAutomatisation(res.getString(2));
+            maisonAutomatisation.setTypeCapteur(res.getString(3));
+            maisonAutomatisation.setTypeProgramme(res.getString(4));
 
-            System.out.println("Nom: " + maison_automatisation.getNomAutomatisation());
-            System.out.println("Capteur: " + maison_automatisation.getTypeCapteur());
-            System.out.println("Programme: " + maison_automatisation.getTypeProgramme());
+            System.out.println("Nom: " + maisonAutomatisation.getNomAutomatisation());
+            System.out.println("Capteur: " + maisonAutomatisation.getTypeCapteur());
+            System.out.println("Programme: " + maisonAutomatisation.getTypeProgramme());
             System.out.println("---------------------------");
 
 
-            maison_automatisations.add(maison_automatisation);
+            maisonAutomatisations.add(maisonAutomatisation);
         }
-        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maison_automatisations));
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
     }
 }

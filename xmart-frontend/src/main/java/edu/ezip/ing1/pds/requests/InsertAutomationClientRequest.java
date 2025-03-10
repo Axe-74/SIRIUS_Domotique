@@ -1,8 +1,7 @@
 package edu.ezip.ing1.pds.requests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.ezip.ing1.pds.business.dto.Maison_Automatisation;
-import edu.ezip.ing1.pds.business.dto.Student;
+import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
@@ -10,10 +9,10 @@ import edu.ezip.ing1.pds.commons.Request;
 import java.io.IOException;
 import java.util.Map;
 
-public class InsertAutomationClientRequest extends ClientRequest<Maison_Automatisation, String> {
+public class InsertAutomationClientRequest extends ClientRequest<MaisonAutomatisation, String> {
 
     public InsertAutomationClientRequest(
-            NetworkConfig networkConfig, int myBirthDate, Request request, Maison_Automatisation info, byte[] bytes)
+            NetworkConfig networkConfig, int myBirthDate, Request request, MaisonAutomatisation info, byte[] bytes)
             throws IOException {
         super(networkConfig, myBirthDate, request, info, bytes);
     }

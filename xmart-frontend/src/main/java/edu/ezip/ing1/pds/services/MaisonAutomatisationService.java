@@ -3,17 +3,12 @@ package edu.ezip.ing1.pds.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.ezip.commons.LoggingUtils;
-import edu.ezip.ing1.pds.business.dto.Maison_Automatisations;
-import edu.ezip.ing1.pds.business.dto.Maison_Automatisation;
-import edu.ezip.ing1.pds.business.dto.Student;
-import edu.ezip.ing1.pds.business.dto.Students;
+import edu.ezip.ing1.pds.business.dto.MaisonAutomatisations;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.ConfigLoader;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
 import edu.ezip.ing1.pds.requests.InsertStudentsClientRequest;
-import edu.ezip.ing1.pds.requests.SelectAllStudentsClientRequest;
-import edu.ezip.ing1.pds.requests.InsertAutomationClientRequest;
 import edu.ezip.ing1.pds.requests.SelectAllAutomationClientRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,8 +19,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.UUID;
 
-public class Maison_AutomatisationService {
-    private final static String LoggingLabel = "FrontEnd - StudentService";
+public class MaisonAutomatisationService {
+    private final static String LoggingLabel = "FrontEnd - MaisonAutomatisationService";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String studentsToBeInserted = "students-to-be-inserted.yaml";
 
@@ -35,11 +30,11 @@ public class Maison_AutomatisationService {
 
     private final NetworkConfig networkConfig;
 
-    public Maison_AutomatisationService (NetworkConfig networkConfig) {
+    public MaisonAutomatisationService(NetworkConfig networkConfig) {
         this.networkConfig = networkConfig;
     }
 
-    public void insertStudents() throws InterruptedException, IOException {
+    /*public void insertStudents() throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final Students guys = ConfigLoader.loadConfig(Students.class, studentsToBeInserted);
 
@@ -71,9 +66,9 @@ public class Maison_AutomatisationService {
                     guy.getFirstname(), guy.getName(), guy.getGroup(),
                     clientRequest.getResult());
         }
-    }
+    }*/
 
-    public Maison_Automatisations select_all_automation() throws InterruptedException, IOException {
+    public MaisonAutomatisations select_all_automation() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -93,7 +88,7 @@ public class Maison_AutomatisationService {
             final ClientRequest joinedClientRequest = clientRequests.pop();
             joinedClientRequest.join();
             logger.debug("Thread {} complete.", joinedClientRequest.getThreadName());
-            return (Maison_Automatisations) joinedClientRequest.getResult();
+            return (MaisonAutomatisations) joinedClientRequest.getResult();
         }
         else {
             logger.error("No automations found");

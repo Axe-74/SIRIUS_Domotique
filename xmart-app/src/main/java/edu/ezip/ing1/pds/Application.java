@@ -1,13 +1,10 @@
 package edu.ezip.ing1.pds;
 
-import edu.ezip.ing1.pds.business.dto.Maison_Automatisations;
-import edu.ezip.ing1.pds.business.dto.Students;
-
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.util.*;
-import java.io.*;
+//import edu.ezip.ing1.pds.services.Maison_AutomatiisationService;
 
 
 
@@ -126,10 +123,10 @@ public class Application {
         JTextField txtAutomationName = new JTextField();
 
         JLabel lblSensor_activation = new JLabel("Activation du capteur: ");
-        JComboBox<Maison_Automatisation.TypeCapteurs> cbSensor_activation = new JComboBox<>(Maison_Automatisation.TypeCapteurs.values());
+        JComboBox<edu.ezip.ing1.pds.Maison_Automatisation.TypeCapteurs> cbSensor_activation = new JComboBox<>(edu.ezip.ing1.pds.Maison_Automatisation.TypeCapteurs.values());
 
         JLabel lblSensor_program = new JLabel("Execution du programme:");
-        JComboBox<Maison_Automatisation.TypeProgramme> cbSensor_programme = new JComboBox<>(Maison_Automatisation.TypeProgramme.values());
+        JComboBox<edu.ezip.ing1.pds.Maison_Automatisation.TypeProgramme> cbSensor_programme = new JComboBox<>(edu.ezip.ing1.pds.Maison_Automatisation.TypeProgramme.values());
 
         JButton btnSaveAutomation = new JButton("Enregistrer");
         JButton btnBackToMenu_Automation = new JButton("Retour au menu");
@@ -440,9 +437,9 @@ public class Application {
                     String nom_automatisation = rs.getString("nom_automatisation");
                     String type_capteur = rs.getString("type_capteur");
                     String type_programme_automatisation = rs.getString("type_programme");
-                    Maison_Automatisation.TypeCapteurs typeCapteurs = Maison_Automatisation.TypeCapteurs.valueOf(type_capteur);
-                    Maison_Automatisation.TypeProgramme typeProgrammeAutomatisation = Maison_Automatisation.TypeProgramme.valueOf(type_programme_automatisation);
-                    Maison_Automatisation auto = new Maison_Automatisation(nom_automatisation, typeCapteurs, typeProgrammeAutomatisation);
+                    edu.ezip.ing1.pds.Maison_Automatisation.TypeCapteurs typeCapteurs = edu.ezip.ing1.pds.Maison_Automatisation.TypeCapteurs.valueOf(type_capteur);
+                    edu.ezip.ing1.pds.Maison_Automatisation.TypeProgramme typeProgrammeAutomatisation = edu.ezip.ing1.pds.Maison_Automatisation.TypeProgramme.valueOf(type_programme_automatisation);
+                    edu.ezip.ing1.pds.Maison_Automatisation auto = new edu.ezip.ing1.pds.Maison_Automatisation(nom_automatisation, typeCapteurs, typeProgrammeAutomatisation);
                     automatisations.add(auto);
                 }
                 rs.close();
@@ -457,7 +454,7 @@ public class Application {
                 sb_automation.append("Aucune automatisation enregistré.\n");
             } else {
                 sb_automation.append("Automatisations enregistrés :\n");
-                for (Maison_Automatisation auto : automatisations) {
+                for (edu.ezip.ing1.pds.Maison_Automatisation auto : automatisations) {
                     sb_automation.append("Nom : ").append(auto.NomAutomatisation).append("\n")
                             .append("Capteur écouté ").append(auto.TypeCapteurs).append("\n")
                             .append("Programme executé : ").append(auto.TypeProgramme).append("\n\n");
@@ -710,8 +707,8 @@ public class Application {
         btnSaveAutomation.addActionListener(e -> {
             // Récupération des données
             String nomAutomation = txtAutomationName.getText().trim();
-            Maison_Automatisation.TypeCapteurs capteurSelect = (Maison_Automatisation.TypeCapteurs) cbSensor_activation.getSelectedItem();
-            Maison_Automatisation.TypeProgramme programmeSelect = (Maison_Automatisation.TypeProgramme) cbSensor_programme.getSelectedItem();
+            edu.ezip.ing1.pds.Maison_Automatisation.TypeCapteurs capteurSelect = (edu.ezip.ing1.pds.Maison_Automatisation.TypeCapteurs) cbSensor_activation.getSelectedItem();
+            edu.ezip.ing1.pds.Maison_Automatisation.TypeProgramme programmeSelect = (edu.ezip.ing1.pds.Maison_Automatisation.TypeProgramme) cbSensor_programme.getSelectedItem();
             // Validation des données
             if (nomAutomation.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom d'automatisation.", "Erreur", JOptionPane.ERROR_MESSAGE);
@@ -737,14 +734,14 @@ public class Application {
 
 
             // Création et sauvegarde de l'automatisation
-            Maison_Automatisation nouvelleAutomatisation = new Maison_Automatisation(nomAutomation, capteurSelect, programmeSelect);
+            edu.ezip.ing1.pds.Maison_Automatisation nouvelleAutomatisation = new edu.ezip.ing1.pds.Maison_Automatisation(nomAutomation, capteurSelect, programmeSelect);
             automatisations.add(nouvelleAutomatisation);
             System.out.println(automatisations);
             //Connection connection = DriverManager.getConnection(url, username, password);
             String query = "INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)";
             try (Connection conn = DriverManager.getConnection(url, username, password);
                  PreparedStatement stmt = conn.prepareStatement(query)){
-                Maison_Automatisation auto = automatisations.get(automatisations.size() - 1);
+                edu.ezip.ing1.pds.Maison_Automatisation auto = automatisations.get(automatisations.size() - 1);
                 stmt.setString(1, auto.NomAutomatisation);
                 stmt.setString(2, auto.TypeCapteurs.toString());
                 stmt.setString(3, auto.TypeProgramme.toString());
