@@ -1,10 +1,17 @@
 package edu.ezip.ing1.pds;
 
+import edu.ezip.ing1.pds.business.dto.Maison_Automatisations;
+import edu.ezip.ing1.pds.business.dto.Students;
+
 import javax.swing.*;
 import java.awt.*;
 import java.sql.*;
 import java.util.*;
 import java.io.*;
+
+
+
+
 
 public class Application {
     public JFrame frame;
@@ -18,15 +25,16 @@ public class Application {
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
     public ArrayList<String> capteurs_affichage = new ArrayList<>();
 
-    public Application()  {
+//    public Application()  {
 //        automatisations = loadautomatisation();
 //        programmes = loadprogramms();
 //        rooms = loadrooms();
 //        capteurs = loadcapteurs();
-        initialize();
-    }
+//        initialize();
+//    }
 
     public void initialize() {
+
         frame = new JFrame("Domotique maison");
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         frame.setSize(450, 350);
@@ -36,9 +44,11 @@ public class Application {
         mainPanel.setLayout(new CardLayout());
 
         // BD connexion
-        String url = "jdbc:mysql://172.31.250.179:3306/domotique";
-        String username = "sirius";
-        String password = "domotique";
+        String url = "jdbc:mysql://172.0.0.1:3306/domotique";
+        String username = "root";
+        String password = "Zozoleplubo@2005";
+
+
 
 
 // Main Menu panel
@@ -393,6 +403,11 @@ public class Application {
                 rs.close();
                 stmt.close();
                 System.out.println("Import réussi!");
+                //Test
+//                final Maison_AutomatisationService maison_AutomatisationService = new Maison_AutomatisationService()
+//                final StudentService studentService = new StudentService(NetworkConfig);
+//                studentService.insertStudents();
+//                Students students = studentService.selectStudents();
             } catch (SQLException ex) {
                 throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
             }
@@ -631,6 +646,7 @@ public class Application {
 
         //Boutons Sauvegarde
         btnSaveProgram.addActionListener(e -> {
+
             //Récupération des données entrées
             String nomProgramme = txtProgramName.getText().trim();
             Maison_programme.TypePiece pieceSelect = (Maison_programme.TypePiece) cbPiece.getSelectedItem();

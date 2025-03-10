@@ -1,4 +1,4 @@
-package edu.ezip.ing1.pds.business.server.automatisation;
+package edu.ezip.ing1.pds.business.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -14,9 +14,9 @@ import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
 
-public class InsertRequestAutomation {
+public class XMartCityAutomationService {
 
-    private final static String LoggingLabel = "B u s i n e s s - S e r v e r";
+    private final static String LoggingLabel = "B u s i n e s s - S e r v e r - Enzo";
     private final Logger logger = LoggerFactory.getLogger(LoggingLabel);
 
     private enum Queries {
@@ -30,15 +30,15 @@ public class InsertRequestAutomation {
         }
     }
 
-    public static InsertRequestAutomation inst = null;
-    public static final InsertRequestAutomation getInstance()  {
+    public static XMartCityAutomationService inst = null;
+    public static final XMartCityAutomationService getInstance()  {
         if(inst == null) {
-            inst = new InsertRequestAutomation();
+            inst = new XMartCityAutomationService();
         }
         return inst;
     }
 
-    private InsertRequestAutomation() {
+    private XMartCityAutomationService() {
 
     }
 
@@ -87,6 +87,13 @@ public class InsertRequestAutomation {
             maison_automatisation.setNomAutomatisation(res.getString(1));
             maison_automatisation.setTypeCapteur(res.getString(2));
             maison_automatisation.setTypeProgramme(res.getString(3));
+
+            System.out.println("Nom: " + maison_automatisation.getNomAutomatisation());
+            System.out.println("Capteur: " + maison_automatisation.getTypeCapteur());
+            System.out.println("Programme: " + maison_automatisation.getTypeProgramme());
+            System.out.println("---------------------------");
+
+
             maison_automatisations.add(maison_automatisation);
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maison_automatisations));

@@ -84,7 +84,7 @@ public class Maison_AutomatisationService {
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         final byte []  requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
         LoggingUtils.logDataMultiLine(logger, Level.TRACE, requestBytes);
-        final SelectAllStudentsClientRequest clientRequest = new SelectAllStudentsClientRequest(
+        final SelectAllAutomationClientRequest clientRequest = new SelectAllAutomationClientRequest(
                 networkConfig,
                 birthdate++, request, null, requestBytes);
         clientRequests.push(clientRequest);
@@ -96,7 +96,7 @@ public class Maison_AutomatisationService {
             return (Maison_Automatisations) joinedClientRequest.getResult();
         }
         else {
-            logger.error("No students found");
+            logger.error("No automations found");
             return null;
         }
     }

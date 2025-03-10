@@ -42,16 +42,17 @@ public class MainFrontEnd {
 //        asciiTable.addRule();
 
 
-        final Maison_AutomatisationService maison_automatisationService = new Maison_AutomatisationService(networkConfig);
-        //maison_automatisationService.insertStudents();
-        Maison_Automatisations maison_automatisations = maison_automatisationService.select_all_automation();
-        final AsciiTable asciiTable = new AsciiTable();
-        for (final Maison_Automatisation maison_automatisation  : maison_automatisations.getMaison_Automatisations()) {
-            asciiTable.addRule();
-            asciiTable.addRow(maison_automatisation.getNomAutomatisation(), maison_automatisation.getTypeCapteur(), maison_automatisation.getTypeProgramme());
-        }
-        asciiTable.addRule();
-
+//        final Maison_AutomatisationService maison_automatisationService = new Maison_AutomatisationService(networkConfig);
+//        //maison_automatisationService.insertStudents();
+//        Maison_Automatisations maison_automatisations = maison_automatisationService.select_all_automation();
+//        final AsciiTable asciiTable = new AsciiTable();
+//        for (final Maison_Automatisation maison_automatisation  : maison_automatisations.getMaison_Automatisations()) {
+//            asciiTable.addRule();
+//            asciiTable.addRow(maison_automatisation.getNomAutomatisation(), maison_automatisation.getTypeCapteur(), maison_automatisation.getTypeProgramme());
+//        }
+//        asciiTable.addRule();
+//
+//
 //        Maison_AutomatisationService.insertStudents();
 
 //        Maison_Automatisations maison_automatisations = Maison_AutomatisationService.Sel();
@@ -62,15 +63,13 @@ public class MainFrontEnd {
 //        }
 //        asciiTable.addRule();
 //        logger.debug("\n{}\n", asciiTable.render());
-//        Application mainApp = new Application();
-//        mainApp.initialize();
+
 
         //logger.debug("Load Network...");
         //App. aa = new app("");
-        //Application application = new Application();
+        Application application = new Application();
+        application.initialize();
 
-        //application.initialize();
-        //application.main("");
         //logger.debug("Load Network after");
     }
 }
