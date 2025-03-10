@@ -14,6 +14,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import javax.swing.*;
 import java.io.IOException;
 import java.util.ArrayDeque;
 import java.util.Deque;
@@ -23,7 +24,6 @@ public class MainFrontEnd {
     private final static String LoggingLabel = "FrontEnd";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String networkConfigFile = "network.yaml";
-    //private final static String networkConfigFile = "db-config.yaml";
     private static final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 
     public static void main(String[] args) throws IOException, InterruptedException {
@@ -62,6 +62,19 @@ public class MainFrontEnd {
             asciiTable.addRow(maison_automatisation.getNomAutomatisation(), maison_automatisation.getTypeCapteur(), maison_automatisation.getTypeProgramme());
         }
         asciiTable.addRule();*/
+
+
+//        final CapteurService capteurService = new CapteurService(networkConfig);
+//        capteurService.insertCapteurs();
+//        MaisonCapteurs capteurs = capteurService.selectCapteurs();
+//        final AsciiTable ascii2Table = new AsciiTable();
+//        for (final MaisonCapteur capteur : capteurs.getCapteurs()) {
+//            ascii2Table.addRule();
+//            ascii2Table.addRow(capteur.getTypecapteur(), capteur.getName(), capteur.getEtat());
+//        }
+//        ascii2Table.addRule();
+//        logger.debug("\n{}\n", ascii2Table.render());
+
 
 
         //logger.debug("Load Network...");
