@@ -11,6 +11,9 @@ import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.services.Maison_AutomatisationService;
 import edu.ezip.ing1.pds.services.StudentService;
 import edu.ezip.ing1.pds.services.Maison_AutomatisationService;
+//import edu.ezip.ing1.pds.services.CapteurService;
+import edu.ezip.ing1.pds.business.dto.MaisonCapteur;
+import edu.ezip.ing1.pds.business.dto.MaisonCapteurs;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +66,19 @@ public class MainFrontEnd {
 //        }
 //        asciiTable.addRule();
 //        logger.debug("\n{}\n", asciiTable.render());
+
+
+//        final CapteurService capteurService = new CapteurService(networkConfig);
+//        capteurService.insertCapteurs();
+//        MaisonCapteurs capteurs = capteurService.selectCapteurs();
+//        final AsciiTable ascii2Table = new AsciiTable();
+//        for (final MaisonCapteur capteur : capteurs.getCapteurs()) {
+//            ascii2Table.addRule();
+//            ascii2Table.addRow(capteur.getTypecapteur(), capteur.getName(), capteur.getEtat());
+//        }
+//        ascii2Table.addRule();
+//        logger.debug("\n{}\n", ascii2Table.render());
+
 
 
         //logger.debug("Load Network...");
