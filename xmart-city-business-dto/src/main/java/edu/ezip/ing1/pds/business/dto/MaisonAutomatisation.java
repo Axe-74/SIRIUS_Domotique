@@ -10,10 +10,10 @@ import java.sql.SQLException;
 
 @JsonRootName(value = "MaisonAutomatisation")
 public class MaisonAutomatisation {
-    private int Id;
     private  String NomAutomatisation;
     private  String TypeCapteur;
     private  String TypeProgramme;
+    private int Id;
 
     public MaisonAutomatisation() {
     }

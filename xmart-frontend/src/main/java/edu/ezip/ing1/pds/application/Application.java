@@ -2,17 +2,24 @@ package edu.ezip.ing1.pds.application;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
 import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation;
 import edu.ezip.ing1.pds.services.MaisonAutomatisationService;
+import edu.ezip.ing1.pds.business.dto.MaisonAutomatisations;
+import edu.ezip.ing1.pds.client.commons.ClientRequest;
+import edu.ezip.ing1.pds.client.commons.ConfigLoader;
+import edu.ezip.ing1.pds.client.commons.NetworkConfig;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 
 public class Application {
     public JFrame frame;
     public ArrayList<Maison_programme> programmes = new ArrayList<Maison_programme>();
-    public ArrayList<Maison_Automatisation> automatisations = new ArrayList<Maison_Automatisation>();
+    public ArrayList<MaisonAutomatisations> automatisations = new ArrayList<MaisonAutomatisations>();
     public ArrayList<Maison_Capteurs> capteurs = new ArrayList<>(); {}
     public ArrayList<Maison_Room> rooms = new ArrayList<>();
     public ArrayList<String> automatisationsNoms = new ArrayList<>();
@@ -20,6 +27,12 @@ public class Application {
     public ArrayList<String> programmesNoms = new ArrayList<>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
     public ArrayList<String> capteurs_affichage = new ArrayList<>();
+    private final static String LoggingLabel = "Application";
+    private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
+    private final static String networkConfigFile = "network.yaml";
+    private static final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
+
+
 
 //    public Application()  {
 //        automatisations = loadautomatisation();
@@ -44,7 +57,8 @@ public class Application {
         String username = "root";
         String password = "Zozoleplubo@2005";
 
-
+        final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
+        logger.debug("Load Network config file : {}", networkConfig.toString());
 
 
 // Main Menu panel
@@ -122,10 +136,16 @@ public class Application {
         JTextField txtAutomationName = new JTextField();
 
         JLabel lblSensor_activation = new JLabel("Activation du capteur: ");
-        JComboBox<Maison_Automatisation.TypeCapteurs> cbSensor_activation = new JComboBox<>(Maison_Automatisation.TypeCapteurs.values());
+        JComboBox<String> cbSensor_activation = new JComboBox<>(new String[]{
+                "Capteur 1", "Capteur 2", "Capteur 3", "Capteur 4", "Capteur 5"
+        });
+        //JComboBox<Maison_Automatisation.TypeCapteurs> cbSensor_activation = new JComboBox<>(Maison_Automatisation.TypeCapteurs.values());
 
         JLabel lblSensor_program = new JLabel("Execution du programme:");
-        JComboBox<Maison_Automatisation.TypeProgramme> cbSensor_programme = new JComboBox<>(Maison_Automatisation.TypeProgramme.values());
+        JComboBox<String> cbSensor_programme = new JComboBox<>(new String[]{
+                "Programme 1", "Programme 2", "Programme 3", "Programme 4", "Programme 5"
+        });
+        //JComboBox<Maison_Automatisation.TypeProgramme> cbSensor_programme = new JComboBox<>(Maison_Automatisation.TypeProgramme.values());
 
         JButton btnSaveAutomation = new JButton("Enregistrer");
         JButton btnBackToMenu_Automation = new JButton("Retour au menu");
@@ -427,40 +447,47 @@ public class Application {
 
         btnViewAutomations.addActionListener(e -> {
             //Connection connection = DriverManager.getConnection(url, username, password);
-            String query = "SELECT * FROM automatisations";
-            automatisations.clear();
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query);
-                 ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String nom_automatisation = rs.getString("nom_automatisation");
-                    String type_capteur = rs.getString("type_capteur");
-                    String type_programme_automatisation = rs.getString("type_programme");
-                    Maison_Automatisation.TypeCapteurs typeCapteurs = Maison_Automatisation.TypeCapteurs.valueOf(type_capteur);
-                    Maison_Automatisation.TypeProgramme typeProgrammeAutomatisation = Maison_Automatisation.TypeProgramme.valueOf(type_programme_automatisation);
-                    Maison_Automatisation auto = new Maison_Automatisation(nom_automatisation, typeCapteurs, typeProgrammeAutomatisation);
-                    automatisations.add(auto);
-                }
-                rs.close();
-                stmt.close();
+//            String query = "SELECT * FROM automatisations";
+//            automatisations.clear();
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query);
+//                 ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    String nom_automatisation = rs.getString("nom_automatisation");
+//                    String type_capteur = rs.getString("type_capteur");
+//                    String type_programme_automatisation = rs.getString("type_programme");
+//                    Maison_Automatisation.TypeCapteurs typeCapteurs = Maison_Automatisation.TypeCapteurs.valueOf(type_capteur);
+//                    Maison_Automatisation.TypeProgramme typeProgrammeAutomatisation = Maison_Automatisation.TypeProgramme.valueOf(type_programme_automatisation);
+//                    Maison_Automatisation auto = new Maison_Automatisation(nom_automatisation, typeCapteurs, typeProgrammeAutomatisation);
+//                    automatisations.add(auto);
+//                }
+//                rs.close();
+//                stmt.close();
+            try {MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
+                MaisonAutomatisations maisonAutomatisations = maisonAutomatisationService.select_all_automation();
+                automatisations.clear();
+                automatisations.add(maisonAutomatisations);
                 System.out.println("Import réussi!");
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la récupération des automatisations : " + ex.getMessage());
+                System.out.println(automatisations);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
 
-            StringBuilder sb_automation= new StringBuilder();
-            if (automatisations.isEmpty()) {
-                sb_automation.append("Aucune automatisation enregistré.\n");
-            } else {
-                sb_automation.append("Automatisations enregistrés :\n");
-                for (Maison_Automatisation auto : automatisations) {
-                    sb_automation.append("Nom : ").append(auto.NomAutomatisation).append("\n")
-                            .append("Capteur écouté ").append(auto.TypeCapteurs).append("\n")
-                            .append("Programme executé : ").append(auto.TypeProgramme).append("\n\n");
-                }
-            }
-            txtPrograms.setText(sb_automation.toString());
-            cardLayout.show(mainPanel, "ViewProgramsPanel");
+//            StringBuilder sb_automation= new StringBuilder();
+//            if (automatisations.isEmpty()) {
+//                sb_automation.append("Aucune automatisation enregistré.\n");
+//            } else {
+//                sb_automation.append("Automatisations enregistrés :\n");
+//                for (MaisonAutomatisations auto : automatisations) {
+//                    sb_automation.append("Nom : ").append(auto.NomAutomatisation).append("\n")
+//                            .append("Capteur écouté ").append(auto.TypeCapteurs).append("\n")
+//                            .append("Programme executé : ").append(auto.TypeProgramme).append("\n\n");
+//                }
+//            }
+//            txtPrograms.setText(sb_automation.toString());
+//            cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
 
         btnVoirCapteurs.addActionListener(e -> {
@@ -705,54 +732,67 @@ public class Application {
 
         btnSaveAutomation.addActionListener(e -> {
             // Récupération des données
-            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
+
             String nomAutomation = txtAutomationName.getText().trim();
-            Maison_Automatisation.TypeCapteurs capteurSelect = (Maison_Automatisation.TypeCapteurs) cbSensor_activation.getSelectedItem();
-            Maison_Automatisation.TypeProgramme programmeSelect = (Maison_Automatisation.TypeProgramme) cbSensor_programme.getSelectedItem();
-            // Validation des données
-            if (nomAutomation.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom d'automatisation.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return;
+            String CapteurSelection = (String) cbSensor_activation.getSelectedItem();
+            String ProgrammeSelection = (String) cbSensor_programme.getSelectedItem();
+            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation(0,nomAutomation,CapteurSelection,ProgrammeSelection);
+            try {
+                MaisonAutomatisationService maisonAutomatisationService =new MaisonAutomatisationService(networkConfig);
+                maisonAutomatisationService.insertAutomation(maisonAutomatisation,"INSERT_AUTOMATION");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-            String query1 = "SELECT nom_automatisation FROM automatisations;";
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query1);
-                 ResultSet  rs = stmt.executeQuery()){
-                while (rs.next()){
-                    String nom_automatisation_comparaison = rs.getString("nom_automatisation");;
-                    automatisationsNoms.add(nom_automatisation_comparaison);
-                }
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
-            }
-            for (String aN : automatisationsNoms){
-                if (aN.equals(nomAutomation)) {
-                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
+//            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
+//            String nomAutomation = txtAutomationName.getText().trim();
+//            MaisonAutomatisation. = (Maison_Automatisation.TypeCapteurs) cbSensor_activation.getSelectedItem();
+//            Maison_Automatisation.TypeProgramme programmeSelect = (Maison_Automatisation.TypeProgramme) cbSensor_programme.getSelectedItem();
+//            // Validation des données
+//            if (nomAutomation.isEmpty()) {
+//                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom d'automatisation.", "Erreur", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//            String query1 = "SELECT nom_automatisation FROM automatisations;";
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query1);
+//                 ResultSet  rs = stmt.executeQuery()){
+//                while (rs.next()){
+//                    String nom_automatisation_comparaison = rs.getString("nom_automatisation");;
+//                    automatisationsNoms.add(nom_automatisation_comparaison);
+//                }
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
+//            }
+//            for (String aN : automatisationsNoms){
+//                if (aN.equals(nomAutomation)) {
+//                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+//                    return;
+//                }
+//            }
 
 
             // Création et sauvegarde de l'automatisation
-            Maison_Automatisation nouvelleAutomatisation = new Maison_Automatisation(nomAutomation, capteurSelect, programmeSelect);
-            automatisations.add(nouvelleAutomatisation);
-            System.out.println(automatisations);
-            //Connection connection = DriverManager.getConnection(url, username, password);
-            String query = "INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)";
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query)){
-                Maison_Automatisation auto = automatisations.get(automatisations.size() - 1);
-                stmt.setString(1, auto.NomAutomatisation);
-                stmt.setString(2, auto.TypeCapteurs.toString());
-                stmt.setString(3, auto.TypeProgramme.toString());
-                stmt.executeUpdate();
-                stmt.close();
-                JOptionPane.showMessageDialog(frame, "Automatisation enregistré avec succès!");
-                cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
-                System.out.println("import reussi");
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
-            }
+//            Maison_Automatisation nouvelleAutomatisation = new Maison_Automatisation(nomAutomation, capteurSelect, programmeSelect);
+//            automatisations.add(nouvelleAutomatisation);
+//            System.out.println(automatisations);
+//            //Connection connection = DriverManager.getConnection(url, username, password);
+//            String query = "INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)";
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query)){
+//                Maison_Automatisation auto = automatisations.get(automatisations.size() - 1);
+//                stmt.setString(1, auto.NomAutomatisation);
+//                stmt.setString(2, auto.TypeCapteurs.toString());
+//                stmt.setString(3, auto.TypeProgramme.toString());
+//                stmt.executeUpdate();
+//                stmt.close();
+//                JOptionPane.showMessageDialog(frame, "Automatisation enregistré avec succès!");
+//                cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
+//                System.out.println("import reussi");
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
+//            }
         });
 
         btnSaveCapteur.addActionListener(e -> {

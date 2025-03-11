@@ -28,8 +28,8 @@ public class MainFrontEnd {
     private static final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 
     public static void main(String[] args) throws IOException, InterruptedException {
-        final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
-        logger.debug("Load Network config file : {}", networkConfig.toString());
+//        final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
+//        logger.debug("Load Network config file : {}", networkConfig.toString());
 
         /*final StudentService studentService = new StudentService(networkConfig);
         studentService.insertStudents();
@@ -41,15 +41,15 @@ public class MainFrontEnd {
         }
         asciiTableStudent.addRule();*/
 
-        final MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
-        //studentService.insertStudents();
-        MaisonAutomatisations maisonAutomatisations = maisonAutomatisationService.select_all_automation();
-        final AsciiTable asciiTable = new AsciiTable();
-        for (final MaisonAutomatisation maisonAutomatisation : maisonAutomatisations.getMaisonAutomatisations()) {
-            asciiTable.addRule();
-            asciiTable.addRow(maisonAutomatisation.getId(), maisonAutomatisation.getNomAutomatisation(), maisonAutomatisation.getTypeCapteur(), maisonAutomatisation.getTypeProgramme());
-        }
-        asciiTable.addRule();
+//        final MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
+//        //studentService.insertStudents();
+//        MaisonAutomatisations maisonAutomatisations = maisonAutomatisationService.select_all_automation();
+//        final AsciiTable asciiTable = new AsciiTable();
+//        for (final MaisonAutomatisation maisonAutomatisation : maisonAutomatisations.getMaisonAutomatisations()) {
+//            asciiTable.addRule();
+//            asciiTable.addRow(maisonAutomatisation.getId(), maisonAutomatisation.getNomAutomatisation(), maisonAutomatisation.getTypeCapteur(), maisonAutomatisation.getTypeProgramme());
+//        }
+//        asciiTable.addRule();
 
 
         /*final Maison_AutomatisationService maison_automatisationService = new Maison_AutomatisationService(networkConfig);
