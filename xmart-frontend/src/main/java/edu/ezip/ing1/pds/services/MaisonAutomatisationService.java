@@ -3,12 +3,12 @@ package edu.ezip.ing1.pds.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.ezip.commons.LoggingUtils;
+import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation;
 import edu.ezip.ing1.pds.business.dto.MaisonAutomatisations;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
-import edu.ezip.ing1.pds.client.commons.ConfigLoader;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
-import edu.ezip.ing1.pds.requests.InsertStudentsClientRequest;
+import edu.ezip.ing1.pds.requests.InsertAutomationClientRequest;
 import edu.ezip.ing1.pds.requests.SelectAllAutomationClientRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -24,49 +24,50 @@ public class MaisonAutomatisationService {
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String studentsToBeInserted = "students-to-be-inserted.yaml";
 
-    final String insertRequestOrder = "INSERT_STUDENT";
+    final String insertRequestOrder = "INSERT_AUTOMATION";
     final String selectRequestOrder = "SELECT_ALL_AUTOMATION";
 
 
     private final NetworkConfig networkConfig;
 
-    public MaisonAutomatisationService(NetworkConfig networkConfig) {
+    public MaisonAutomatisationService(NetworkConfig networkConfig) throws InterruptedException {
         this.networkConfig = networkConfig;
     }
 
-    /*public void insertStudents() throws InterruptedException, IOException {
+    public void insertAutomation(MaisonAutomatisation maisonAutomatisation,String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
-        final Students guys = ConfigLoader.loadConfig(Students.class, studentsToBeInserted);
+
 
         int birthdate = 0;
-        for(final Student guy : guys.getStudents()) {
-            final ObjectMapper objectMapper = new ObjectMapper();
-            final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(guy);
-            logger.trace("Student with its JSON face : {}", jsonifiedGuy);
-            final String requestId = UUID.randomUUID().toString();
-            final Request request = new Request();
-            request.setRequestId(requestId);
-            request.setRequestOrder(insertRequestOrder);
-            request.setRequestContent(jsonifiedGuy);
-            objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-            final byte []  requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
 
-            final InsertStudentsClientRequest clientRequest = new InsertStudentsClientRequest(
-                    networkConfig,
-                    birthdate++, request, guy, requestBytes);
-            clientRequests.push(clientRequest);
-        }
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(maisonAutomatisation);
+        logger.trace("Automation with its JSON face : {}", jsonifiedGuy);
+        final String requestId = UUID.randomUUID().toString();
+        final Request request = new Request();
+        request.setRequestId(requestId);
+        request.setRequestOrder(insertRequestOrder);
+        request.setRequestContent(jsonifiedGuy);
+        objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+        final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
+
+        final InsertAutomationClientRequest clientRequest = new InsertAutomationClientRequest(
+                networkConfig,
+                birthdate++, request, maisonAutomatisation, requestBytes);
+        clientRequests.push(clientRequest);
+
 
         while (!clientRequests.isEmpty()) {
-            final ClientRequest clientRequest = clientRequests.pop();
-            clientRequest.join();
-            final Student guy = (Student)clientRequest.getInfo();
+            final ClientRequest clientRequest2 = clientRequests.pop();
+            clientRequest2.join();
+            final MaisonAutomatisation maisonAutomatisation2 = (MaisonAutomatisation) clientRequest2.getInfo();
             logger.debug("Thread {} complete : {} {} {} --> {}",
-                    clientRequest.getThreadName(),
-                    guy.getFirstname(), guy.getName(), guy.getGroup(),
-                    clientRequest.getResult());
+                    clientRequest2.getThreadName(),
+                    maisonAutomatisation2.getNomAutomatisation(), maisonAutomatisation2.getTypeCapteur(), maisonAutomatisation2.getTypeProgramme(),
+                    clientRequest2.getResult());
         }
-    }*/
+    }
+
 
     public MaisonAutomatisations select_all_automation() throws InterruptedException, IOException {
         int birthdate = 0;

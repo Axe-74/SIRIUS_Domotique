@@ -105,17 +105,14 @@ public class XMartCityService {
 
     private Response InsertAutomation(final Request request, final Connection connection) throws SQLException, IOException {
         final ObjectMapper objectMapper = new ObjectMapper();
-        final MaisonAutomatisation student = objectMapper.readValue(request.getRequestBody(), MaisonAutomatisation.class);
+        final MaisonAutomatisation maisonAutomatisation = objectMapper.readValue(request.getRequestBody(), MaisonAutomatisation.class);
         final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_AUTOMATION.query);
-        stmt.setString(1, student.getNomAutomatisation());
-        stmt.setString(2, student.getTypeCapteur());
-        stmt.setString(3, student.getTypeProgramme());
+        stmt.setString(1, maisonAutomatisation.getNomAutomatisation());
+        stmt.setString(2, maisonAutomatisation.getTypeCapteur());
+        stmt.setString(3, maisonAutomatisation.getTypeProgramme());
         stmt.executeUpdate();
-        final Statement stmt2 = connection.createStatement();
-        final ResultSet res = stmt2.executeQuery("SELECT LAST_INSERT_ID()");
-        res.next();
-        //Maison_Automatisation.setId(res.getInt(1));
-        return new Response(request.getRequestId(), objectMapper.writeValueAsString(student));
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation));
     }
 
     private Response SelectAllAutomation(final Request request, final Connection connection) throws SQLException, JsonProcessingException {

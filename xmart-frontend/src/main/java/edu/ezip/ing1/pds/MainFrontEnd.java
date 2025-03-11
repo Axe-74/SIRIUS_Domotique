@@ -12,6 +12,7 @@ import edu.ezip.ing1.pds.services.MaisonAutomatisationService;
 import edu.ezip.ing1.pds.services.StudentService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import edu.ezip.ing1.pds.application.Application;
 
 
 import javax.swing.*;
@@ -79,8 +80,8 @@ public class MainFrontEnd {
 
         //logger.debug("Load Network...");
         //App. aa = new app("");
-        //Application application = new Application();
-        //application.initialize();
+        Application application = new Application();
+        application.initialize();
 
         //logger.debug("Load Network after");
     }
