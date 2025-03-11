@@ -2,10 +2,8 @@ package edu.ezip.ing1.pds.business.server;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation;
-import edu.ezip.ing1.pds.business.dto.MaisonAutomatisations;
-import edu.ezip.ing1.pds.business.dto.Student;
-import edu.ezip.ing1.pds.business.dto.Students;
+import edu.ezip.ing1.pds.business.dto.*;
+import edu.ezip.ing1.pds.business.server.CapteursService.CapteursRequestSelect;
 import edu.ezip.ing1.pds.commons.Request;
 import edu.ezip.ing1.pds.commons.Response;
 import org.slf4j.Logger;
@@ -27,7 +25,9 @@ public class XMartCityService {
         SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname, t.id FROM students t"),
         INSERT_STUDENT("INSERT into students (name, firstname, groupname) values (?, ?, ?)"),
         SELECT_ALL_AUTOMATION("SELECT * FROM automatisations"),
-        INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)");
+        INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)"),;
+        //SELECT_ALL_CAPTEURS("SELECT nom_capteur FROM capteurs;"),
+        //INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)");
         private final String query;
 
         private Queries(final String query) {
@@ -65,6 +65,10 @@ public class XMartCityService {
                 break;
             case INSERT_AUTOMATION:
                 response = InsertAutomation(request, connection);
+                break;
+//            case SELECT_ALL_CAPTEURS:
+//                response = SelectAllCapteurs(request, connection);
+//                break;
             default:
                 break;
         }
@@ -137,4 +141,21 @@ public class XMartCityService {
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
     }
+
+//    private Response SelectAllCapteurs(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+//        final ObjectMapper objectMapper = new ObjectMapper();
+//        final Statement stmt = connection.createStatement();
+//        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_CAPTEURS.query);
+//        MaisonCapteurs capteurs = new MaisonCapteurs();
+//        while (res.next()) {
+//            MaisonCapteur capteur = new MaisonCapteur();
+//            capteur.setIdCapteur(res.getInt(1));
+//            capteur.setName(res.getString(2));
+//            capteur.setTypecapteur(res.getString(3));
+//            capteur.setEtat(res.getString(4));
+//            capteurs.add(capteur);
+//        }
+//        return new Response(request.getRequestId(), objectMapper.writeValueAsString(capteurs));
+//    }
+
 }
