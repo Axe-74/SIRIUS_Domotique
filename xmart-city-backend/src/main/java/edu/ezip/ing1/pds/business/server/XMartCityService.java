@@ -3,7 +3,6 @@ package edu.ezip.ing1.pds.business.server;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ezip.ing1.pds.business.dto.*;
-import edu.ezip.ing1.pds.business.server.CapteursService.CapteursRequestSelect;
 import edu.ezip.ing1.pds.commons.Request;
 import edu.ezip.ing1.pds.commons.Response;
 import org.slf4j.Logger;
