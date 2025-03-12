@@ -26,6 +26,8 @@ public class XMartCityService {
         INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)"),
         //SELECT_ALL_CAPTEURS("SELECT nom_capteur FROM capteurs;"),
         //INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)");
+//        SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
+//        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
         SELECT_NAME_AUTOMATION("SELECT SELECT nom_automatisation FROM automatisations");
 
         private final String query;
@@ -68,6 +70,9 @@ public class XMartCityService {
                 break;
 //            case SELECT_ALL_CAPTEURS:
 //                response = SelectAllCapteurs(request, connection);
+//                break;
+//            case SELECT_ALL_ROOMS:
+//                response = SelectAllRooms(request, connection);
 //                break;
             case SELECT_NAME_AUTOMATION:
                 response = SelectNameAutomation(request, connection);
@@ -159,6 +164,24 @@ public class XMartCityService {
 //        }
 //        return new Response(request.getRequestId(), objectMapper.writeValueAsString(capteurs));
 //    }
+
+//    private Response SelectAllRooms(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+//        final ObjectMapper objectMapper = new ObjectMapper();
+//        final Statement stmt = connection.createStatement();
+//        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_ROOMS.query);
+//        Rooms rooms = new Rooms();
+//        while (res.next()) {
+//            Room room = new Room();
+//            room.setId(Integer.parseInt(res.getString(1)));
+//            room.setName(res.getString(2));
+//            room.setType(res.getString(3));
+//            room.setSurface(Integer.parseInt(res.getString(4)));
+//            rooms.add(room);
+//        }
+//        return new Response(request.getRequestId(), objectMapper.writeValueAsString(rooms));
+//    }
+
+
 private Response SelectNameAutomation(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
     final ObjectMapper objectMapper = new ObjectMapper();
     final Statement stmt = connection.createStatement();
