@@ -18,15 +18,16 @@ public class XMartCityService {
 
     private final static String LoggingLabel = "B u s i n e s s - S e r v e r - XMartCityService";
     private final Logger logger = LoggerFactory.getLogger(LoggingLabel);
-    //SELECT_ALL_AUTOMATION("SELECT a.id, a.nom_automatisation, a.type_capteur, a.type_programme FROM automatisations a"),
     private enum Queries {
         //SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname FROM students t"),
         SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname, t.id FROM students t"),
         INSERT_STUDENT("INSERT into students (name, firstname, groupname) values (?, ?, ?)"),
         SELECT_ALL_AUTOMATION("SELECT * FROM automatisations"),
-        INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)"),;
+        INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)"),
         //SELECT_ALL_CAPTEURS("SELECT nom_capteur FROM capteurs;"),
         //INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)");
+        SELECT_NAME_AUTOMATION("SELECT SELECT nom_automatisation FROM automatisations");
+
         private final String query;
 
         private Queries(final String query) {
@@ -68,6 +69,8 @@ public class XMartCityService {
 //            case SELECT_ALL_CAPTEURS:
 //                response = SelectAllCapteurs(request, connection);
 //                break;
+            case SELECT_NAME_AUTOMATION:
+                response = SelectNameAutomation(request, connection);
             default:
                 break;
         }
@@ -156,5 +159,16 @@ public class XMartCityService {
 //        }
 //        return new Response(request.getRequestId(), objectMapper.writeValueAsString(capteurs));
 //    }
-
+private Response SelectNameAutomation(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+    final ObjectMapper objectMapper = new ObjectMapper();
+    final Statement stmt = connection.createStatement();
+    final ResultSet res = stmt.executeQuery(Queries.SELECT_NAME_AUTOMATION.query);
+    MaisonAutomatisations maisonAutomatisations = new MaisonAutomatisations();
+    while (res.next()) {
+        MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
+        maisonAutomatisation.setNomAutomatisation(res.getString(2));
+        maisonAutomatisations.add(maisonAutomatisation);
+    }
+    return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
+    }
 }

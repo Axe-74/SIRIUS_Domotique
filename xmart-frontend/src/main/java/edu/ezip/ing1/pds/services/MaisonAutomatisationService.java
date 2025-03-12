@@ -26,6 +26,7 @@ public class MaisonAutomatisationService {
 
     final String insertRequestOrder = "INSERT_AUTOMATION";
     final String selectRequestOrder = "SELECT_ALL_AUTOMATION";
+    final String selectNameAutomation = "SELECT_ALL_AUTOMATION";
 
 
     private final NetworkConfig networkConfig;
@@ -34,7 +35,7 @@ public class MaisonAutomatisationService {
         this.networkConfig = networkConfig;
     }
 
-    public void insertAutomation(MaisonAutomatisation maisonAutomatisation,String requestOrder) throws InterruptedException, IOException {
+    public void insertAutomation(MaisonAutomatisation maisonAutomatisation, String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 
 
@@ -78,23 +79,49 @@ public class MaisonAutomatisationService {
         request.setRequestId(requestId);
         request.setRequestOrder(selectRequestOrder);
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-        final byte []  requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
+        final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
         LoggingUtils.logDataMultiLine(logger, Level.TRACE, requestBytes);
         final SelectAllAutomationClientRequest clientRequest = new SelectAllAutomationClientRequest(
                 networkConfig,
                 birthdate++, request, null, requestBytes);
         clientRequests.push(clientRequest);
 
-        if(!clientRequests.isEmpty()) {
+        if (!clientRequests.isEmpty()) {
             final ClientRequest joinedClientRequest = clientRequests.pop();
             joinedClientRequest.join();
             logger.debug("Thread {} complete.", joinedClientRequest.getThreadName());
             return (MaisonAutomatisations) joinedClientRequest.getResult();
-        }
-        else {
+        } else {
             logger.error("No automations found");
             return null;
         }
     }
 
+
+    public MaisonAutomatisations select_name_automation() throws InterruptedException, IOException {
+        int birthdate = 0;
+        final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String requestId = UUID.randomUUID().toString();
+        final Request request = new Request();
+        request.setRequestId(requestId);
+        request.setRequestOrder(selectNameAutomation);
+        objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+        final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
+        LoggingUtils.logDataMultiLine(logger, Level.TRACE, requestBytes);
+        final SelectAllAutomationClientRequest clientRequest = new SelectAllAutomationClientRequest(
+                networkConfig,
+                birthdate++, request, null, requestBytes);
+        clientRequests.push(clientRequest);
+
+        if (!clientRequests.isEmpty()) {
+            final ClientRequest joinedClientRequest = clientRequests.pop();
+            joinedClientRequest.join();
+            logger.debug("Thread {} complete.", joinedClientRequest.getThreadName());
+            return (MaisonAutomatisations) joinedClientRequest.getResult();
+        } else {
+            logger.error("No automations found");
+            return null;
+        }
+    }
 }

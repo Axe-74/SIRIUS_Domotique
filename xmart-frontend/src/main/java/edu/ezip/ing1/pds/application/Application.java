@@ -465,8 +465,10 @@ public class Application {
 //                stmt.close();
             try {MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
                 MaisonAutomatisations maisonAutomatisations = maisonAutomatisationService.select_all_automation();
+                //MaisonAutomatisations maisonAutomatisations1 = maisonAutomatisationService.select_name_automation();
                 automatisations.clear();
                 automatisations.add(maisonAutomatisations);
+                //automatisations.add(maisonAutomatisations1);
                 System.out.println("Import réussi!");
                 System.out.println(automatisations);
             } catch (InterruptedException ex) {
@@ -475,19 +477,20 @@ public class Application {
                 throw new RuntimeException(ex);
             }
 
-//            StringBuilder sb_automation= new StringBuilder();
-//            if (automatisations.isEmpty()) {
-//                sb_automation.append("Aucune automatisation enregistré.\n");
-//            } else {
-//                sb_automation.append("Automatisations enregistrés :\n");
-//                for (MaisonAutomatisations auto : automatisations) {
-//                    sb_automation.append("Nom : ").append(auto.NomAutomatisation).append("\n")
-//                            .append("Capteur écouté ").append(auto.TypeCapteurs).append("\n")
-//                            .append("Programme executé : ").append(auto.TypeProgramme).append("\n\n");
-//                }
-//            }
-//            txtPrograms.setText(sb_automation.toString());
-//            cardLayout.show(mainPanel, "ViewProgramsPanel");
+            StringBuilder sb_automation= new StringBuilder();
+            if (automatisations.isEmpty()) {
+                sb_automation.append("Aucune automatisation enregistré.\n");
+            } else {
+                sb_automation.append("Automatisations enregistrés :\n");
+                for (MaisonAutomatisations Maisonauto : automatisations)
+                    for (MaisonAutomatisation auto : Maisonauto.getMaisonAutomatisations()) {
+                        sb_automation.append("Nom : ").append(auto.getNomAutomatisation()).append("\n")
+                                .append("Capteur écouté ").append(auto.getTypeCapteur()).append("\n")
+                                .append("Programme executé : ").append(auto.getTypeProgramme()).append("\n\n");
+                    }
+            }
+            txtPrograms.setText(sb_automation.toString());
+            cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
 
         btnVoirCapteurs.addActionListener(e -> {
@@ -731,29 +734,15 @@ public class Application {
         });
 
         btnSaveAutomation.addActionListener(e -> {
-            // Récupération des données
-
+            // Validation des données
             String nomAutomation = txtAutomationName.getText().trim();
             String CapteurSelection = (String) cbSensor_activation.getSelectedItem();
             String ProgrammeSelection = (String) cbSensor_programme.getSelectedItem();
-            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation(0,nomAutomation,CapteurSelection,ProgrammeSelection);
-            try {
-                MaisonAutomatisationService maisonAutomatisationService =new MaisonAutomatisationService(networkConfig);
-                maisonAutomatisationService.insertAutomation(maisonAutomatisation,"INSERT_AUTOMATION");
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
+            if (nomAutomation.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom d'automatisation.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
             }
-//            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
-//            String nomAutomation = txtAutomationName.getText().trim();
-//            MaisonAutomatisation. = (Maison_Automatisation.TypeCapteurs) cbSensor_activation.getSelectedItem();
-//            Maison_Automatisation.TypeProgramme programmeSelect = (Maison_Automatisation.TypeProgramme) cbSensor_programme.getSelectedItem();
-//            // Validation des données
-//            if (nomAutomation.isEmpty()) {
-//                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom d'automatisation.", "Erreur", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
+
 //            String query1 = "SELECT nom_automatisation FROM automatisations;";
 //            try (Connection conn = DriverManager.getConnection(url, username, password);
 //                 PreparedStatement stmt = conn.prepareStatement(query1);
@@ -771,6 +760,19 @@ public class Application {
 //                    return;
 //                }
 //            }
+
+            // Insertion des données
+            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation(0,nomAutomation,CapteurSelection,ProgrammeSelection);
+            try {
+                MaisonAutomatisationService maisonAutomatisationService =new MaisonAutomatisationService(networkConfig);
+                maisonAutomatisationService.insertAutomation(maisonAutomatisation,"INSERT_AUTOMATION");
+                JOptionPane.showMessageDialog(frame, "Automatisation enregistré avec succès!");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
 
 
             // Création et sauvegarde de l'automatisation
