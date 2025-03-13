@@ -77,6 +77,9 @@ public class XMartCityService {
 //            case SELECT_ALL_ROOMS:
 //                response = SelectAllRooms(request, connection);
 //                break;
+//            case INSERT_ROOM:
+//                response = InsertRoom(request, connection);
+//                break;
             case SELECT_NAME_AUTOMATION:
                 response = SelectNameAutomation(request, connection);
             case SELECT_ALL_PROGRAM:
@@ -170,6 +173,21 @@ public class XMartCityService {
 //            capteurs.add(capteur);
 //        }
 //        return new Response(request.getRequestId(), objectMapper.writeValueAsString(capteurs));
+//    }
+
+//    private Response InsertRoom(final Request request, final Connection connection) throws SQLException, IOException {
+//        final ObjectMapper objectMapper = new ObjectMapper();
+//        final Room room = objectMapper.readValue(request.getRequestBody(), Room.class);
+//        final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_ROOM.query);
+//        stmt.setString(1, room.getName());
+//        stmt.setString(2, room.getType());
+//        stmt.setInt(3, room.getSurface());
+//        stmt.executeUpdate();
+//        final Statement stmt2 = connection.createStatement();
+//        final ResultSet res = stmt2.executeQuery("SELECT LAST_INSERT_ID()");
+//        res.next();
+//        room.setId(res.getInt(1));
+//        return new Response(request.getRequestId(), objectMapper.writeValueAsString(room));
 //    }
 
 //    private Response SelectAllRooms(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
