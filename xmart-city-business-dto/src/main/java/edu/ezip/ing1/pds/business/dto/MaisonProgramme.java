@@ -8,8 +8,8 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@JsonRootName(value = "Maison_Programme")
-public class Maison_Programme {
+@JsonRootName(value = "MaisonProgramme")
+public class MaisonProgramme {
     private  String NomProgramme;
     private  String TypePiece;
     private  String TypeChauffage;
@@ -21,22 +21,25 @@ public class Maison_Programme {
 
 
 
-    public Maison_Programme() {
+    public MaisonProgramme() {
     }
-    public final Maison_Programme  build(final ResultSet resultSet)
+    public final MaisonProgramme build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "NomProgramme","TypePiece","TypeChauffage","JourSemaine");
+        setFieldsFromResulset(resultSet, "nom_programme", "type_piece", "type_chauffage", " jour_semaine","temperature_piece", "heure_debut", "heure_fin");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
         return buildPreparedStatement(preparedStatement, NomProgramme,TypePiece,TypeChauffage,JourSemaine);
     }
-    public Maison_Programme(String NomProgramme, String TypePiece, String TypeChauffage, String JourSemaine) {
+    public MaisonProgramme(String NomProgramme, String TypePiece, String TypeChauffage, String JourSemaine,int Temperature, int HeureDebut, int HeureFin) {
         this.NomProgramme = NomProgramme ;
         this.TypePiece = TypePiece;
         this.TypeChauffage = TypeChauffage;
         this.JourSemaine =JourSemaine;
+        this.Temperature = Temperature;
+        this.HeureDebut = HeureDebut;
+        this.HeureFin = HeureFin;
     }
 
     public String getNomProgramme() {
@@ -53,11 +56,11 @@ public class Maison_Programme {
 
     public String getJourSemaine(){return JourSemaine;}
 
-    private int getHeureDebut(){return HeureDebut;}
+    public int getHeureDebut(){return HeureDebut;}
 
-    private int getHeureFin(){return HeureFin;}
+    public int getHeureFin(){return HeureFin;}
 
-    private int getTemperature(){return Temperature;}
+    public int getTemperature(){return Temperature;}
 
     public int getId() {
         return id;
@@ -122,7 +125,7 @@ public class Maison_Programme {
 
     @Override
     public String toString() {
-        return "Maison_Programme{" +
+        return "MaisonProgramme{" +
                 "NomProgramme='" + NomProgramme + '\'' +
                 ", TypePiece='" + TypePiece + '\'' +
                 ", TypeChauffage='" + TypeChauffage + '\'' +

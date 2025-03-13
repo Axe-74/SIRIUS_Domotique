@@ -18,6 +18,7 @@ public class XMartCityService {
 
     private final static String LoggingLabel = "B u s i n e s s - S e r v e r - XMartCityService";
     private final Logger logger = LoggerFactory.getLogger(LoggingLabel);
+
     private enum Queries {
         //SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname FROM students t"),
         SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname, t.id FROM students t"),
@@ -28,7 +29,9 @@ public class XMartCityService {
         //INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)");
 //        SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
 //        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
-        SELECT_NAME_AUTOMATION("SELECT SELECT nom_automatisation FROM automatisations");
+        SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
+        SELECT_ALL_PROGRAM("SELECT * FROM programmes"),
+        INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)");
 
         private final String query;
 
@@ -76,6 +79,10 @@ public class XMartCityService {
 //                break;
             case SELECT_NAME_AUTOMATION:
                 response = SelectNameAutomation(request, connection);
+            case SELECT_ALL_PROGRAM:
+                response = SelectAllProgram(request, connection);
+            case INSERT_PROGRAM:
+                response = InsertProgram(request, connection);
             default:
                 break;
         }
@@ -182,16 +189,52 @@ public class XMartCityService {
 //    }
 
 
-private Response SelectNameAutomation(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
-    final ObjectMapper objectMapper = new ObjectMapper();
-    final Statement stmt = connection.createStatement();
-    final ResultSet res = stmt.executeQuery(Queries.SELECT_NAME_AUTOMATION.query);
-    MaisonAutomatisations maisonAutomatisations = new MaisonAutomatisations();
-    while (res.next()) {
-        MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
-        maisonAutomatisation.setNomAutomatisation(res.getString(2));
-        maisonAutomatisations.add(maisonAutomatisation);
+    private Response SelectNameAutomation(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_NAME_AUTOMATION.query);
+        MaisonAutomatisations maisonAutomatisations = new MaisonAutomatisations();
+        while (res.next()) {
+            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
+            maisonAutomatisation.setNomAutomatisation(res.getString(2));
+            maisonAutomatisations.add(maisonAutomatisation);
+        }
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
     }
-    return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
+
+
+    private Response SelectAllProgram(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_PROGRAM.query);
+        MaisonProgrammes maisonProgrammes = new MaisonProgrammes();
+        while (res.next()) {
+            MaisonProgramme maisonProgramme = new MaisonProgramme();
+            maisonProgramme.setNomProgramme(res.getString(1));
+            maisonProgramme.setTypePiece(res.getString(2));
+            maisonProgramme.setTypeChauffage(res.getString(3));
+            maisonProgramme.setJourSemaine(res.getString(4));
+            maisonProgramme.setTemperature(Integer.parseInt(res.getString(5)));
+            maisonProgramme.setHeureDebut(Integer.parseInt(res.getString(6)));
+            maisonProgramme.setHeureFin(Integer.parseInt(res.getString(7)));
+            maisonProgrammes.add(maisonProgramme);
+        }
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
+    }
+
+    private Response InsertProgram(final Request request, final Connection connection) throws SQLException, IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final MaisonProgramme maisonProgramme = objectMapper.readValue(request.getRequestBody(), MaisonProgramme.class);
+        final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_PROGRAM.query);
+        stmt.setString(1, maisonProgramme.getNomProgramme());
+        stmt.setString(2, maisonProgramme.getTypePiece());
+        stmt.setString(3, maisonProgramme.getTypeChauffage());
+        stmt.setString(4, maisonProgramme.getJourSemaine());
+        stmt.setInt(5,maisonProgramme.getTemperature());
+        stmt.setInt(6,maisonProgramme.getHeureDebut());
+        stmt.setInt(7,maisonProgramme.getHeureFin());
+        stmt.executeUpdate();
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgramme));
     }
 }

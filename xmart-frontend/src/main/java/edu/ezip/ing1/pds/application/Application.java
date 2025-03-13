@@ -7,7 +7,10 @@ import java.sql.*;
 import java.util.*;
 
 import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation;
+import edu.ezip.ing1.pds.business.dto.MaisonProgramme;
+import edu.ezip.ing1.pds.business.dto.MaisonProgrammes;
 import edu.ezip.ing1.pds.services.MaisonAutomatisationService;
+import edu.ezip.ing1.pds.services.MaisonProgrammeService;
 import edu.ezip.ing1.pds.business.dto.MaisonAutomatisations;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.ConfigLoader;
@@ -18,7 +21,7 @@ import org.slf4j.LoggerFactory;
 
 public class Application {
     public JFrame frame;
-    public ArrayList<Maison_programme> programmes = new ArrayList<Maison_programme>();
+    public ArrayList<MaisonProgrammes> programmes = new ArrayList<MaisonProgrammes>();
     public ArrayList<MaisonAutomatisations> automatisations = new ArrayList<MaisonAutomatisations>();
     public ArrayList<Maison_Capteurs> capteurs = new ArrayList<>(); {}
     public ArrayList<Maison_Room> rooms = new ArrayList<>();
@@ -187,16 +190,25 @@ public class Application {
         JTextField txtProgramName = new JTextField();
 
         JLabel lblPiece = new JLabel("Pièce:");
-        JComboBox<Maison_programme.TypePiece> cbPiece = new JComboBox<>(Maison_programme.TypePiece.values());
+        JComboBox<String> cbPiece = new JComboBox<>(new String[]{
+                "Entree", "Cuisine", "Salon", "Salle de bain", "Chambre parents", "Chambre enfants 1", "Chambre enfants 2", "Chambre enfants 3", "Chambre enfants 4"
+        });
+//        JComboBox<Maison_programme.TypePiece> cbPiece = new JComboBox<>(Maison_programme.TypePiece.values());
 
         JLabel lblChauffage = new JLabel("Type de chauffage:");
-        JComboBox<Maison_programme.TypeChauffage> cbChauffage = new JComboBox<>(Maison_programme.TypeChauffage.values());
+        JComboBox<String> cbChauffage = new JComboBox<>(new String[]{
+                "Radiateur", "Seche-serviette"
+        });
+        //JComboBox<Maison_programme.TypeChauffage> cbChauffage = new JComboBox<>(Maison_programme.TypeChauffage.values());
 
         JLabel lblTemperature = new JLabel("Température:");
         JSpinner spTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));
 
         JLabel lblJour = new JLabel("Jour:");
-        JComboBox<Maison_programme.JoursSemaine> cbJour = new JComboBox<>(Maison_programme.JoursSemaine.values());
+        JComboBox<String> cbJour = new JComboBox<>(new String[]{
+                "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"
+        });
+        //JComboBox<Maison_programme.JoursSemaine> cbJour = new JComboBox<>(Maison_programme.JoursSemaine.values());
 
         JLabel lblHeureDebut = new JLabel("Heure de début:");
         JSpinner spHeureDebut = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
@@ -395,51 +407,83 @@ public class Application {
 
         //Boutons Affichage
         btnViewPrograms.addActionListener(e -> {
-            //Connection connection = DriverManager.getConnection(url, username, password);
-            String query = "SELECT * FROM programmes";
-            programmes.clear();
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query);
-                 ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String nom_programme = rs.getString("nom_programme");
-                    String type_piece = rs.getString("type_piece");
-                    String type_chauffage = rs.getString("type_chauffage");
-                    int temperature_piece = rs.getInt("temperature_piece");
-                    String jour_semaine = rs.getString("jour_semaine");
-                    int heure_début = rs.getInt("heure_debut");
-                    int heure_fin = rs.getInt("heure_fin");
-
-                    Maison_programme.TypePiece typePiece = Maison_programme.TypePiece.valueOf(type_piece);
-                    Maison_programme.TypeChauffage typeChauffage = Maison_programme.TypeChauffage.valueOf(type_chauffage);
-                    Maison_programme.JoursSemaine jourSemaine = Maison_programme.JoursSemaine.valueOf(jour_semaine);
-                    Maison_programme programme = new Maison_programme(nom_programme,typePiece,typeChauffage, temperature_piece,jourSemaine,heure_début,heure_fin);
-                    programmes.add(programme);
-                }
-                rs.close();
-                stmt.close();
-                System.out.println("Import réussi!");
-                //Test
+//            //Connection connection = DriverManager.getConnection(url, username, password);
+//            String query = "SELECT * FROM programmes";
+//            programmes.clear();
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query);
+//                 ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    String nom_programme = rs.getString("nom_programme");
+//                    String type_piece = rs.getString("type_piece");
+//                    String type_chauffage = rs.getString("type_chauffage");
+//                    int temperature_piece = rs.getInt("temperature_piece");
+//                    String jour_semaine = rs.getString("jour_semaine");
+//                    int heure_début = rs.getInt("heure_debut");
+//                    int heure_fin = rs.getInt("heure_fin");
+//
+//                    Maison_programme.TypePiece typePiece = Maison_programme.TypePiece.valueOf(type_piece);
+//                    Maison_programme.TypeChauffage typeChauffage = Maison_programme.TypeChauffage.valueOf(type_chauffage);
+//                    Maison_programme.JoursSemaine jourSemaine = Maison_programme.JoursSemaine.valueOf(jour_semaine);
+//                    Maison_programme programme = new Maison_programme(nom_programme,typePiece,typeChauffage, temperature_piece,jourSemaine,heure_début,heure_fin);
+//                    programmes.add(programme);
+//                }
+//                rs.close();
+//                stmt.close();
+//                System.out.println("Import réussi!");
+//                //Test
 //                final Maison_AutomatisationService maison_AutomatisationService = new Maison_AutomatisationService()
 //                final StudentService studentService = new StudentService(NetworkConfig);
 //                studentService.insertStudents();
 //                Students students = studentService.selectStudents();
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+//            }
+//            StringBuilder sb_program = new StringBuilder();
+//            if (programmes.isEmpty()) {
+//                sb_program.append("Aucun programme enregistré.\n");
+//            } else {
+//                sb_program.append("Programmes enregistrés :\n");
+//                for (Maison_programme prog : programmes) {
+//                    sb_program.append("Nom : ").append(prog.NomProgramme).append("\n")
+//                            .append("Pièce : ").append(prog.TypePiece).append("\n")
+//                            .append("Chauffage : ").append(prog.TypeChauffage).append("\n")
+//                            .append("Température : ").append(prog.TemperaturePiece).append("°C\n")
+//                            .append("Jour : ").append(prog.JoursSemaine).append("\n")
+//                            .append("Heure : de ").append(prog.HeureDebut).append("h à ").append(prog.HeureFin).append("h\n\n");
+//                }
+//            }
+//            txtPrograms.setText(sb_program.toString());
+//            cardLayout.show(mainPanel, "ViewProgramsPanel");
+            try {MaisonProgrammeService maisonProgrammeService = new MaisonProgrammeService(networkConfig);
+                MaisonProgrammes maisonProgrammes = maisonProgrammeService.select_all_program();
+                //MaisonAutomatisations maisonAutomatisations1 = maisonAutomatisationService.select_name_automation();
+                programmes.clear();
+                programmes.add(maisonProgrammes);
+                //automatisations.add(maisonAutomatisations1);
+                System.out.println("Import réussi!");
+                System.out.println(programmes);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-            StringBuilder sb_program = new StringBuilder();
+
+            StringBuilder sb_program= new StringBuilder();
             if (programmes.isEmpty()) {
                 sb_program.append("Aucun programme enregistré.\n");
             } else {
-                sb_program.append("Programmes enregistrés :\n");
-                for (Maison_programme prog : programmes) {
-                    sb_program.append("Nom : ").append(prog.NomProgramme).append("\n")
-                            .append("Pièce : ").append(prog.TypePiece).append("\n")
-                            .append("Chauffage : ").append(prog.TypeChauffage).append("\n")
-                            .append("Température : ").append(prog.TemperaturePiece).append("°C\n")
-                            .append("Jour : ").append(prog.JoursSemaine).append("\n")
-                            .append("Heure : de ").append(prog.HeureDebut).append("h à ").append(prog.HeureFin).append("h\n\n");
-                }
+                sb_program.append("programme enregistrés :\n");
+                for (MaisonProgrammes Maisonprogramme : programmes)
+                    for (MaisonProgramme programme : Maisonprogramme.getMaison_Programmes()) {
+                        sb_program.append("Nom : ").append(programme.getNomProgramme()).append("\n")
+                                .append("Piéce : ").append(programme.getTypePiece()).append("\n")
+                                .append("Chauffage : ").append(programme.getTypeChauffage()).append("\n")
+                                .append("Jour : ").append(programme.getJourSemaine()).append("\n")
+                                .append("Température : ").append(programme.getTemperature()).append("\n")
+                                .append("Heure début : ").append(programme.getHeureDebut()).append("\n")
+                                .append("Heure fin : ").append(programme.getHeureFin()).append("\n\n");
+                    }
             }
             txtPrograms.setText(sb_program.toString());
             cardLayout.show(mainPanel, "ViewProgramsPanel");
@@ -672,65 +716,90 @@ public class Application {
 
         //Boutons Sauvegarde
         btnSaveProgram.addActionListener(e -> {
-
-            //Récupération des données entrées
             String nomProgramme = txtProgramName.getText().trim();
-            Maison_programme.TypePiece pieceSelect = (Maison_programme.TypePiece) cbPiece.getSelectedItem();
-            Maison_programme.TypeChauffage chauffageSelect = (Maison_programme.TypeChauffage) cbChauffage.getSelectedItem();
-            int temperature = (int) spTemperature.getValue();
-            Maison_programme.JoursSemaine joursSemaineSelect = (Maison_programme.JoursSemaine) cbJour.getSelectedItem();
-            int heureDebut = (int) spHeureDebut.getValue();
-            int heureFin = (int) spHeureFin.getValue();
-            // Validation des données
+            String PieceSelection = (String) cbPiece.getSelectedItem();
+            String ChauffageSelection = (String) cbChauffage.getSelectedItem();
+            String JourSelection = (String) cbJour.getSelectedItem();
+            Integer TemperatureSelection = (int) spTemperature.getValue();
+            Integer HeureDebutSelection = (int) spHeureDebut.getValue();
+            Integer HeureFinSelection = (int) spHeureFin.getValue();
             if (nomProgramme.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de programme.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if (heureDebut >= heureFin) {
+            if (HeureDebutSelection >= HeureFinSelection) {
                 JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            String query1 = "SELECT nom_programme FROM programmes;";
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query1);
-                 ResultSet  rs = stmt.executeQuery()){
-                while (rs.next()){
-                    String nom_programme_comparaison = rs.getString("nom_programme");;
-                    programmesNoms.add(nom_programme_comparaison);
-                }
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
+//            //Récupération des données entrées
+//            String nomProgramme = txtProgramName.getText().trim();
+//            Maison_programme.TypePiece pieceSelect = (Maison_programme.TypePiece) cbPiece.getSelectedItem();
+//            Maison_programme.TypeChauffage chauffageSelect = (Maison_programme.TypeChauffage) cbChauffage.getSelectedItem();
+//            int temperature = (int) spTemperature.getValue();
+//            Maison_programme.JoursSemaine joursSemaineSelect = (Maison_programme.JoursSemaine) cbJour.getSelectedItem();
+//            int heureDebut = (int) spHeureDebut.getValue();
+//            int heureFin = (int) spHeureFin.getValue();
+//            // Validation des données
+//            if (nomProgramme.isEmpty()) {
+//                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de programme.", "Erreur", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//            if (heureDebut >= heureFin) {
+//                JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//            String query1 = "SELECT nom_programme FROM programmes;";
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query1);
+//                 ResultSet  rs = stmt.executeQuery()){
+//                while (rs.next()){
+//                    String nom_programme_comparaison = rs.getString("nom_programme");;
+//                    programmesNoms.add(nom_programme_comparaison);
+//                }
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
+//            }
+//            for (String pN : programmesNoms){
+//                if (pN.equals(nomProgramme)) {
+//                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+//                    return;
+//                }
+//            }
+//            // Création et sauvegarde du programme
+//            Maison_programme nouveauProgramme = new Maison_programme(nomProgramme, pieceSelect, chauffageSelect, temperature, joursSemaineSelect, heureDebut, heureFin);
+//            programmes.add(nouveauProgramme);
+//
+//            //Connection connection = DriverManager.getConnection(url, username, password);
+//            String query = "INSERT INTO programmes (nom_programme, type_piece, type_chauffage, temperature_piece, jour_semaine, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)";
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query)) {
+//                Maison_programme prog = programmes.get(programmes.size() - 1);
+//                stmt.setString(1, prog.NomProgramme);
+//                stmt.setString(2, prog.TypePiece.toString());
+//                stmt.setString(3, prog.TypeChauffage.toString());
+//                stmt.setInt(4, prog.TemperaturePiece);
+//                stmt.setString(5, prog.JoursSemaine.toString());
+//                stmt.setInt(6, prog.HeureDebut);
+//                stmt.setInt(7, prog.HeureFin);
+//                stmt.executeUpdate();
+//                System.out.println("import reussi");
+//                stmt.close();
+//                JOptionPane.showMessageDialog(frame, "Programme enregistré avec succès!");
+//                cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
+//            }
+            MaisonProgramme maisonProgramme = new MaisonProgramme(nomProgramme,PieceSelection,ChauffageSelection,JourSelection,TemperatureSelection,HeureDebutSelection,HeureFinSelection);
+            try {
+                MaisonProgrammeService maisonProgrammeService =new MaisonProgrammeService(networkConfig);
+                maisonProgrammeService.insertProgram(maisonProgramme,"INSERT_PROGRAM");
+                JOptionPane.showMessageDialog(frame, "Programmes enregistré avec succès!");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-            for (String pN : programmesNoms){
-                if (pN.equals(nomProgramme)) {
-                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                    return;
-                }
-            }
-            // Création et sauvegarde du programme
-            Maison_programme nouveauProgramme = new Maison_programme(nomProgramme, pieceSelect, chauffageSelect, temperature, joursSemaineSelect, heureDebut, heureFin);
-            programmes.add(nouveauProgramme);
 
-            //Connection connection = DriverManager.getConnection(url, username, password);
-            String query = "INSERT INTO programmes (nom_programme, type_piece, type_chauffage, temperature_piece, jour_semaine, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)";
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query)) {
-                Maison_programme prog = programmes.get(programmes.size() - 1);
-                stmt.setString(1, prog.NomProgramme);
-                stmt.setString(2, prog.TypePiece.toString());
-                stmt.setString(3, prog.TypeChauffage.toString());
-                stmt.setInt(4, prog.TemperaturePiece);
-                stmt.setString(5, prog.JoursSemaine.toString());
-                stmt.setInt(6, prog.HeureDebut);
-                stmt.setInt(7, prog.HeureFin);
-                stmt.executeUpdate();
-                System.out.println("import reussi");
-                stmt.close();
-                JOptionPane.showMessageDialog(frame, "Programme enregistré avec succès!");
-                cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
-            }
         });
 
         btnSaveAutomation.addActionListener(e -> {
