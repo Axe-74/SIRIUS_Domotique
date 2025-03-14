@@ -25,8 +25,8 @@ public class XMartCityService {
         INSERT_STUDENT("INSERT into students (name, firstname, groupname) values (?, ?, ?)"),
         SELECT_ALL_AUTOMATION("SELECT * FROM automatisations"),
         INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)"),
-        //SELECT_ALL_CAPTEURS("SELECT nom_capteur FROM capteurs;"),
-        //INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)");
+        SELECT_ALL_CAPTEURS("SELECT nom_capteur FROM capteurs;"),
+        INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)"),
 //        SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
 //        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
@@ -71,9 +71,12 @@ public class XMartCityService {
             case INSERT_AUTOMATION:
                 response = InsertAutomation(request, connection);
                 break;
-//            case SELECT_ALL_CAPTEURS:
-//                response = SelectAllCapteurs(request, connection);
-//                break;
+            case SELECT_ALL_CAPTEURS:
+                response = SelectAllCapteurs(request, connection);
+                break;
+            case INSERT_CAPTEUR:
+                response = InsertCapteur(request, connection);
+                break;
 //            case SELECT_ALL_ROOMS:
 //                response = SelectAllRooms(request, connection);
 //                break;
@@ -159,21 +162,33 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
     }
 
-//    private Response SelectAllCapteurs(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
-//        final ObjectMapper objectMapper = new ObjectMapper();
-//        final Statement stmt = connection.createStatement();
-//        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_CAPTEURS.query);
-//        MaisonCapteurs capteurs = new MaisonCapteurs();
-//        while (res.next()) {
-//            MaisonCapteur capteur = new MaisonCapteur();
-//            capteur.setIdCapteur(res.getInt(1));
-//            capteur.setName(res.getString(2));
-//            capteur.setTypecapteur(res.getString(3));
-//            capteur.setEtat(res.getString(4));
-//            capteurs.add(capteur);
-//        }
-//        return new Response(request.getRequestId(), objectMapper.writeValueAsString(capteurs));
-//    }
+    private Response InsertCapteur(final Request request, final Connection connection) throws SQLException, IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final MaisonCapteur maisonCapteur = objectMapper.readValue(request.getRequestBody(), MaisonCapteur.class);
+        final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_CAPTEUR.query);
+        stmt.setString(1, maisonCapteur.getName());
+        stmt.setString(2, maisonCapteur.getTypecapteur());
+        stmt.setString(3, maisonCapteur.getEtat());
+        stmt.executeUpdate();
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));
+    }
+
+    private Response SelectAllCapteurs(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_CAPTEURS.query);
+        MaisonCapteurs capteurs = new MaisonCapteurs();
+        while (res.next()) {
+            MaisonCapteur capteur = new MaisonCapteur();
+            capteur.setIdCapteur(res.getInt(1));
+            capteur.setName(res.getString(2));
+            capteur.setTypecapteur(res.getString(3));
+            capteur.setEtat(res.getString(4));
+            capteurs.add(capteur);
+        }
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(capteurs));
+    }
 
 //    private Response InsertRoom(final Request request, final Connection connection) throws SQLException, IOException {
 //        final ObjectMapper objectMapper = new ObjectMapper();
