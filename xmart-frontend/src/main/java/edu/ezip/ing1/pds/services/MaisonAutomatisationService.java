@@ -28,7 +28,6 @@ public class MaisonAutomatisationService {
     final String selectRequestOrder = "SELECT_ALL_AUTOMATION";
     final String selectNameAutomation = "SELECT_ALL_AUTOMATION";
 
-
     private final NetworkConfig networkConfig;
 
     public MaisonAutomatisationService(NetworkConfig networkConfig) throws InterruptedException {
@@ -37,7 +36,6 @@ public class MaisonAutomatisationService {
 
     public void insertAutomation(MaisonAutomatisation maisonAutomatisation, String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
-
 
         int birthdate = 0;
 
@@ -57,7 +55,6 @@ public class MaisonAutomatisationService {
                 birthdate++, request, maisonAutomatisation, requestBytes);
         clientRequests.push(clientRequest);
 
-
         while (!clientRequests.isEmpty()) {
             final ClientRequest clientRequest2 = clientRequests.pop();
             clientRequest2.join();
@@ -68,7 +65,6 @@ public class MaisonAutomatisationService {
                     clientRequest2.getResult());
         }
     }
-
 
     public MaisonAutomatisations select_all_automation() throws InterruptedException, IOException {
         int birthdate = 0;
@@ -96,7 +92,6 @@ public class MaisonAutomatisationService {
             return null;
         }
     }
-
 
     public MaisonAutomatisations select_name_automation() throws InterruptedException, IOException {
         int birthdate = 0;

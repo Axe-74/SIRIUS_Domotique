@@ -23,23 +23,28 @@ public class MaisonProgramme {
 
     public MaisonProgramme() {
     }
+
     public final MaisonProgramme build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "nom_programme", "type_piece", "type_chauffage", " jour_semaine","temperature_piece", "heure_debut", "heure_fin");
+        setFieldsFromResulset(resultSet, "nom_programme", "type_piece", "type_chauffage", "jour_semaine","temperature_piece", "heure_debut", "heure_fin");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        return buildPreparedStatement(preparedStatement, NomProgramme,TypePiece,TypeChauffage,JourSemaine);
+        return buildPreparedStatement(preparedStatement, NomProgramme,TypePiece,TypeChauffage,JourSemaine, String.valueOf(Temperature),String.valueOf(HeureDebut), String.valueOf(HeureFin));
     }
     public MaisonProgramme(String NomProgramme, String TypePiece, String TypeChauffage, String JourSemaine,int Temperature, int HeureDebut, int HeureFin) {
+        this.id = id;
         this.NomProgramme = NomProgramme ;
         this.TypePiece = TypePiece;
         this.TypeChauffage = TypeChauffage;
-        this.JourSemaine =JourSemaine;
+        this.JourSemaine = JourSemaine;
         this.Temperature = Temperature;
         this.HeureDebut = HeureDebut;
         this.HeureFin = HeureFin;
+    }
+    public int getId() {
+        return id;
     }
 
     public String getNomProgramme() {
@@ -62,9 +67,7 @@ public class MaisonProgramme {
 
     public int getTemperature(){return Temperature;}
 
-    public int getId() {
-        return id;
-    }
+
 
 
     @JsonProperty("Maison_Programme_NomProgramme")

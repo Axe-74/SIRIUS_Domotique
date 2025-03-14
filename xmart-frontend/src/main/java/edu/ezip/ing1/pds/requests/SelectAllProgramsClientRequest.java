@@ -6,8 +6,6 @@ import edu.ezip.ing1.pds.business.dto.MaisonProgrammes;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
-
-
 import java.io.IOException;
 
 public class SelectAllProgramsClientRequest extends ClientRequest<Object, MaisonProgrammes> {

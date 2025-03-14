@@ -9,27 +9,27 @@ import java.util.Set;
 public class MaisonProgrammes {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("Maison_Programmes")
+    @JsonProperty("MaisonProgrammes")
     //private  Set<MaisonProgramme> maison_programmes = new LinkedHashSet<MaisonProgramme>();
-    private  Set<MaisonProgramme> maison_programmes = new LinkedHashSet<MaisonProgramme>();
+    private  Set<MaisonProgramme> maisonprogrammes = new LinkedHashSet<MaisonProgramme>();
 
-    public Set<MaisonProgramme> getMaison_Programmes() {
-        return maison_programmes;
+    public Set<MaisonProgramme> getMaisonProgrammes() {
+        return maisonprogrammes;
     }
 
-    public void setMaison_Programmes(Set<MaisonProgramme> maison_programmes) {
-        this.maison_programmes = maison_programmes;
+    public void setMaisonProgramme(Set<MaisonProgramme> maisonProgramme) {
+        this.maisonprogrammes = maisonProgramme;
     }
 
-    public final MaisonProgrammes add (final MaisonProgramme maisonProgramme) {
-        maison_programmes.add(maisonProgramme);
+    public final MaisonProgrammes add (final MaisonProgramme maison_Programme) {
+        maisonprogrammes.add(maison_Programme);
         return this;
     }
 
     @Override
     public String toString() {
         return "Maison_Programmes{" +
-                "Maison_Programmes=" + maison_programmes +
+                "Maison_Programmes=" + maisonprogrammes +
                 '}';
     }
 }
