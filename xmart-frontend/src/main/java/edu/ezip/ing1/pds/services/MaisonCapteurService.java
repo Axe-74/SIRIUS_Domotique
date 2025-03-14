@@ -8,6 +8,7 @@ import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
 import edu.ezip.ing1.pds.requests.InsertCapteurClientRequest;
+import edu.ezip.ing1.pds.requests.SelectAllCapteursClientRequest;
 import edu.ezip.ing1.pds.requests.SelectAllStudentsClientRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -29,7 +30,7 @@ public class MaisonCapteurService {
 
     private final NetworkConfig networkConfig;
 
-    public MaisonCapteurService(NetworkConfig networkConfig) {
+    public MaisonCapteurService(NetworkConfig networkConfig) throws InterruptedException {
         this.networkConfig = networkConfig;
     }
 
@@ -77,7 +78,7 @@ public class MaisonCapteurService {
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         final byte []  requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
         LoggingUtils.logDataMultiLine(logger, Level.TRACE, requestBytes);
-        final SelectAllStudentsClientRequest clientRequest = new SelectAllStudentsClientRequest(
+        final SelectAllCapteursClientRequest clientRequest = new SelectAllCapteursClientRequest(
                 networkConfig,
                 birthdate++, request, null, requestBytes);
         clientRequests.push(clientRequest);
@@ -89,7 +90,7 @@ public class MaisonCapteurService {
             return (MaisonCapteurs) joinedClientRequest.getResult();
         }
         else {
-            logger.error("No students found");
+            logger.error("Pas trouvé de capteurs.");
             return null;
         }
     }
