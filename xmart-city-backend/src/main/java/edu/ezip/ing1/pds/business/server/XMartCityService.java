@@ -31,7 +31,8 @@ public class XMartCityService {
 //        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
         SELECT_ALL_PROGRAM("SELECT * FROM programmes"),
-        INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)");
+        INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
+        SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes");
 
         private final String query;
 
@@ -91,6 +92,9 @@ public class XMartCityService {
                 break;
             case INSERT_PROGRAM:
                 response = InsertProgram(request, connection);
+                break;
+            case SELECT_NAME_PROGRAM:
+                response = SelectNameProgram(request, connection);
                 break;
             default:
                 break;
@@ -217,7 +221,6 @@ public class XMartCityService {
 //        return new Response(request.getRequestId(), objectMapper.writeValueAsString(rooms));
 //    }
 
-
     private Response SelectNameAutomation(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
         final ObjectMapper objectMapper = new ObjectMapper();
         final Statement stmt = connection.createStatement();
@@ -225,7 +228,8 @@ public class XMartCityService {
         MaisonAutomatisations maisonAutomatisations = new MaisonAutomatisations();
         while (res.next()) {
             MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
-            maisonAutomatisation.setNomAutomatisation(res.getString(2));
+            maisonAutomatisation.setNomAutomatisation(res.getString(1));
+            System.out.println("NOM" + maisonAutomatisation.getNomAutomatisation());
             maisonAutomatisations.add(maisonAutomatisation);
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
@@ -250,7 +254,6 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
     }
 
-
     private Response InsertProgram(final Request request, final Connection connection) throws SQLException, IOException {
         final ObjectMapper objectMapper = new ObjectMapper();
         final MaisonProgramme maisonProgramme = objectMapper.readValue(request.getRequestBody(), MaisonProgramme.class);
@@ -266,4 +269,18 @@ public class XMartCityService {
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgramme));
     }
+
+    private Response SelectNameProgram(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_NAME_PROGRAM.query);
+        MaisonProgrammes maisonProgrammes = new MaisonProgrammes();
+        while (res.next()) {
+            MaisonProgramme maisonProgramme = new MaisonProgramme();
+            maisonProgramme.setNomProgramme(res.getString(2));
+            maisonProgrammes.add(maisonProgramme);
+        }
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
+    }
+
 }

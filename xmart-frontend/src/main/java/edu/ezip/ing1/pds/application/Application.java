@@ -27,7 +27,7 @@ public class Application {
     public ArrayList<MaisonAutomatisations> automatisations = new ArrayList<MaisonAutomatisations>();
     public ArrayList<MaisonCapteurs> capteurs = new ArrayList<>(); {}
     public ArrayList<Maison_Room> rooms = new ArrayList<>();
-    public ArrayList<String> automatisationsNoms = new ArrayList<>();
+    public ArrayList<String> automatisationsNoms = new ArrayList<String>();
     public ArrayList<String> capteursNoms = new ArrayList<>();
     public ArrayList<String> programmesNoms = new ArrayList<>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
@@ -409,60 +409,10 @@ public class Application {
 
         //Boutons Affichage
         btnViewPrograms.addActionListener(e -> {
-//            //Connection connection = DriverManager.getConnection(url, username, password);
-//            String query = "SELECT * FROM programmes";
-//            programmes.clear();
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query);
-//                 ResultSet rs = stmt.executeQuery()) {
-//                while (rs.next()) {
-//                    String nom_programme = rs.getString("nom_programme");
-//                    String type_piece = rs.getString("type_piece");
-//                    String type_chauffage = rs.getString("type_chauffage");
-//                    int temperature_piece = rs.getInt("temperature_piece");
-//                    String jour_semaine = rs.getString("jour_semaine");
-//                    int heure_début = rs.getInt("heure_debut");
-//                    int heure_fin = rs.getInt("heure_fin");
-//
-//                    Maison_programme.TypePiece typePiece = Maison_programme.TypePiece.valueOf(type_piece);
-//                    Maison_programme.TypeChauffage typeChauffage = Maison_programme.TypeChauffage.valueOf(type_chauffage);
-//                    Maison_programme.JoursSemaine jourSemaine = Maison_programme.JoursSemaine.valueOf(jour_semaine);
-//                    Maison_programme programme = new Maison_programme(nom_programme,typePiece,typeChauffage, temperature_piece,jourSemaine,heure_début,heure_fin);
-//                    programmes.add(programme);
-//                }
-//                rs.close();
-//                stmt.close();
-//                System.out.println("Import réussi!");
-//                //Test
-//                final Maison_AutomatisationService maison_AutomatisationService = new Maison_AutomatisationService()
-//                final StudentService studentService = new StudentService(NetworkConfig);
-//                studentService.insertStudents();
-//                Students students = studentService.selectStudents();
-//            } catch (SQLException ex) {
-//                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
-//            }
-//            StringBuilder sb_program = new StringBuilder();
-//            if (programmes.isEmpty()) {
-//                sb_program.append("Aucun programme enregistré.\n");
-//            } else {
-//                sb_program.append("Programmes enregistrés :\n");
-//                for (Maison_programme prog : programmes) {
-//                    sb_program.append("Nom : ").append(prog.NomProgramme).append("\n")
-//                            .append("Pièce : ").append(prog.TypePiece).append("\n")
-//                            .append("Chauffage : ").append(prog.TypeChauffage).append("\n")
-//                            .append("Température : ").append(prog.TemperaturePiece).append("°C\n")
-//                            .append("Jour : ").append(prog.JoursSemaine).append("\n")
-//                            .append("Heure : de ").append(prog.HeureDebut).append("h à ").append(prog.HeureFin).append("h\n\n");
-//                }
-//            }
-//            txtPrograms.setText(sb_program.toString());
-//            cardLayout.show(mainPanel, "ViewProgramsPanel");
             try {MaisonProgrammeService maisonProgrammeService = new MaisonProgrammeService(networkConfig);
                 MaisonProgrammes maisonProgrammes = maisonProgrammeService.select_all_program();
-                //MaisonAutomatisations maisonAutomatisations1 = maisonAutomatisationService.select_name_automation();
                 programmes.clear();
                 programmes.add(maisonProgrammes);
-                //automatisations.add(maisonAutomatisations1);
                 System.out.println("Import réussi!");
                 System.out.println(programmes);
             } catch (InterruptedException ex) {
@@ -492,29 +442,10 @@ public class Application {
         });
 
         btnViewAutomations.addActionListener(e -> {
-            //Connection connection = DriverManager.getConnection(url, username, password);
-//            String query = "SELECT * FROM automatisations";
-//            automatisations.clear();
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query);
-//                 ResultSet rs = stmt.executeQuery()) {
-//                while (rs.next()) {
-//                    String nom_automatisation = rs.getString("nom_automatisation");
-//                    String type_capteur = rs.getString("type_capteur");
-//                    String type_programme_automatisation = rs.getString("type_programme");
-//                    Maison_Automatisation.TypeCapteurs typeCapteurs = Maison_Automatisation.TypeCapteurs.valueOf(type_capteur);
-//                    Maison_Automatisation.TypeProgramme typeProgrammeAutomatisation = Maison_Automatisation.TypeProgramme.valueOf(type_programme_automatisation);
-//                    Maison_Automatisation auto = new Maison_Automatisation(nom_automatisation, typeCapteurs, typeProgrammeAutomatisation);
-//                    automatisations.add(auto);
-//                }
-//                rs.close();
-//                stmt.close();
             try {MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
                 MaisonAutomatisations maisonAutomatisations = maisonAutomatisationService.select_all_automation();
-                //MaisonAutomatisations maisonAutomatisations1 = maisonAutomatisationService.select_name_automation();
                 automatisations.clear();
                 automatisations.add(maisonAutomatisations);
-                //automatisations.add(maisonAutomatisations1);
                 System.out.println("Import réussi!");
                 System.out.println(automatisations);
             } catch (InterruptedException ex) {
@@ -742,65 +673,28 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-//            //Récupération des données entrées
-//            String nomProgramme = txtProgramName.getText().trim();
-//            Maison_programme.TypePiece pieceSelect = (Maison_programme.TypePiece) cbPiece.getSelectedItem();
-//            Maison_programme.TypeChauffage chauffageSelect = (Maison_programme.TypeChauffage) cbChauffage.getSelectedItem();
-//            int temperature = (int) spTemperature.getValue();
-//            Maison_programme.JoursSemaine joursSemaineSelect = (Maison_programme.JoursSemaine) cbJour.getSelectedItem();
-//            int heureDebut = (int) spHeureDebut.getValue();
-//            int heureFin = (int) spHeureFin.getValue();
-//            // Validation des données
-//            if (nomProgramme.isEmpty()) {
-//                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de programme.", "Erreur", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//            if (heureDebut >= heureFin) {
-//                JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
-//            String query1 = "SELECT nom_programme FROM programmes;";
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query1);
-//                 ResultSet  rs = stmt.executeQuery()){
-//                while (rs.next()){
-//                    String nom_programme_comparaison = rs.getString("nom_programme");;
-//                    programmesNoms.add(nom_programme_comparaison);
-//                }
-//            } catch (SQLException ex) {
-//                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
-//            }
-//            for (String pN : programmesNoms){
-//                if (pN.equals(nomProgramme)) {
-//                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
-//                    return;
-//                }
-//            }
-//            // Création et sauvegarde du programme
-//            Maison_programme nouveauProgramme = new Maison_programme(nomProgramme, pieceSelect, chauffageSelect, temperature, joursSemaineSelect, heureDebut, heureFin);
-//            programmes.add(nouveauProgramme);
-//
-//            //Connection connection = DriverManager.getConnection(url, username, password);
-//            String query = "INSERT INTO programmes (nom_programme, type_piece, type_chauffage, temperature_piece, jour_semaine, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)";
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query)) {
-//                Maison_programme prog = programmes.get(programmes.size() - 1);
-//                stmt.setString(1, prog.NomProgramme);
-//                stmt.setString(2, prog.TypePiece.toString());
-//                stmt.setString(3, prog.TypeChauffage.toString());
-//                stmt.setInt(4, prog.TemperaturePiece);
-//                stmt.setString(5, prog.JoursSemaine.toString());
-//                stmt.setInt(6, prog.HeureDebut);
-//                stmt.setInt(7, prog.HeureFin);
-//                stmt.executeUpdate();
-//                System.out.println("import reussi");
-//                stmt.close();
-//                JOptionPane.showMessageDialog(frame, "Programme enregistré avec succès!");
-//                cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
-//            } catch (SQLException ex) {
-//                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
-//            }
             MaisonProgramme maisonProgramme = new MaisonProgramme(nomProgramme,PieceSelection,ChauffageSelection,JourSelection,TemperatureSelection,HeureDebutSelection,HeureFinSelection);
+            int CountProgramNameEqual = 0;
+            try {
+                MaisonProgrammeService maisonProgrammeServiceFind = new MaisonProgrammeService(networkConfig);
+                MaisonProgrammes maisonProgrammeFind = maisonProgrammeServiceFind.select_all_program();
+                programmes.clear();
+                programmes.add(maisonProgrammeFind);
+                for (MaisonProgrammes Maisonprogramme : programmes)
+                    for (MaisonProgramme programme : Maisonprogramme.getMaisonProgrammes()) {
+                        if (nomProgramme.equals(programme.getNomProgramme())){
+                            CountProgramNameEqual = CountProgramNameEqual + 1;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountProgramNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
 
             try {
                 MaisonProgrammeService maisonProgrammeService =new MaisonProgrammeService(networkConfig);
@@ -823,27 +717,29 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom d'automatisation.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-
-//            String query1 = "SELECT nom_automatisation FROM automatisations;";
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query1);
-//                 ResultSet  rs = stmt.executeQuery()){
-//                while (rs.next()){
-//                    String nom_automatisation_comparaison = rs.getString("nom_automatisation");;
-//                    automatisationsNoms.add(nom_automatisation_comparaison);
-//                }
-//            } catch (SQLException ex) {
-//                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
-//            }
-//            for (String aN : automatisationsNoms){
-//                if (aN.equals(nomAutomation)) {
-//                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
-//                    return;
-//                }
-//            }
-
             // Insertion des données
+            int CountAutomationNameEqual = 0;
             MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation(0,nomAutomation,CapteurSelection,ProgrammeSelection);
+            try {
+                MaisonAutomatisationService maisonAutomatisationServiceFind = new MaisonAutomatisationService(networkConfig);
+                MaisonAutomatisations maisonAutomatisationFind = maisonAutomatisationServiceFind.select_all_automation();
+                automatisations.clear();
+                automatisations.add(maisonAutomatisationFind);
+                for (MaisonAutomatisations Maisonauto : automatisations)
+                    for (MaisonAutomatisation auto : Maisonauto.getMaisonAutomatisations()) {
+                        if (nomAutomation.equals(auto.getNomAutomatisation())){
+                            CountAutomationNameEqual = CountAutomationNameEqual + 1;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountAutomationNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
             try {
                 MaisonAutomatisationService maisonAutomatisationService =new MaisonAutomatisationService(networkConfig);
                 maisonAutomatisationService.insertAutomation(maisonAutomatisation,"INSERT_AUTOMATION");

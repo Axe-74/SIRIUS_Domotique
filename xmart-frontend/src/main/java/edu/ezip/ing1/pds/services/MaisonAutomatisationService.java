@@ -26,7 +26,7 @@ public class MaisonAutomatisationService {
 
     final String insertRequestOrder = "INSERT_AUTOMATION";
     final String selectRequestOrder = "SELECT_ALL_AUTOMATION";
-    final String selectNameAutomation = "SELECT_ALL_AUTOMATION";
+    final String selectNameAutomation = "SELECT_NAME_AUTOMATION";
 
     private final NetworkConfig networkConfig;
 

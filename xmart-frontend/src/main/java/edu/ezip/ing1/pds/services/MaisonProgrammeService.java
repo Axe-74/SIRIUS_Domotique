@@ -29,7 +29,7 @@ public class MaisonProgrammeService {
 
     final String insertRequestOrder = "INSERT_PROGRAM";
     final String selectRequestOrder = "SELECT_ALL_PROGRAM";
-    final String selectNameRequestOrder = "SELECT_ALL_AUTOMATION";
+    final String selectNameRequestOrder = "SELECT_NAME_PROGRAM";
 
     private final NetworkConfig networkConfig;
 
@@ -99,30 +99,30 @@ public class MaisonProgrammeService {
     }
 
 
-//    public MaisonAutomatisations select_name_automation() throws InterruptedException, IOException {
-//        int birthdate = 0;
-//        final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
-//        final ObjectMapper objectMapper = new ObjectMapper();
-//        final String requestId = UUID.randomUUID().toString();
-//        final Request request = new Request();
-//        request.setRequestId(requestId);
-//        request.setRequestOrder(selectNameRequestOrder);
-//        objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-//        final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
-//        LoggingUtils.logDataMultiLine(logger, Level.TRACE, requestBytes);
-//        final SelectAllAutomationClientRequest clientRequest = new SelectAllAutomationClientRequest(
-//                networkConfig,
-//                birthdate++, request, null, requestBytes);
-//        clientRequests.push(clientRequest);
-//
-//        if (!clientRequests.isEmpty()) {
-//            final ClientRequest joinedClientRequest = clientRequests.pop();
-//            joinedClientRequest.join();
-//            logger.debug("Thread {} complete.", joinedClientRequest.getThreadName());
-//            return (MaisonAutomatisations) joinedClientRequest.getResult();
-//        } else {
-//            logger.error("No automations found");
-//            return null;
-//        }
-//    }
+    public MaisonProgrammes  select_name_program() throws InterruptedException, IOException {
+        int birthdate = 0;
+        final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String requestId = UUID.randomUUID().toString();
+        final Request request = new Request();
+        request.setRequestId(requestId);
+        request.setRequestOrder(selectNameRequestOrder);
+        objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+        final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
+        LoggingUtils.logDataMultiLine(logger, Level.TRACE, requestBytes);
+        final SelectAllProgramsClientRequest clientRequest = new SelectAllProgramsClientRequest(
+                networkConfig,
+                birthdate++, request, null, requestBytes);
+        clientRequests.push(clientRequest);
+
+        if (!clientRequests.isEmpty()) {
+            final ClientRequest joinedClientRequest = clientRequests.pop();
+            joinedClientRequest.join();
+            logger.debug("Thread {} complete.", joinedClientRequest.getThreadName());
+            return (MaisonProgrammes) joinedClientRequest.getResult();
+        } else {
+            logger.error("No name found");
+            return null;
+        }
+    }
 }
