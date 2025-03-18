@@ -16,7 +16,6 @@
         <module>xmart-city-commons</module>
         <module>xmart-city-backend</module>
         <module>xmart-frontend</module>
-        <module>xmart-app</module>
     </modules>
 
 
