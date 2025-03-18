@@ -13,6 +13,7 @@ public class MaisonAutomatisation {
     private  String NomAutomatisation;
     private  String TypeCapteur;
     private  String TypeProgramme;
+    private String EtatAutomatisation;
     private int Id;
 
     public MaisonAutomatisation() {
@@ -20,18 +21,19 @@ public class MaisonAutomatisation {
 
     public final MaisonAutomatisation build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "id", "nom_automatisation", "type_capteur","type_programme");
+        setFieldsFromResulset(resultSet, "id", "nom_automatisation", "type_capteur","type_programme,etat_automatisation");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        return buildPreparedStatement(preparedStatement, String.valueOf(Id), NomAutomatisation, TypeCapteur,TypeProgramme);
+        return buildPreparedStatement(preparedStatement, String.valueOf(Id), NomAutomatisation, TypeCapteur,TypeProgramme,EtatAutomatisation);
     }
-    public MaisonAutomatisation(Integer Id, String NomAutomatisation, String TypeCapteur, String TypeProgramme) {
+    public MaisonAutomatisation(Integer Id, String NomAutomatisation, String TypeCapteur, String TypeProgramme, String EtatAutomatisation) {
         this.Id = Id;
         this.NomAutomatisation = NomAutomatisation;
         this.TypeCapteur = TypeCapteur;
         this.TypeProgramme = TypeProgramme;
+        this.EtatAutomatisation = EtatAutomatisation;
     }
 
     public Integer getId() {
@@ -50,6 +52,8 @@ public class MaisonAutomatisation {
         return TypeProgramme;
     }
 
+    public String getEtatAutomatisation(){return EtatAutomatisation;}
+
     @JsonProperty("Maison_Automatisation_NomAutomatisation")
     public void setNomAutomatisation(String NomAutomatisation) {
         this.NomAutomatisation = NomAutomatisation;
@@ -63,6 +67,11 @@ public class MaisonAutomatisation {
     @JsonProperty("Maison_Automatisation_TypeProgramme")
     public void setTypeProgramme(String TypeProgramme) {
         this.TypeProgramme = TypeProgramme;
+    }
+
+    @JsonProperty("Maison_Automatisation_EtatAutomatisation")
+    public void setEtatAutomatisation(String EtatAutomatisation) {
+        this.EtatAutomatisation = EtatAutomatisation;
     }
 
     @JsonProperty("Maison_Automatisation_id")
@@ -92,6 +101,7 @@ public class MaisonAutomatisation {
                 "NomAutomatisation='" + NomAutomatisation + '\'' +
                 ", TypeCapteur='" + TypeCapteur + '\'' +
                 ", TypeProgramme='" + TypeProgramme + '\'' +
+                ", EtatAutomatisation='" + EtatAutomatisation + '\'' +
                 '}';
     }
 }

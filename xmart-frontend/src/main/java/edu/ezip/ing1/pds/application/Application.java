@@ -499,7 +499,8 @@ public class Application {
                     for (MaisonAutomatisation auto : Maisonauto.getMaisonAutomatisations()) {
                         sb_automation.append("Nom : ").append(auto.getNomAutomatisation()).append("\n")
                                 .append("Capteur écouté ").append(auto.getTypeCapteur()).append("\n")
-                                .append("Programme executé : ").append(auto.getTypeProgramme()).append("\n\n");
+                                .append("Programme executé : ").append(auto.getTypeProgramme()).append("\n")
+                                .append("Etat de l'automatisation : ").append(auto.getEtatAutomatisation()).append("\n\n");
                     }
             }
             txtPrograms.setText(sb_automation.toString());
@@ -766,13 +767,19 @@ public class Application {
             String nomAutomation = txtAutomationName.getText().trim();
             String CapteurSelection = (String) cbSensor_activation.getSelectedItem();
             String ProgrammeSelection = (String) cbSensor_programme.getSelectedItem();
+            String etatAutomation ;
+            if (cbEtatAutomatisation.isSelected()) {
+                etatAutomation = "ON";
+            } else {
+                etatAutomation = "OFF";
+            }
             if (nomAutomation.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom d'automatisation.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             // Insertion des données
             int CountAutomationNameEqual = 0;
-            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation(0,nomAutomation,CapteurSelection,ProgrammeSelection);
+            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation(0,nomAutomation,CapteurSelection,ProgrammeSelection,etatAutomation);
             try {
                 MaisonAutomatisationService maisonAutomatisationServiceFind = new MaisonAutomatisationService(networkConfig);
                 MaisonAutomatisations maisonAutomatisationFind = maisonAutomatisationServiceFind.select_all_automation();

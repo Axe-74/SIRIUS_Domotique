@@ -24,7 +24,7 @@ public class XMartCityService {
         SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname, t.id FROM students t"),
         INSERT_STUDENT("INSERT into students (name, firstname, groupname) values (?, ?, ?)"),
         SELECT_ALL_AUTOMATION("SELECT * FROM automatisations"),
-        INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)"),
+        INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
         SELECT_ALL_CAPTEURS("SELECT id, nom_capteur, type_capteur, etat_capteur FROM capteurs"),
         INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)"),
 //        SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
@@ -141,6 +141,7 @@ public class XMartCityService {
         stmt.setString(1, maisonAutomatisation.getNomAutomatisation());
         stmt.setString(2, maisonAutomatisation.getTypeCapteur());
         stmt.setString(3, maisonAutomatisation.getTypeProgramme());
+        stmt.setString(4, maisonAutomatisation.getEtatAutomatisation());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation));
@@ -157,6 +158,7 @@ public class XMartCityService {
             maisonAutomatisation.setNomAutomatisation(res.getString(2));
             maisonAutomatisation.setTypeCapteur(res.getString(3));
             maisonAutomatisation.setTypeProgramme(res.getString(4));
+            maisonAutomatisation.setEtatAutomatisation(res.getString(5));
             maisonAutomatisations.add(maisonAutomatisation);
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
