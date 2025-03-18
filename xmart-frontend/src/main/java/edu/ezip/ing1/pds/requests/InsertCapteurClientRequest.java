@@ -20,9 +20,10 @@ public class InsertCapteurClientRequest extends ClientRequest<MaisonCapteur, Str
 
     @Override
     public String readResult(String body) throws IOException {
+        System.out.println("Réponse JSON du serveur : " + body);
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> capteurIdMap = mapper.readValue(body, Map.class);
-        final String result  = capteurIdMap.get("idCapteur").toString();
+        final String result  = capteurIdMap.get("id").toString();
         return result;
     }
 }

@@ -25,7 +25,7 @@ public class XMartCityService {
         INSERT_STUDENT("INSERT into students (name, firstname, groupname) values (?, ?, ?)"),
         SELECT_ALL_AUTOMATION("SELECT * FROM automatisations"),
         INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme) VALUES (?, ?, ?)"),
-        SELECT_ALL_CAPTEURS("SELECT id_capteur, nom_capteur, type_capteur, etat_capteur FROM capteurs;"),
+        SELECT_ALL_CAPTEURS("SELECT id, nom_capteur, type_capteur, etat_capteur FROM capteurs"),
         INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)"),
 //        SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
 //        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
@@ -174,6 +174,10 @@ public class XMartCityService {
             capteur.setTypecapteur(res.getString(3));
             capteur.setEtat(res.getString(4));
             capteurs.add(capteur);
+            System.out.println("id: " + capteur.getIdCapteur());
+            System.out.println("name: " + capteur.getName());
+            System.out.println("etat: " + capteur.getEtat());
+            System.out.println("type: " + capteur.getTypecapteur());
             System.out.println(capteur);
             System.out.println(capteurs);
         }

@@ -6,14 +6,10 @@ import java.io.IOException;
 import java.sql.*;
 import java.util.*;
 
-import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation;
-import edu.ezip.ing1.pds.business.dto.MaisonProgramme;
-import edu.ezip.ing1.pds.business.dto.MaisonProgrammes;
-import edu.ezip.ing1.pds.business.dto.MaisonCapteurs;
+import edu.ezip.ing1.pds.business.dto.*;
 import edu.ezip.ing1.pds.services.MaisonAutomatisationService;
 import edu.ezip.ing1.pds.services.MaisonCapteurService;
 import edu.ezip.ing1.pds.services.MaisonProgrammeService;
-import edu.ezip.ing1.pds.business.dto.MaisonAutomatisations;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.ConfigLoader;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
@@ -250,8 +246,8 @@ public class Application {
         JTextField txtNomCapteur = new JTextField();
 
         JLabel lblTypeCapteur = new JLabel("Type du capteur: ");
-        JComboBox<Maison_Capteurs.TypeCapteur> cbTypeCapteur = new JComboBox<>(new Maison_Capteurs.TypeCapteur[]{
-                Maison_Capteurs.TypeCapteur.TEMPERATURE, Maison_Capteurs.TypeCapteur.LUMINOSITE, Maison_Capteurs.TypeCapteur.MOUVEMENT
+        JComboBox<String> cbTypeCapteur = new JComboBox<>(new String[]{
+                "TEMPERATURE", "LUMINOSITE", "MOUVEMENT"
         });
 
         JLabel lblEtatCapteur = new JLabel("Etat du capteur:");
@@ -490,6 +486,7 @@ public class Application {
 //                stmt.close();
             try {MaisonCapteurService maisonCapteurService = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurs = maisonCapteurService.selectAllCapteurs();
+                System.out.println(maisonCapteurs);
                 capteurs.clear();
                 capteurs.add(maisonCapteurs);
                 System.out.println("Import réussi!");
@@ -499,6 +496,22 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+
+            StringBuilder sb_capteur= new StringBuilder();
+            if (capteurs.isEmpty()) {
+                sb_capteur.append("Aucun capteur enregistré.\n");
+            } else {
+                sb_capteur.append("Capteurs enregistrés :\n");
+                for (MaisonCapteurs maisonCapteurs : capteurs)
+                    for (MaisonCapteur cap : maisonCapteurs.getCapteurs()) {
+                        sb_capteur.append("Nom : ").append(cap.getName()).append("\n")
+                                .append("Type : ").append(cap.getTypecapteur()).append("\n")
+                                .append("Etat : ").append(cap.getEtat()).append("\n\n");
+                    }
+            }
+            txtCapteurs.setText(sb_capteur.toString());
+            cardLayout.show(mainPanel, "voirCapteurPanel");
+
 //            } catch (SQLException ex) {
 //                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
 //            }
@@ -776,19 +789,52 @@ public class Application {
 
         btnSaveCapteur.addActionListener(e -> {
             //Récupération des données
-//            String nomCapteur = txtNomCapteur.getText().trim();
-//            Maison_Capteurs.TypeCapteur capteurSelect = (Maison_Capteurs.TypeCapteur) cbTypeCapteur.getSelectedItem();
-//            Maison_Capteurs.EtatCapteur etatSelect ;
-//            if (cbEtatCapteur.isSelected()) {
-//                etatSelect = Maison_Capteurs.EtatCapteur.ON;
-//            } else {
-//                etatSelect = Maison_Capteurs.EtatCapteur.OFF;
-//            }
-//            //Validation des données
-//            if (nomCapteur.isEmpty()) {
-//                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
-//                return;
-//            }
+            String nomCapteur = txtNomCapteur.getText().trim();
+            String capteurSelect = (String) cbTypeCapteur.getSelectedItem();
+            String etatSelect ;
+            if (cbEtatCapteur.isSelected()) {
+                etatSelect = "ON";
+            } else {
+                etatSelect = "OFF";
+            }
+            //Validation des données
+            if (nomCapteur.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Insertion des données
+            int CountAutomationNameEqual = 0;
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,capteurSelect,etatSelect, 0);
+            try {
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs)
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        if (nomCapteur.equalsIgnoreCase(cap.getName())){
+                            CountAutomationNameEqual ++;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountAutomationNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                MaisonCapteurService maisonCapteurService =new MaisonCapteurService(networkConfig);
+                maisonCapteurService.insertCapteurs(maisonCapteur,"INSERT_CAPTEUR");
+                JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
+                cardLayout.show(mainPanel, "MenuPanel");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
 //            String query1 = "SELECT nom_capteur FROM capteurs;";
 //            try (Connection conn = DriverManager.getConnection(url, username, password);
 //                 PreparedStatement stmt = conn.prepareStatement(query1);
