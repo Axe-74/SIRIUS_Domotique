@@ -77,21 +77,24 @@ public class Application {
 
 // Automations and programs Menu Panel
         JPanel Automations_and_programsPanel = new JPanel();
-        Automations_and_programsPanel.setLayout(new GridLayout(5, 1));
+        Automations_and_programsPanel.setLayout(new GridLayout(6, 1));
 
         JButton btnNewAutomations = new JButton("Définir une nouvelle automatisation");
         JButton btnViewAutomations = new JButton("Voir les automatisations");
         JButton btnNewPrograms = new JButton("Définir un nouveau programme");
         JButton btnViewPrograms = new JButton("Voir les programmes");
+        JButton btnEtatAutomation = new JButton("Changer l'état d'une automatisation");
         JButton btnBacktoMainmenu = new JButton("Retour au menu principal");
 
         Automations_and_programsPanel.add(btnNewAutomations);
         Automations_and_programsPanel.add(btnViewAutomations);
+        Automations_and_programsPanel.add(btnEtatAutomation);
         Automations_and_programsPanel.add(btnNewPrograms);
         Automations_and_programsPanel.add(btnViewPrograms);
         Automations_and_programsPanel.add(btnBacktoMainmenu);
 
         mainPanel.add(Automations_and_programsPanel, "Automations_and_ProgramsPanel");
+
 
 
 
@@ -131,7 +134,7 @@ public class Application {
 
 // Automation Definition Panel
         JPanel AutomationPanel = new JPanel();
-        AutomationPanel.setLayout(new GridLayout(4, 2));
+        AutomationPanel.setLayout(new GridLayout(6, 2));
 
         JLabel lblAutomationName = new JLabel("Nom de l'automatisation:");
         JTextField txtAutomationName = new JTextField();
@@ -148,6 +151,13 @@ public class Application {
         });
         //JComboBox<Maison_Automatisation.TypeProgramme> cbSensor_programme = new JComboBox<>(Maison_Automatisation.TypeProgramme.values());
 
+        JLabel lblEtatAutomatisation = new JLabel("Etat de l'automatisation:");
+        JCheckBox cbEtatAutomatisation = new JCheckBox();
+        cbEtatAutomatisation.setSelected(true);
+
+        JLabel lblExplicationAutomatisationOFF = new JLabel("Pas coché = OFF");
+        JLabel lblExplicationAutomatisationON = new JLabel("Coché = ON");
+
         JButton btnSaveAutomation = new JButton("Enregistrer");
         JButton btnBackToMenu_Automation = new JButton("Retour au menu");
 
@@ -157,12 +167,40 @@ public class Application {
         AutomationPanel.add(cbSensor_activation);
         AutomationPanel.add(lblSensor_program);
         AutomationPanel.add(cbSensor_programme);
+        AutomationPanel.add(lblExplicationAutomatisationON);
+        AutomationPanel.add(lblExplicationAutomatisationOFF);
+        AutomationPanel.add(lblEtatAutomatisation);
+        AutomationPanel.add(cbEtatAutomatisation);
         AutomationPanel.add(btnSaveAutomation);
         AutomationPanel.add(btnBackToMenu_Automation);
 
         mainPanel.add(AutomationPanel, "AutomationPanel");
 
 
+//Etat Automatisation panel
+        JPanel EtatAutomatisationPanel = new JPanel();
+        EtatAutomatisationPanel.setLayout(new GridLayout(3, 2));
+
+        JLabel lblChoixAutomatisation = new JLabel("Automatisation:");
+        JLabel lblEtatAutomatisation_EtatAutomatisation= new JLabel("Etat:");
+
+        JComboBox<String> cbAutomatisationsExistantes = new JComboBox<>(new String[]{
+        });
+        JComboBox<String> cbEtatAutomatisation_ChangerEtat = new JComboBox<>(new String[]{
+                "ON", "OFF"
+        });
+
+        JButton btnEnregistrerEtatAutomatisation = new JButton("Enregistrer");
+        JButton btnBackToMenu_ChangerEtatAutomatisation = new JButton("Retour au menu");
+
+        EtatAutomatisationPanel.add(lblChoixAutomatisation);
+        EtatAutomatisationPanel.add(lblEtatAutomatisation_EtatAutomatisation);
+        EtatAutomatisationPanel.add(cbAutomatisationsExistantes);
+        EtatAutomatisationPanel.add(cbEtatAutomatisation_ChangerEtat);
+        EtatAutomatisationPanel.add(btnEnregistrerEtatAutomatisation);
+        EtatAutomatisationPanel.add(btnBackToMenu_ChangerEtatAutomatisation);
+
+        mainPanel.add(EtatAutomatisationPanel, "EtatAutomatisationPanel");
 
 //View Automation panel
         JPanel viewAutomationPanel = new JPanel();
@@ -177,7 +215,6 @@ public class Application {
         viewAutomationPanel.add(btnBackToMenuAutomationProgramm, BorderLayout.SOUTH);
 
         mainPanel.add(viewAutomationPanel, "ViewAutomationPanel");
-
 
 
 // Program Definition Panel
@@ -380,10 +417,13 @@ public class Application {
         btnBackToMenuAutomationProgramm.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_Program.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnAutomations_and_programs.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
+        btnBackToMenu_ChangerEtatAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
+
 
         //Boutons Automatisations et Programmes
         btnNewAutomations.addActionListener(e -> cardLayout.show(mainPanel, "AutomationPanel"));
         btnNewPrograms.addActionListener(e -> cardLayout.show(mainPanel, "ProgramPanel"));
+        btnEtatAutomation.addActionListener(e -> cardLayout.show(mainPanel, "EtatAutomatisationPanel"));
 
         //Retour Menu Capteurs
         btnSensorsManagement.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
