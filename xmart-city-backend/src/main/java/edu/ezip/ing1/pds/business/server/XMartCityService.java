@@ -33,7 +33,7 @@ public class XMartCityService {
         SELECT_ALL_PROGRAM("SELECT * FROM programmes"),
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
-        UPDATE_CAPTEUR("UPDATE capteurs SET etat_capteur = ? WHERE id = ?"),
+        UPDATE_CAPTEUR("UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?"),
         DELETE_CAPTEUR("DELETE FROM capteurs WHERE id = ?"),;
 
         private final String query;

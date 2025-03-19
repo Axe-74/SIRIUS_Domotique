@@ -32,7 +32,15 @@ public class Application {
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String networkConfigFile = "network.yaml";
     private static final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
-
+    final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
+    final MaisonCapteurService update;
+    {
+        try {
+            update = new MaisonCapteurService(networkConfig);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
 
 //    public Application()  {
@@ -553,6 +561,8 @@ public class Application {
             txtCapteurs.setText(sb_capteur.toString());
             cardLayout.show(mainPanel, "voirCapteurPanel");
 
+
+
 //            } catch (SQLException ex) {
 //                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
 //            }
@@ -647,66 +657,140 @@ public class Application {
 
         //Bouton Changement Etat Capteur
         btnChangerEtat.addActionListener(e -> {
-            String query1 = "SELECT nom_capteur FROM capteurs;";
-            capteursNoms_cE.clear();
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query1);
-                 ResultSet  rs = stmt.executeQuery()){
-                while (rs.next()){
-                    String nom_capteur_comparaison = rs.getString("nom_capteur");;
-                    capteursNoms_cE.add(nom_capteur_comparaison);
-                }
-                rs.close();
-                stmt.close();
-                System.out.println("Import réussi!");
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+//            String query1 = "SELECT nom_capteur FROM capteurs;";
+//            capteursNoms_cE.clear();
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query1);
+//                 ResultSet  rs = stmt.executeQuery()){
+//                while (rs.next()){
+//                    String nom_capteur_comparaison = rs.getString("nom_capteur");;
+//                    capteursNoms_cE.add(nom_capteur_comparaison);
+//                }
+//                rs.close();
+//                stmt.close();
+//                System.out.println("Import réussi!");
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+//            }
+//            String query2 = "SELECT * FROM capteurs";
+//            capteurs_affichage.clear();
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query2);
+//                 ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    String nom = rs.getString("nom_capteur");
+//                    String type = rs.getString("type_capteur");
+//                    String etat = rs.getString("etat_capteur");
+//                    System.out.println(nom);
+//                    System.out.println(etat);
+//                    System.out.println("Type récupéré : " + type);
+//                    Maison_Capteurs.TypeCapteur typeCap = Maison_Capteurs.TypeCapteur.valueOf(type);
+//                    Maison_Capteurs.EtatCapteur etatCap = Maison_Capteurs.EtatCapteur.valueOf(etat);
+//                    Maison_Capteurs capteur = new Maison_Capteurs(nom, typeCap, etatCap);
+//                    System.out.println(capteur);
+//                    capteurs_affichage.add(nom);
+//                    capteurs_affichage.add(type);
+//                    capteurs_affichage.add(etat);}
+//                rs.close();
+//                stmt.close();
+//                System.out.println("Import réussi!");
+//                System.out.println(capteurs_affichage);
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+//            }
+            StringBuilder sb_capteur= new StringBuilder();
+            if (capteurs.isEmpty()) {
+                sb_capteur.append("Aucun capteur enregistré.\n");
+            } else {
+                sb_capteur.append("Capteurs enregistrés :\n");
+                for (MaisonCapteurs maisonCapteurs : capteurs)
+                    for (MaisonCapteur cap : maisonCapteurs.getCapteurs()) {
+                        sb_capteur.append("Nom : ").append(cap.getName()).append("\n")
+                                .append("Type : ").append(cap.getTypecapteur()).append("\n")
+                                .append("Etat : ").append(cap.getEtat()).append("\n\n");
+                    }
             }
-            String query2 = "SELECT * FROM capteurs";
-            capteurs_affichage.clear();
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query2);
-                 ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String nom = rs.getString("nom_capteur");
-                    String type = rs.getString("type_capteur");
-                    String etat = rs.getString("etat_capteur");
-                    System.out.println(nom);
-                    System.out.println(etat);
-                    System.out.println("Type récupéré : " + type);
-                    Maison_Capteurs.TypeCapteur typeCap = Maison_Capteurs.TypeCapteur.valueOf(type);
-                    Maison_Capteurs.EtatCapteur etatCap = Maison_Capteurs.EtatCapteur.valueOf(etat);
-                    Maison_Capteurs capteur = new Maison_Capteurs(nom, typeCap, etatCap);
-                    System.out.println(capteur);
-                    capteurs_affichage.add(nom);
-                    capteurs_affichage.add(type);
-                    capteurs_affichage.add(etat);}
-                rs.close();
-                stmt.close();
-                System.out.println("Import réussi!");
-                System.out.println(capteurs_affichage);
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+
+
+            try {
+                capteursNoms_cE.clear();
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs)
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        capteursNoms_cE.add(cap.getName());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
             DefaultComboBoxModel model = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
             cbCapteursExistants.removeAllItems();
             cbCapteursExistants.setModel(model);
         });
         btnEnregistrerEtatCapteur.addActionListener(e -> {
+            System.out.println("\n"+capteurs+"\n"+"\n"+"\n"+"\n");
             String cap_select = cbCapteursExistants.getSelectedItem().toString();
             String etat_select = cbEtatCapteur_ChangerEtat.getSelectedItem().toString();
-            String query = "UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?";
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query)) {
-                stmt.setString(1,etat_select);
-                stmt.setString(2, cap_select);
-                stmt.executeUpdate();
-                System.out.println("Import réussi!");
-                stmt.close();
-                JOptionPane.showMessageDialog(frame, "L'état du capteur à été modifié avec succès!");
-                cardLayout.show(mainPanel, "CapteursPanel");
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
+            int i = 0 ;
+//            String query = "UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?";
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query)) {
+//                stmt.setString(1,etat_select);
+//                stmt.setString(2, cap_select);
+//                stmt.executeUpdate();
+//                System.out.println("Import réussi!");
+//                stmt.close();
+//                JOptionPane.showMessageDialog(frame, "L'état du capteur à été modifié avec succès!");
+//                cardLayout.show(mainPanel, "CapteursPanel");
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
+//            }
+            try {
+                capteursNoms.clear();
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs) {
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        capteursNoms.add(cap.getName());
+                        capteursNoms.add(cap.getTypecapteur());
+                    }
+                }
+                for (String nomtype :capteursNoms) {
+                    while (i < capteursNoms.size() && !nomtype.equals(cap_select) ) {
+                        i++;
+                    }
+                }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            MaisonCapteur nouvelEtat = new MaisonCapteur();
+            nouvelEtat.setName(cap_select);
+            i -= 1;
+            if (i >= capteursNoms.size()) {
+                System.out.println("cap_select non trouvé dans capteursNoms"+i);
+            } else {
+                System.out.println("cap_select trouvé à l'index : " + i);
+            }
+
+            nouvelEtat.setTypecapteur(capteursNoms.get(i));
+            nouvelEtat.setEtat(etat_select);
+            System.out.println(nouvelEtat);
+
+
+            try {
+                update.updateCapteur(nouvelEtat);
+            }catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
         });
 
@@ -834,6 +918,7 @@ public class Application {
 //            }
         });
 
+
         btnSaveCapteur.addActionListener(e -> {
             //Récupération des données
             String nomCapteur = txtNomCapteur.getText().trim();
@@ -874,7 +959,7 @@ public class Application {
             }
             try {
                 MaisonCapteurService maisonCapteurService =new MaisonCapteurService(networkConfig);
-                maisonCapteurService.insertCapteurs(maisonCapteur,"INSERT_CAPTEUR");
+                maisonCapteurService.insertCapteur(maisonCapteur);
                 JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
                 cardLayout.show(mainPanel, "MenuPanel");
             } catch (InterruptedException ex) {
