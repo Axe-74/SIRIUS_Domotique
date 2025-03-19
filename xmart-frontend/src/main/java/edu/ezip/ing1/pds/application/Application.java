@@ -36,6 +36,7 @@ public class Application {
     private static final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
     final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
     final MaisonCapteurService update;
+    final MaisonAutomatisationService update_automatisation;
     {
         try {
             update = new MaisonCapteurService(networkConfig);
@@ -43,6 +44,14 @@ public class Application {
             throw new RuntimeException(e);
         }
     }
+    {
+        try {
+            update_automatisation = new MaisonAutomatisationService(networkConfig);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
 
 
 //    public Application()  {
@@ -800,6 +809,109 @@ public class Application {
                         if (cap.getName().equals(cap_select)){
                             cap.setEtat(etat_select);
                             update.updateCapteur(cap);
+                            break;
+                        }
+                    }
+                }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        //Bouton Changement etat automatisation
+        btnEtatAutomation.addActionListener(e -> {
+//            String query1 = "SELECT nom_capteur FROM capteurs;";
+//            capteursNoms_cE.clear();
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query1);
+//                 ResultSet  rs = stmt.executeQuery()){
+//                while (rs.next()){
+//                    String nom_capteur_comparaison = rs.getString("nom_capteur");;
+//                    capteursNoms_cE.add(nom_capteur_comparaison);
+//                }
+//                rs.close();
+//                stmt.close();
+//                System.out.println("Import réussi!");
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+//            }
+//            String query2 = "SELECT * FROM capteurs";
+//            capteurs_affichage.clear();
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query2);
+//                 ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    String nom = rs.getString("nom_capteur");
+//                    String type = rs.getString("type_capteur");
+//                    String etat = rs.getString("etat_capteur");
+//                    System.out.println(nom);
+//                    System.out.println(etat);
+//                    System.out.println("Type récupéré : " + type);
+//                    Maison_Capteurs.TypeCapteur typeCap = Maison_Capteurs.TypeCapteur.valueOf(type);
+//                    Maison_Capteurs.EtatCapteur etatCap = Maison_Capteurs.EtatCapteur.valueOf(etat);
+//                    Maison_Capteurs capteur = new Maison_Capteurs(nom, typeCap, etatCap);
+//                    System.out.println(capteur);
+//                    capteurs_affichage.add(nom);
+//                    capteurs_affichage.add(type);
+//                    capteurs_affichage.add(etat);}
+//                rs.close();
+//                stmt.close();
+//                System.out.println("Import réussi!");
+//                System.out.println(capteurs_affichage);
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
+//            }
+//            StringBuilder sb_automatisation= new StringBuilder();
+//            if (automatisations.isEmpty()) {
+//                sb_automatisation.append("Aucune automatisation enregistré.\n");
+//            } else {
+//                sb_automatisation.append("Automatisations enregistrés :\n");
+//                for (MaisonAutomatisations maisonAutomatisations : automatisations)
+//                    for (MaisonAutomatisation auto : maisonAutomatisations.getMaisonAutomatisations()) {
+//                        sb_automatisation.append("Nom : ").append(auto.getNomAutomatisation()).append("\n")
+//                                .append("Type capteur: ").append(auto.getTypeCapteur()).append("\n")
+//                                .append("Type programme: ").append(auto.getTypeProgramme()).append("\n")
+//                                .append("Etat : ").append(auto.getEtatAutomatisation()).append("\n\n");
+//                    }
+//            }
+
+            try {
+                automatisationsNoms.clear();
+                MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
+                MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationService.select_all_automation();
+                automatisations.clear();
+                automatisations.add(maisonAutomatisationsFind);
+                System.out.println(automatisations);
+                for (MaisonAutomatisations auto : automatisations)
+                    for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
+                        automatisationsNoms.add(aut.getNomAutomatisation());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel model = new DefaultComboBoxModel(automatisationsNoms.toArray(new String[0]));
+            cbAutomatisationsExistantes.removeAllItems();
+            cbAutomatisationsExistantes.setModel(model);
+        });
+        btnEnregistrerEtatAutomatisation.addActionListener(e -> {
+            String auto_select = cbAutomatisationsExistantes.getSelectedItem().toString();
+            String etat_auto_select = cbEtatAutomatisation_ChangerEtat.getSelectedItem().toString();
+            int i = 0 ;
+            try {
+                MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
+                MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationService.select_all_automation();
+                automatisations.clear();
+                automatisations.add(maisonAutomatisationsFind);
+
+                for (MaisonAutomatisations auto : automatisations) {
+                    for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
+                        if (aut.getNomAutomatisation().equals(auto_select)){
+                            aut.setEtatAutomatisation(etat_auto_select);
+                            update_automatisation.updateAutomation(aut);
                             break;
                         }
                     }

@@ -187,10 +187,8 @@ public class XMartCityService {
 
         final PreparedStatement stmt = connection.prepareStatement(Queries.UPDATE_AUTOMATION.query);
 
-        stmt.setString(1, maisonAutomatisation.getNomAutomatisation());
-        stmt.setString(2, maisonAutomatisation.getTypeCapteur());
-        stmt.setString(3, maisonAutomatisation.getTypeProgramme());
-        stmt.setString(4, maisonAutomatisation.getEtatAutomatisation());
+        stmt.setString(2, maisonAutomatisation.getNomAutomatisation());
+        stmt.setString(1, maisonAutomatisation.getEtatAutomatisation());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation));
