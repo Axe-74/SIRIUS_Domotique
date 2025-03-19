@@ -9,7 +9,6 @@ import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
 import edu.ezip.ing1.pds.requests.InsertCapteurClientRequest;
 import edu.ezip.ing1.pds.requests.SelectAllCapteursClientRequest;
-import edu.ezip.ing1.pds.requests.SelectAllStudentsClientRequest;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -22,16 +21,29 @@ import java.util.UUID;
 public class MaisonCapteurService {
     private final static String LoggingLabel = "FrontEnd - CapteurService";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
-    private final static String studentsToBeInserted = "students-to-be-inserted.yaml";
+    //private final static String studentsToBeInserted = "students-to-be-inserted.yaml";
 
     final String insertRequestOrder = "INSERT_CAPTEUR";
     final String selectRequestOrder = "SELECT_ALL_CAPTEURS";
-
+    final String updateRequestOrder = "UPDATE_CAPTEUR";
+    final String deleteRequestOrder = "DELETE_CAPTEUR";
 
     private final NetworkConfig networkConfig;
 
     public MaisonCapteurService(NetworkConfig networkConfig) throws InterruptedException {
         this.networkConfig = networkConfig;
+    }
+
+    public void insertCapteur(MaisonCapteur maisonCapteur)throws InterruptedException, IOException {
+        insertCapteurs(maisonCapteur, insertRequestOrder);
+    }
+
+    public void updateCapteur(MaisonCapteur maisonCapteur)throws InterruptedException, IOException {
+        insertCapteurs(maisonCapteur, updateRequestOrder);
+    }
+
+    public void deleteCapteur(MaisonCapteur maisonCapteur)throws InterruptedException, IOException {
+        insertCapteurs(maisonCapteur, deleteRequestOrder);
     }
 
     public void insertCapteurs(MaisonCapteur maisonCapteur, String requestOrder) throws InterruptedException, IOException {
@@ -46,7 +58,7 @@ public class MaisonCapteurService {
         final String requestId = UUID.randomUUID().toString();
         final Request request = new Request();
         request.setRequestId(requestId);
-        request.setRequestOrder(insertRequestOrder);
+        request.setRequestOrder(requestOrder);
         request.setRequestContent(jsonifiedGuy);
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
