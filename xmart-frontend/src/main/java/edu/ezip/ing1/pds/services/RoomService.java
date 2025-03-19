@@ -3,8 +3,8 @@ package edu.ezip.ing1.pds.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.ezip.commons.LoggingUtils;
-import edu.ezip.ing1.pds.business.dto.Room;
-import edu.ezip.ing1.pds.business.dto.Rooms;
+import edu.ezip.ing1.pds.business.dto.MaisonRoom;
+import edu.ezip.ing1.pds.business.dto.MaisonRooms;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.ConfigLoader;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
@@ -37,10 +37,10 @@ public class RoomService {
 
     public void insertRooms() throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
-        final Rooms guys = ConfigLoader.loadConfig(Rooms.class, roomsToBeInserted);
+        final MaisonRooms guys = ConfigLoader.loadConfig(MaisonRooms.class, roomsToBeInserted);
 
         int birthdate = 0;
-        for(final Room guy : guys.getRooms()) {
+        for(final MaisonRoom guy : guys.getRooms()) {
             final ObjectMapper objectMapper = new ObjectMapper();
             final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(guy);
             logger.trace("Room with its JSON face : {}", jsonifiedGuy);
@@ -61,7 +61,7 @@ public class RoomService {
         while (!clientRequests.isEmpty()) {
             final ClientRequest clientRequest = clientRequests.pop();
             clientRequest.join();
-            final Room guy = (Room)clientRequest.getInfo();
+            final MaisonRoom guy = (MaisonRoom)clientRequest.getInfo();
             logger.debug("Thread {} complete : {} {} {} --> {}",
                     clientRequest.getThreadName(),
                     guy.getType(), guy.getName(), guy.getSurface(),
@@ -69,7 +69,7 @@ public class RoomService {
         }
     }
 
-    public Rooms selectRooms() throws InterruptedException, IOException {
+    public MaisonRooms selectRooms() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -89,7 +89,7 @@ public class RoomService {
             final ClientRequest joinedClientRequest = clientRequests.pop();
             joinedClientRequest.join();
             logger.debug("Thread {} complete.", joinedClientRequest.getThreadName());
-            return (Rooms) joinedClientRequest.getResult();
+            return (MaisonRooms) joinedClientRequest.getResult();
         }
         else {
             logger.error("No rooms found");
