@@ -1097,6 +1097,53 @@ public class Application {
 //                throw new RuntimeException("Erreur lors de la sauvegarde des pièces : " + ex.getMessage());
 //            }
 //        });
+        btnSaveRoom.addActionListener(e -> {
+            String nameRoom = txtNameRoom.getText().trim();
+            String typeRoom = (String) cbTypeRoom.getSelectedItem();
+            Integer surfaceRoom = (int) spSurfaceRoom.getValue();
+            if (nameRoom.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir le nom de la pièce.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (surfaceRoom <= 0) {
+                JOptionPane.showMessageDialog(frame, "La surface de la pièce doit être srictement supérieur à 0.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            MaisonRoom maisonRoom = new MaisonRoom(nameRoom,typeRoom,surfaceRoom);
+            int CountRoomNameEqual = 0;
+            try {
+                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRoomsFind = maisonRoomServiceFind.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRoomsFind);
+                for (MaisonRooms maisonRooms : rooms)
+                    for (MaisonRoom maisonRoom1 : maisonRooms.getMaisonRooms()) {
+                        if (nameRoom.equals(maisonRoom1.getName())){
+                            CountRoomNameEqual = CountRoomNameEqual + 1;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountRoomNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                MaisonRoomService maisonRoomService =new MaisonRoomService(networkConfig);
+                maisonRoomService.insertRoom(maisonRoom,"INSERT_ROOM");
+                JOptionPane.showMessageDialog(frame, "Pièce enregistrée avec succès!");
+                cardLayout.show(mainPanel, "HouseManagementPanel");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
 
         //FIN
         cardLayout.show(mainPanel, "MenuPanel");

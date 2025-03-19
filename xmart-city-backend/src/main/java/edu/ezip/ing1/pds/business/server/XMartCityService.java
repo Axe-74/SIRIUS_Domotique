@@ -28,7 +28,7 @@ public class XMartCityService {
         SELECT_ALL_CAPTEURS("SELECT id, nom_capteur, type_capteur, etat_capteur FROM capteurs"),
         INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)"),
         SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
-//        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
+        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
         SELECT_ALL_PROGRAM("SELECT * FROM programmes"),
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
@@ -91,9 +91,9 @@ public class XMartCityService {
             case SELECT_ALL_ROOMS:
                 response = SelectAllRooms(request, connection);
                 break;
-//            case INSERT_ROOM:
-//                response = InsertRoom(request, connection);
-//                break;
+            case INSERT_ROOM:
+                response = InsertRoom(request, connection);
+                break;
             case SELECT_NAME_AUTOMATION:
                 response = SelectNameAutomation(request, connection);
                 break;
@@ -245,20 +245,17 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));
     }
 
-//    private Response InsertRoom(final Request request, final Connection connection) throws SQLException, IOException {
-//        final ObjectMapper objectMapper = new ObjectMapper();
-//        final Room room = objectMapper.readValue(request.getRequestBody(), Room.class);
-//        final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_ROOM.query);
-//        stmt.setString(1, room.getName());
-//        stmt.setString(2, room.getType());
-//        stmt.setInt(3, room.getSurface());
-//        stmt.executeUpdate();
-//        final Statement stmt2 = connection.createStatement();
-//        final ResultSet res = stmt2.executeQuery("SELECT LAST_INSERT_ID()");
-//        res.next();
-//        room.setId(res.getInt(1));
-//        return new Response(request.getRequestId(), objectMapper.writeValueAsString(room));
-//    }
+    private Response InsertRoom(final Request request, final Connection connection) throws SQLException, IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final MaisonRoom maisonRoom = objectMapper.readValue(request.getRequestBody(), MaisonRoom.class);
+        final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_ROOM.query);
+        stmt.setString(1, maisonRoom.getName());
+        stmt.setString(2, maisonRoom.getType());
+        stmt.setInt(3,maisonRoom.getSurface());
+        stmt.executeUpdate();
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonRoom));
+    }
 
     private Response SelectAllRooms(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
         final ObjectMapper objectMapper = new ObjectMapper();
