@@ -786,24 +786,9 @@ public class Application {
             cbCapteursExistants.setModel(model);
         });
         btnEnregistrerEtatCapteur.addActionListener(e -> {
-            System.out.println("\n"+capteurs+"\n"+"\n"+"\n"+"\n");
             String cap_select = cbCapteursExistants.getSelectedItem().toString();
             String etat_select = cbEtatCapteur_ChangerEtat.getSelectedItem().toString();
             int i = 0 ;
-//            String query = "UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?";
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query)) {
-//                stmt.setString(1,etat_select);
-//                stmt.setString(2, cap_select);
-//                stmt.executeUpdate();
-//                System.out.println("Import réussi!");
-//                stmt.close();
-//                JOptionPane.showMessageDialog(frame, "L'état du capteur à été modifié avec succès!");
-//                cardLayout.show(mainPanel, "CapteursPanel");
-//            } catch (SQLException ex) {
-//                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
-//            }
-
             try {
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
@@ -999,44 +984,6 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-//            String query1 = "SELECT nom_capteur FROM capteurs;";
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query1);
-//                 ResultSet  rs = stmt.executeQuery()){
-//                while (rs.next()){
-//                    String nom_capteur_comparaison = rs.getString("nom_capteur");;
-//                    capteursNoms.add(nom_capteur_comparaison);
-//                }
-//            } catch (SQLException ex) {
-//                throw new RuntimeException("Erreur lors de la récupération : " + ex.getMessage());
-//            }
-//            for (String cN : capteursNoms){
-//                if (cN.equals(nomCapteur)) {
-//                    JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
-//                    return;
-//                }
-//            }
-//
-//            //Création et sauvegarde du capteur
-//            Maison_Capteurs nouveauCapteur = new Maison_Capteurs(nomCapteur, capteurSelect, etatSelect);
-//            capteurs.add(nouveauCapteur);
-//
-//            //Connection connection = DriverManager.getConnection(url, username, password);
-//            String query = "INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)";
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query)) {
-//                Maison_Capteurs capt = capteurs.get(capteurs.size() - 1);
-//                stmt.setString(1, capt.NomCapteur);
-//                stmt.setString(2, capt.TypeCapteur.toString());
-//                stmt.setString(3, capt.EtatCapteur.toString());
-//                stmt.executeUpdate();
-//                System.out.println("Import réussi!");
-//                JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
-//                cardLayout.show(mainPanel, "CapteursPanel");
-//                stmt.close();
-//            } catch (SQLException ex) {
-//                throw new RuntimeException("Erreur lors de la sauvegarde des capteurs : " + ex.getMessage());
-//            }
         });
 
 //        btnSaveRoom.addActionListener(e -> {
