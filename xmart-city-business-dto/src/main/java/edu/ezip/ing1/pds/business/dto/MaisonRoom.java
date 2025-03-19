@@ -9,25 +9,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 
 @JsonRootName(value = "room")
-public class Room {
+public class MaisonRoom {
     private  String name;
     private  String type;
     private  int surface;
     private  int id;
 
 
-    public Room() {
+    public MaisonRoom() {
     }
-    public final Room build(final ResultSet resultSet)
+    public final MaisonRoom build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
         setFieldsFromResulset(resultSet, "name", "type", "surface");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        return buildPreparedStatement(preparedStatement, name, type);
+        return buildPreparedStatement(preparedStatement, name, type, String.valueOf(surface));
     }
-    public Room(String name, String type, int surface) {
+    public MaisonRoom(String name, String type, int surface) {
         this.name = name;
         this.type = type;
         this.surface = surface;
