@@ -20,8 +20,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.UUID;
 
-public class RoomService {
-    private final static String LoggingLabel = "FrontEnd - RoomService";
+public class MaisonRoomService {
+    private final static String LoggingLabel = "FrontEnd - MaisonRoomService";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String roomsToBeInserted = "rooms-to-be-inserted.yaml";
 
@@ -31,16 +31,16 @@ public class RoomService {
 
     private final NetworkConfig networkConfig;
 
-    public RoomService(NetworkConfig networkConfig) {
+    public MaisonRoomService(NetworkConfig networkConfig) {
         this.networkConfig = networkConfig;
     }
 
-    public void insertRooms() throws InterruptedException, IOException {
+    public void insertRooms(MaisonRoom maisonRoom) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final MaisonRooms guys = ConfigLoader.loadConfig(MaisonRooms.class, roomsToBeInserted);
 
         int birthdate = 0;
-        for(final MaisonRoom guy : guys.getRooms()) {
+        for(final MaisonRoom guy : guys.getMaisonRooms()) {
             final ObjectMapper objectMapper = new ObjectMapper();
             final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(guy);
             logger.trace("Room with its JSON face : {}", jsonifiedGuy);

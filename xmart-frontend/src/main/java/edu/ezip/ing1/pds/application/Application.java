@@ -10,9 +10,11 @@ import edu.ezip.ing1.pds.business.dto.*;
 import edu.ezip.ing1.pds.services.MaisonAutomatisationService;
 import edu.ezip.ing1.pds.services.MaisonCapteurService;
 import edu.ezip.ing1.pds.services.MaisonProgrammeService;
+import edu.ezip.ing1.pds.services.MaisonRoomService;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.ConfigLoader;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -22,7 +24,7 @@ public class Application {
     public ArrayList<MaisonProgrammes> programmes = new ArrayList<MaisonProgrammes>();
     public ArrayList<MaisonAutomatisations> automatisations = new ArrayList<MaisonAutomatisations>();
     public ArrayList<MaisonCapteurs> capteurs = new ArrayList<>(); {}
-    public ArrayList<Maison_Room> rooms = new ArrayList<>();
+    public ArrayList<MaisonRooms> rooms = new ArrayList<>();
     public ArrayList<String> automatisationsNoms = new ArrayList<String>();
     public ArrayList<String> capteursNoms = new ArrayList<>();
     public ArrayList<String> programmesNoms = new ArrayList<>();
@@ -328,7 +330,10 @@ public class Application {
         JTextField txtNameRoom = new JTextField();
 
         JLabel lblTypeRoom = new JLabel("Type de pièce : ");
-        JComboBox<Maison_Room.TypeRoom> cbTypeRoom = new JComboBox<>(Maison_Room.TypeRoom.values());
+//        JComboBox<Maison_Room.TypeRoom> cbTypeRoom = new JComboBox<>(Maison_Room.TypeRoom.values());
+        JComboBox<String> cbTypeRoom = new JComboBox<>(new String[]{
+                "Entree", "Salon", "Cuisine", "Salle_de_bain", "Toilettes", "Chambre", "Autre"
+        });
 
         JLabel lblSurfaceRoom = new JLabel("Surface de la pièce (en m²) :");
         JSpinner spSurfaceRoom = new JSpinner(new SpinnerNumberModel(0, 0, 200, 1));
@@ -380,6 +385,22 @@ public class Application {
         voirCapteurPanel.add(btnBackToMenu_VoirCapteurs, BorderLayout.SOUTH);
 
         mainPanel.add(voirCapteurPanel, "voirCapteurPanel");
+
+
+// Voir Rooms
+        JPanel voirRoomPanel = new JPanel();
+        voirRoomPanel.setLayout(new BorderLayout());
+
+        JTextArea txtRooms = new JTextArea();
+        txtRooms.setEditable(false);
+
+        JScrollPane scrollPane_rooms = new JScrollPane(txtRooms);
+        JButton btnBackToMenu_VoirRooms = new JButton("Retour au menu");
+
+        voirRoomPanel.add(scrollPane_rooms, BorderLayout.CENTER);
+        voirRoomPanel.add(btnBackToMenu_VoirRooms, BorderLayout.SOUTH);
+
+        mainPanel.add(voirRoomPanel, "voirRoomPanel");
 
 
 
@@ -444,10 +465,14 @@ public class Application {
         btnNewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
         btnChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "EtatCapteurPanel"));
 
+        //Retour Menu Rooms
+        btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
+        btnBackToMenu_VoirRooms.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         //Boutons Rooms
+        btnViewRoom.addActionListener(e -> cardLayout.show(mainPanel, "voirRoomPanel"));
         btnHouseManagement.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomPanel"));
-        btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
+
 
         //Boutons plus complexes
 
@@ -583,51 +608,81 @@ public class Application {
 //            cardLayout.show(mainPanel, "voirCapteurPanel");
         });
 
+//        btnViewRoom.addActionListener(e -> {
+//            String query = "SELECT * FROM rooms";
+//            rooms.clear();
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query);
+//                 ResultSet rs = stmt.executeQuery()) {
+//                while (rs.next()) {
+//                    String nom_room = rs.getString("nom_room");
+//                    String type_room = rs.getString("type_room");
+//                    int room_surface = rs.getInt("room_surface");
+//                    Maison_Room.TypeRoom typeRoom = Maison_Room.TypeRoom.valueOf(type_room);
+//                    Maison_Room room = new Maison_Room(nom_room,typeRoom,room_surface);
+//                    rooms.add(room);
+//                }
+//                rs.close();
+//                stmt.close();
+//                System.out.println("Import réussi!");
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la récupération des pièce : " + ex.getMessage());
+//            }
+//            StringBuilder sb_room= new StringBuilder();
+//            if (rooms.isEmpty()) {
+//                sb_room.append("Aucune pièce enregistrée.\n");
+//            } else {
+//                JPanel ViewRoomPanel = new JPanel();
+//                ViewRoomPanel.setLayout(new FlowLayout());
+//
+//                for (Maison_Room room : rooms) {
+//                    JButton btnRoom_i = new JButton(room.NameRoom);
+//                    ViewRoomPanel.add(btnRoom_i);
+//                    mainPanel.add(ViewRoomPanel, "ViewRoomPanel");
+//
+//                    JPanel Inroom_iPanel = new JPanel();
+//                    Inroom_iPanel.setLayout(new FlowLayout());
+//                    JButton btnBackToMenuInRoom_i = new JButton("Retour");
+//                    Inroom_iPanel.add(btnBackToMenuInRoom_i, BorderLayout.SOUTH);
+//                    btnBackToMenuInRoom_i.addActionListener(ev -> cardLayout.show(mainPanel, "ViewRoomPanel"));
+//                    mainPanel.add(Inroom_iPanel, "Inroom_iPanel");
+//                    btnRoom_i.addActionListener(ev -> cardLayout.show(mainPanel, "Inroom_iPanel"));
+//                }
+//                JButton btnBackToMenuViewRoom = new JButton("Retour");
+//                ViewRoomPanel.add(btnBackToMenuViewRoom);
+//                btnBackToMenuViewRoom.addActionListener(ev -> cardLayout.show(mainPanel, "HouseManagementPanel"));
+//            }
+//            cardLayout.show(mainPanel, "ViewRoomPanel");
+//        });
+
         btnViewRoom.addActionListener(e -> {
-            String query = "SELECT * FROM rooms";
-            rooms.clear();
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query);
-                 ResultSet rs = stmt.executeQuery()) {
-                while (rs.next()) {
-                    String nom_room = rs.getString("nom_room");
-                    String type_room = rs.getString("type_room");
-                    int room_surface = rs.getInt("room_surface");
-                    Maison_Room.TypeRoom typeRoom = Maison_Room.TypeRoom.valueOf(type_room);
-                    Maison_Room room = new Maison_Room(nom_room,typeRoom,room_surface);
-                    rooms.add(room);
-                }
-                rs.close();
-                stmt.close();
+            try {
+                MaisonRoomService maisonRoomService = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRooms = maisonRoomService.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRooms);
                 System.out.println("Import réussi!");
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la récupération des pièce : " + ex.getMessage());
+                System.out.println(rooms);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
+
             StringBuilder sb_room= new StringBuilder();
             if (rooms.isEmpty()) {
-                sb_room.append("Aucune pièce enregistrée.\n");
+                sb_room.append("Aucune pièce enregistré.\n");
             } else {
-                JPanel ViewRoomPanel = new JPanel();
-                ViewRoomPanel.setLayout(new FlowLayout());
-
-                for (Maison_Room room : rooms) {
-                    JButton btnRoom_i = new JButton(room.NameRoom);
-                    ViewRoomPanel.add(btnRoom_i);
-                    mainPanel.add(ViewRoomPanel, "ViewRoomPanel");
-
-                    JPanel Inroom_iPanel = new JPanel();
-                    Inroom_iPanel.setLayout(new FlowLayout());
-                    JButton btnBackToMenuInRoom_i = new JButton("Retour");
-                    Inroom_iPanel.add(btnBackToMenuInRoom_i, BorderLayout.SOUTH);
-                    btnBackToMenuInRoom_i.addActionListener(ev -> cardLayout.show(mainPanel, "ViewRoomPanel"));
-                    mainPanel.add(Inroom_iPanel, "Inroom_iPanel");
-                    btnRoom_i.addActionListener(ev -> cardLayout.show(mainPanel, "Inroom_iPanel"));
-                }
-                JButton btnBackToMenuViewRoom = new JButton("Retour");
-                ViewRoomPanel.add(btnBackToMenuViewRoom);
-                btnBackToMenuViewRoom.addActionListener(ev -> cardLayout.show(mainPanel, "HouseManagementPanel"));
+                sb_room.append("pièce enregistrés :\n");
+                for (MaisonRooms maisonRooms : rooms)
+                    for (MaisonRoom room : maisonRooms.getMaisonRooms()) {
+                        sb_room.append("Nom : ").append(room.getName()).append("\n")
+                                .append("Type : ").append(room.getType()).append("\n")
+                                .append("Surface : ").append(room.getSurface()).append("\n\n");
+                    }
             }
-            cardLayout.show(mainPanel, "ViewRoomPanel");
+            txtRooms.setText(sb_room.toString());
+            cardLayout.show(mainPanel, "voirRoomPanel");
         });
 
         //Bouton récupération BD
@@ -1007,41 +1062,41 @@ public class Application {
 //            }
         });
 
-        btnSaveRoom.addActionListener(e -> {
-            //Récupération des données
-            String nameRoom = txtNameRoom.getText().trim();
-            Maison_Room.TypeRoom roomSelect = (Maison_Room.TypeRoom) cbTypeRoom.getSelectedItem();
-            int roomSurface = (int) spSurfaceRoom.getValue();
-            // Validation des données
-            if (nameRoom.isEmpty()) {
-                JOptionPane.showMessageDialog(frame, "Veuillez nommer la pièce.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            if (roomSurface <= 0) {
-                JOptionPane.showMessageDialog(frame, "La surface de la pièce doit être positive.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return;
-            }
-            // Création et sauvegarde de la piece
-            Maison_Room nouvellePiece = new Maison_Room(nameRoom, roomSelect, roomSurface);
-            rooms.add(nouvellePiece);
-
-            //Connection connection = DriverManager.getConnection(url, username, password);
-            String query = "INSERT INTO rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)";
-            try (Connection conn = DriverManager.getConnection(url, username, password);
-                 PreparedStatement stmt = conn.prepareStatement(query)) {
-                Maison_Room room = rooms.get(rooms.size() - 1);
-                stmt.setString(1, room.NameRoom);
-                stmt.setString(2, room.TypeRoom.toString());
-                stmt.setInt(3, room.RoomSurface);
-                stmt.executeUpdate();
-                System.out.println("Import réussi!");
-                JOptionPane.showMessageDialog(frame, "Pièce enregistré avec succès!");
-                cardLayout.show(mainPanel, "HouseManagementPanel");
-                stmt.close();
-            } catch (SQLException ex) {
-                throw new RuntimeException("Erreur lors de la sauvegarde des pièces : " + ex.getMessage());
-            }
-        });
+//        btnSaveRoom.addActionListener(e -> {
+//            //Récupération des données
+//            String nameRoom = txtNameRoom.getText().trim();
+//            Maison_Room.TypeRoom roomSelect = (Maison_Room.TypeRoom) cbTypeRoom.getSelectedItem();
+//            int roomSurface = (int) spSurfaceRoom.getValue();
+//            // Validation des données
+//            if (nameRoom.isEmpty()) {
+//                JOptionPane.showMessageDialog(frame, "Veuillez nommer la pièce.", "Erreur", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//            if (roomSurface <= 0) {
+//                JOptionPane.showMessageDialog(frame, "La surface de la pièce doit être positive.", "Erreur", JOptionPane.ERROR_MESSAGE);
+//                return;
+//            }
+//            // Création et sauvegarde de la piece
+//            Maison_Room nouvellePiece = new Maison_Room(nameRoom, roomSelect, roomSurface);
+//            rooms.add(nouvellePiece);
+//
+//            //Connection connection = DriverManager.getConnection(url, username, password);
+//            String query = "INSERT INTO rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)";
+//            try (Connection conn = DriverManager.getConnection(url, username, password);
+//                 PreparedStatement stmt = conn.prepareStatement(query)) {
+//                Maison_Room room = rooms.get(rooms.size() - 1);
+//                stmt.setString(1, room.NameRoom);
+//                stmt.setString(2, room.TypeRoom.toString());
+//                stmt.setInt(3, room.RoomSurface);
+//                stmt.executeUpdate();
+//                System.out.println("Import réussi!");
+//                JOptionPane.showMessageDialog(frame, "Pièce enregistré avec succès!");
+//                cardLayout.show(mainPanel, "HouseManagementPanel");
+//                stmt.close();
+//            } catch (SQLException ex) {
+//                throw new RuntimeException("Erreur lors de la sauvegarde des pièces : " + ex.getMessage());
+//            }
+//        });
 
         //FIN
         cardLayout.show(mainPanel, "MenuPanel");

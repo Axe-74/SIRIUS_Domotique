@@ -9,19 +9,19 @@ import java.util.Set;
 public class MaisonRooms {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
-    @JsonProperty("rooms")
+    @JsonProperty("MaisonRooms")
     private  Set<MaisonRoom> maisonRooms = new LinkedHashSet<MaisonRoom>();
 
-    public Set<MaisonRoom> getRooms() {
+    public Set<MaisonRoom> getMaisonRooms() {
         return maisonRooms;
     }
 
-    public void setRooms(Set<MaisonRoom> maisonRooms) {
+    public void setMaisonRooms(Set<MaisonRoom> maisonRooms) {
         this.maisonRooms = maisonRooms;
     }
 
-    public final MaisonRooms add (final MaisonRoom maisonRoom) {
-        maisonRooms.add(maisonRoom);
+    public final MaisonRooms add (final MaisonRoom maison_Room) {
+        maisonRooms.add(maison_Room);
         return this;
     }
 

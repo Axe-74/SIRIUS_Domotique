@@ -19,7 +19,7 @@ public class SelectAllRoomsClientRequest extends ClientRequest<Object, MaisonRoo
     @Override
     public MaisonRooms readResult(String body) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
-        final MaisonRooms rooms = mapper.readValue(body, MaisonRooms.class);
-        return rooms;
+        final MaisonRooms maisonRooms = mapper.readValue(body, MaisonRooms.class);
+        return maisonRooms;
     }
 }
