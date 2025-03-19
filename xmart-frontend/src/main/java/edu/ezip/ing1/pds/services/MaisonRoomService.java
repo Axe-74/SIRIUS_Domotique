@@ -20,8 +20,8 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.UUID;
 
-public class RoomService {
-    private final static String LoggingLabel = "FrontEnd - RoomService";
+public class MaisonRoomService {
+    private final static String LoggingLabel = "FrontEnd - MaisonRoomService";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String roomsToBeInserted = "rooms-to-be-inserted.yaml";
 
@@ -31,41 +31,40 @@ public class RoomService {
 
     private final NetworkConfig networkConfig;
 
-    public RoomService(NetworkConfig networkConfig) {
+    public MaisonRoomService(NetworkConfig networkConfig) {
         this.networkConfig = networkConfig;
     }
 
-    public void insertRooms() throws InterruptedException, IOException {
+    public void insertRoom(MaisonRoom maisonRoom, String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
-        final MaisonRooms guys = ConfigLoader.loadConfig(MaisonRooms.class, roomsToBeInserted);
 
         int birthdate = 0;
-        for(final MaisonRoom guy : guys.getRooms()) {
-            final ObjectMapper objectMapper = new ObjectMapper();
-            final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(guy);
-            logger.trace("Room with its JSON face : {}", jsonifiedGuy);
-            final String requestId = UUID.randomUUID().toString();
-            final Request request = new Request();
-            request.setRequestId(requestId);
-            request.setRequestOrder(insertRequestOrder);
-            request.setRequestContent(jsonifiedGuy);
-            objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
-            final byte []  requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
 
-            final InsertRoomsClientRequest clientRequest = new InsertRoomsClientRequest(
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(maisonRoom);
+        logger.trace("Room with its JSON face : {}", jsonifiedGuy);
+        final String requestId = UUID.randomUUID().toString();
+        final Request request = new Request();
+        request.setRequestId(requestId);
+        request.setRequestOrder(insertRequestOrder);
+        request.setRequestContent(jsonifiedGuy);
+        objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+        final byte []  requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
+
+        final InsertRoomsClientRequest clientRequest = new InsertRoomsClientRequest(
                     networkConfig,
-                    birthdate++, request, guy, requestBytes);
+                    birthdate++, request, maisonRoom, requestBytes);
             clientRequests.push(clientRequest);
-        }
+
 
         while (!clientRequests.isEmpty()) {
-            final ClientRequest clientRequest = clientRequests.pop();
-            clientRequest.join();
-            final MaisonRoom guy = (MaisonRoom)clientRequest.getInfo();
+            final ClientRequest clientRequest2 = clientRequests.pop();
+            clientRequest2.join();
+            final MaisonRoom maisonRoom1 = (MaisonRoom)clientRequest2.getInfo();
             logger.debug("Thread {} complete : {} {} {} --> {}",
-                    clientRequest.getThreadName(),
-                    guy.getType(), guy.getName(), guy.getSurface(),
-                    clientRequest.getResult());
+                    clientRequest2.getThreadName(),
+                    maisonRoom1.getName(), maisonRoom1.getType(), maisonRoom1.getSurface(),
+                    clientRequest2.getResult());
         }
     }
 

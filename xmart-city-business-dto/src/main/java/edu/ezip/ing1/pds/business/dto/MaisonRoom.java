@@ -8,7 +8,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@JsonRootName(value = "room")
+@JsonRootName(value = "MaisonRoom")
 public class MaisonRoom {
     private  String name;
     private  String type;
@@ -20,7 +20,7 @@ public class MaisonRoom {
     }
     public final MaisonRoom build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "name", "type", "surface");
+        setFieldsFromResulset(resultSet, "id", "name_room", "type_room", "room_surface");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
