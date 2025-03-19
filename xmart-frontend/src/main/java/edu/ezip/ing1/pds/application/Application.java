@@ -711,7 +711,6 @@ public class Application {
                     }
             }
 
-
             try {
                 capteursNoms_cE.clear();
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
@@ -749,45 +748,23 @@ public class Application {
 //            } catch (SQLException ex) {
 //                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
 //            }
+
             try {
-                capteursNoms.clear();
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
                 capteurs.clear();
                 capteurs.add(maisonCapteurFind);
+
                 for (MaisonCapteurs capt : capteurs) {
                     for (MaisonCapteur cap : capt.getCapteurs()) {
-                        capteursNoms.add(cap.getName());
-                        capteursNoms.add(cap.getTypecapteur());
-                    }
-                }
-                for (String nomtype :capteursNoms) {
-                    while (i < capteursNoms.size() && !nomtype.equals(cap_select) ) {
-                        i++;
+                        if (cap.getName().equals(cap_select)){
+                            cap.setEtat(etat_select);
+                            update.updateCapteur(cap);
+                            break;
+                        }
                     }
                 }
             } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            MaisonCapteur nouvelEtat = new MaisonCapteur();
-            nouvelEtat.setName(cap_select);
-            i -= 1;
-            if (i >= capteursNoms.size()) {
-                System.out.println("cap_select non trouvé dans capteursNoms"+i);
-            } else {
-                System.out.println("cap_select trouvé à l'index : " + i);
-            }
-
-            nouvelEtat.setTypecapteur(capteursNoms.get(i));
-            nouvelEtat.setEtat(etat_select);
-            System.out.println(nouvelEtat);
-
-
-            try {
-                update.updateCapteur(nouvelEtat);
-            }catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
