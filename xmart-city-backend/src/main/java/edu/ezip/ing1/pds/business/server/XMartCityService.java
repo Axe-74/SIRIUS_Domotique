@@ -34,7 +34,9 @@ public class XMartCityService {
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
         UPDATE_CAPTEUR("UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?"),
-        DELETE_CAPTEUR("DELETE FROM capteurs WHERE id = ?"),;
+        DELETE_CAPTEUR("DELETE FROM capteurs WHERE id = ?"),
+        UPDATE_AUTOMATION("UPDATE automatisatiosn SET etat_automatisation = ? WHERE nom_automatisation = ?"),
+        DELETE_AUTOMATION("DELETE FROM automatisations WHERE id = ?"),;
 
         private final String query;
 
@@ -95,6 +97,12 @@ public class XMartCityService {
             case SELECT_NAME_AUTOMATION:
                 response = SelectNameAutomation(request, connection);
                 break;
+            case UPDATE_AUTOMATION:
+                response = UpdateAutomatisation(request, connection);
+                break;
+//            case DELETE_AUTOMATION:
+//                response = DeleteCapteur(request,connection);
+//                break;
             case SELECT_ALL_PROGRAM:
                 response = SelectAllProgram(request, connection);
                 break;
@@ -170,6 +178,22 @@ public class XMartCityService {
             maisonAutomatisations.add(maisonAutomatisation);
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
+    }
+
+    private Response UpdateAutomatisation(final Request request, final Connection connection) throws SQLException, IOException {
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final MaisonAutomatisation maisonAutomatisation = objectMapper.readValue(request.getRequestBody(), MaisonAutomatisation.class);
+
+        final PreparedStatement stmt = connection.prepareStatement(Queries.UPDATE_AUTOMATION.query);
+
+        stmt.setString(1, maisonAutomatisation.getNomAutomatisation());
+        stmt.setString(2, maisonAutomatisation.getTypeCapteur());
+        stmt.setString(3, maisonAutomatisation.getTypeProgramme());
+        stmt.setString(4, maisonAutomatisation.getEtatAutomatisation());
+        stmt.executeUpdate();
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation));
     }
 
     private Response SelectAllCapteurs(final Request request, final Connection connection) throws SQLException, JsonProcessingException {

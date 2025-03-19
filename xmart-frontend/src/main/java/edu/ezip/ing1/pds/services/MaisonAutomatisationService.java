@@ -5,6 +5,7 @@ import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.ezip.commons.LoggingUtils;
 import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation;
 import edu.ezip.ing1.pds.business.dto.MaisonAutomatisations;
+import edu.ezip.ing1.pds.business.dto.MaisonCapteur;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
@@ -27,11 +28,21 @@ public class MaisonAutomatisationService {
     final String insertRequestOrder = "INSERT_AUTOMATION";
     final String selectRequestOrder = "SELECT_ALL_AUTOMATION";
     final String selectNameAutomation = "SELECT_NAME_AUTOMATION";
+    final String updateRequestOrder = "UPDATE_AUTOMATION";
+    final String deleteRequestOrder = "DELETE_AUTOMATION";
 
     private final NetworkConfig networkConfig;
 
     public MaisonAutomatisationService(NetworkConfig networkConfig) throws InterruptedException {
         this.networkConfig = networkConfig;
+    }
+
+    public void updateAutomation(MaisonAutomatisation maisonAutomatisation)throws InterruptedException, IOException {
+        insertAutomation(maisonAutomatisation, updateRequestOrder);
+    }
+
+    public void deleteAutomation(MaisonAutomatisation maisonAutomatisation)throws InterruptedException, IOException {
+        insertAutomation(maisonAutomatisation, deleteRequestOrder);
     }
 
     public void insertAutomation(MaisonAutomatisation maisonAutomatisation, String requestOrder) throws InterruptedException, IOException {
