@@ -32,7 +32,9 @@ public class XMartCityService {
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
         SELECT_ALL_PROGRAM("SELECT * FROM programmes"),
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
-        SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes");
+        SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
+        UPDATE_CAPTEUR("UPDATE capteurs SET etat_capteur = ? WHERE id = ?"),
+        DELETE_CAPTEUR("DELETE FROM capteurs WHERE id = ?"),;
 
         private final String query;
 
@@ -78,6 +80,12 @@ public class XMartCityService {
             case INSERT_CAPTEUR:
                 response = InsertCapteur(request, connection);
                 break;
+            case UPDATE_CAPTEUR:
+                response = UpdateCapteur(request, connection);
+                break;
+//            case DELETE_CAPTEUR:
+//                response = DeleteCapteur(request,connection);
+//                break;
 //            case SELECT_ALL_ROOMS:
 //                response = SelectAllRooms(request, connection);
 //                break;
@@ -193,6 +201,21 @@ public class XMartCityService {
         stmt.setString(1, maisonCapteur.getName());
         stmt.setString(2, maisonCapteur.getTypecapteur());
         stmt.setString(3, maisonCapteur.getEtat());
+        stmt.executeUpdate();
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));
+    }
+    private Response UpdateCapteur(final Request request, final Connection connection) throws SQLException, IOException {
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final MaisonCapteur maisonCapteur = objectMapper.readValue(request.getRequestBody(), MaisonCapteur.class);
+
+        final PreparedStatement stmt = connection.prepareStatement(Queries.UPDATE_CAPTEUR.query);
+
+        stmt.setString(1, maisonCapteur.getName());
+        stmt.setString(2, maisonCapteur.getTypecapteur());
+        stmt.setString(3, maisonCapteur.getEtat());
+        stmt.setInt(4, maisonCapteur.getIdCapteur());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));
