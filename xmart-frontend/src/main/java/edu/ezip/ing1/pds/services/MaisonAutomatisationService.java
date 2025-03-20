@@ -38,14 +38,22 @@ public class MaisonAutomatisationService {
     }
 
     public void updateAutomation(MaisonAutomatisation maisonAutomatisation)throws InterruptedException, IOException {
-        insertAutomation(maisonAutomatisation, updateRequestOrder);
+        insert_update_delete_Automation(maisonAutomatisation, updateRequestOrder);
     }
 
     public void deleteAutomation(MaisonAutomatisation maisonAutomatisation)throws InterruptedException, IOException {
-        insertAutomation(maisonAutomatisation, deleteRequestOrder);
+        logger.debug("deleteAutomation pour : {}", maisonAutomatisation.getNomAutomatisation());
+        insert_update_delete_Automation(maisonAutomatisation, deleteRequestOrder);
     }
 
-    public void insertAutomation(MaisonAutomatisation maisonAutomatisation, String requestOrder) throws InterruptedException, IOException {
+    public void insertAutomation(MaisonAutomatisation maisonAutomatisation)throws InterruptedException, IOException {
+        logger.debug("insertAutomation pour : {}", maisonAutomatisation.getNomAutomatisation());
+        insert_update_delete_Automation(maisonAutomatisation, insertRequestOrder);
+    }
+
+
+
+    public void insert_update_delete_Automation(MaisonAutomatisation maisonAutomatisation, String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 
         int birthdate = 0;
@@ -56,7 +64,7 @@ public class MaisonAutomatisationService {
         final String requestId = UUID.randomUUID().toString();
         final Request request = new Request();
         request.setRequestId(requestId);
-        request.setRequestOrder(insertRequestOrder);
+        request.setRequestOrder(requestOrder);
         request.setRequestContent(jsonifiedGuy);
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);

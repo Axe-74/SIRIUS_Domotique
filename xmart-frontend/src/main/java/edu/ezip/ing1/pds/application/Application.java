@@ -34,7 +34,7 @@ public class Application {
     private static final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
     final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
     final MaisonCapteurService update_delete_Capteur;
-    final MaisonAutomatisationService update_automatisation;
+    final MaisonAutomatisationService update_delete_automatisation;
     {
         try {
             update_delete_Capteur = new MaisonCapteurService(networkConfig);
@@ -44,7 +44,7 @@ public class Application {
     }
     {
         try {
-            update_automatisation = new MaisonAutomatisationService(networkConfig);
+            update_delete_automatisation = new MaisonAutomatisationService(networkConfig);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -84,11 +84,12 @@ public class Application {
 
 // Automations and programs Menu Panel
         JPanel Automations_and_programsPanel = new JPanel();
-        Automations_and_programsPanel.setLayout(new GridLayout(6, 1));
+        Automations_and_programsPanel.setLayout(new GridLayout(7, 1));
 
         JButton btnNewAutomations = new JButton("Définir une nouvelle automatisation");
         JButton btnViewAutomations = new JButton("Voir les automatisations");
         JButton btnNewPrograms = new JButton("Définir un nouveau programme");
+        JButton btnDeleteAutomation = new JButton("Supprimer une automatisation");
         JButton btnViewPrograms = new JButton("Voir les programmes");
         JButton btnEtatAutomation = new JButton("Changer l'état d'une automatisation");
         JButton btnBacktoMainmenu = new JButton("Retour au menu principal");
@@ -97,6 +98,7 @@ public class Application {
         Automations_and_programsPanel.add(btnViewAutomations);
         Automations_and_programsPanel.add(btnEtatAutomation);
         Automations_and_programsPanel.add(btnNewPrograms);
+        Automations_and_programsPanel.add(btnDeleteAutomation);
         Automations_and_programsPanel.add(btnViewPrograms);
         Automations_and_programsPanel.add(btnBacktoMainmenu);
 
@@ -228,6 +230,24 @@ public class Application {
         viewAutomationPanel.add(btnBackToMenuAutomationProgramm, BorderLayout.SOUTH);
 
         mainPanel.add(viewAutomationPanel, "ViewAutomationPanel");
+
+//Automatisation Supprimer Panel
+        JPanel SupprimerAutomatisationPanel = new JPanel();
+        SupprimerAutomatisationPanel.setLayout(new GridLayout(3, 1));
+
+        JLabel lblSupprimerAutomatisation = new JLabel("Supprimer une automatisation:");
+        lblSupprimerAutomatisation.setHorizontalAlignment(SwingConstants.CENTER);
+        JComboBox<String> cbAutomatisationsExistantes_Supp = new JComboBox<>(new String[]{});
+
+        JButton btnEnregistrerSupprimerAutomatisation = new JButton("Supprimer");
+        JButton btnBackToMenu_SupprimerAutomatisation = new JButton("Retour au menu");
+
+        SupprimerAutomatisationPanel.add(lblSupprimerAutomatisation);
+        SupprimerAutomatisationPanel.add(cbAutomatisationsExistantes_Supp);
+        SupprimerAutomatisationPanel.add(btnBackToMenu_SupprimerAutomatisation);
+        SupprimerAutomatisationPanel.add(btnEnregistrerSupprimerAutomatisation);
+
+        mainPanel.add(SupprimerAutomatisationPanel, "SupprimerAutomatisationPanel");
 
 
 
@@ -476,12 +496,14 @@ public class Application {
         btnBackToMenu_Program.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnAutomations_and_programs.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_ChangerEtatAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
+        btnBackToMenu_SupprimerAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
 
 
         //Boutons Automatisations et Programmes
         btnNewAutomations.addActionListener(e -> cardLayout.show(mainPanel, "AutomationPanel"));
         btnNewPrograms.addActionListener(e -> cardLayout.show(mainPanel, "ProgramPanel"));
         btnEtatAutomation.addActionListener(e -> cardLayout.show(mainPanel, "EtatAutomatisationPanel"));
+        btnDeleteAutomation.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerAutomatisationPanel"));
 
         //Retour Menu Capteurs
         btnSensorsManagement.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
@@ -823,7 +845,9 @@ public class Application {
                     for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
                         if (aut.getNomAutomatisation().equals(auto_select)){
                             aut.setEtatAutomatisation(etat_auto_select);
-                            update_automatisation.updateAutomation(aut);
+                            update_delete_automatisation.updateAutomation(aut);
+                            JOptionPane.showMessageDialog(frame, "Changement d'état enregistré avec succès!");
+                            cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
                             break;
                         }
                     }
@@ -835,7 +859,51 @@ public class Application {
             }
         });
 
-
+        //Bouton Suppression Automatisation
+        btnDeleteAutomation.addActionListener(e -> {
+            try {
+                automatisationsNoms.clear();
+                MaisonAutomatisationService maisonAutomatisationServiceFind = new MaisonAutomatisationService(networkConfig);
+                MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationServiceFind.select_all_automation();
+                automatisations.clear();
+                automatisations.add(maisonAutomatisationsFind);
+                for (MaisonAutomatisations auto : automatisations)
+                    for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
+                        automatisationsNoms.add(aut.getNomAutomatisation());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel model = new DefaultComboBoxModel(automatisationsNoms.toArray(new String[0]));
+            cbAutomatisationsExistantes_Supp.removeAllItems();
+            cbAutomatisationsExistantes_Supp.setModel(model);
+        });
+        btnEnregistrerSupprimerAutomatisation.addActionListener(e -> {
+            String auto_select = cbAutomatisationsExistantes_Supp.getSelectedItem().toString();
+            try {
+                MaisonAutomatisationService maisonAutomatisationServiceFind = new MaisonAutomatisationService(networkConfig);
+                MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationServiceFind.select_all_automation();
+                automatisations.clear();
+                automatisations.add(maisonAutomatisationsFind);
+                for (MaisonAutomatisations auto : automatisations) {
+                    for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
+                        if (aut.getNomAutomatisation().equals(auto_select)){
+                            logger.debug("Suppression de l'automatisation : {}", aut.getNomAutomatisation());
+                            update_delete_automatisation.deleteAutomation(aut);
+                            JOptionPane.showMessageDialog(frame, "Automatisation supprimé avec succès!");
+                            cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
+                            break;
+                        }
+                    }
+                }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         //Bouton Suppression Capteur
         btnSupprimerCapteur.addActionListener(e -> {
@@ -977,7 +1045,7 @@ public class Application {
             }
             try {
                 MaisonAutomatisationService maisonAutomatisationService =new MaisonAutomatisationService(networkConfig);
-                maisonAutomatisationService.insertAutomation(maisonAutomatisation,"INSERT_AUTOMATION");
+                maisonAutomatisationService.insertAutomation(maisonAutomatisation);
                 JOptionPane.showMessageDialog(frame, "Automatisation enregistré avec succès!");
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);

@@ -25,7 +25,7 @@ public class XMartCityService {
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
         INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
         UPDATE_AUTOMATION("UPDATE automatisatiosn SET etat_automatisation = ? WHERE nom_automatisation = ?"),
-        DELETE_AUTOMATION("DELETE FROM automatisations WHERE id = ?"),
+        DELETE_AUTOMATION("DELETE FROM automatisations WHERE nom_automatisation = ?"),
 
         //PROGRAM
         SELECT_ALL_PROGRAM("SELECT * FROM programmes"),
@@ -84,9 +84,9 @@ public class XMartCityService {
             case UPDATE_AUTOMATION:
                 response = UpdateAutomatisation(request, connection);
                 break;
-//            case DELETE_AUTOMATION:
-//                response = DeleteCapteur(request,connection);
-//                break;
+            case DELETE_AUTOMATION:
+                response = DeleteAutomation(request,connection);
+                break;
     //PROGRAM
             case SELECT_ALL_PROGRAM:
                 response = SelectAllProgram(request, connection);
@@ -165,8 +165,8 @@ public class XMartCityService {
 
         final PreparedStatement stmt = connection.prepareStatement(Queries.UPDATE_AUTOMATION.query);
 
-        stmt.setString(2, maisonAutomatisation.getNomAutomatisation());
-        stmt.setString(1, maisonAutomatisation.getEtatAutomatisation());
+        stmt.setString(1, maisonAutomatisation.getNomAutomatisation());
+        stmt.setString(2, maisonAutomatisation.getEtatAutomatisation());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation));
@@ -186,7 +186,18 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
     }
 
+    private Response DeleteAutomation(final Request request, final Connection connection) throws SQLException, IOException {
 
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final MaisonAutomatisation maisonAutomatisation = objectMapper.readValue(request.getRequestBody(), MaisonAutomatisation.class);
+
+        final PreparedStatement stmt = connection.prepareStatement(Queries.DELETE_AUTOMATION.query);
+
+        stmt.setString(1, maisonAutomatisation.getNomAutomatisation());
+        stmt.executeUpdate();
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation));
+    }
 
 //CAPTEUR
     private Response SelectAllCapteurs(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
@@ -230,8 +241,8 @@ public class XMartCityService {
 
         final PreparedStatement stmt = connection.prepareStatement(Queries.UPDATE_CAPTEUR.query);
 
-        stmt.setString(1, maisonCapteur.getEtat());
-        stmt.setString(2, maisonCapteur.getName());
+        stmt.setString(2, maisonCapteur.getEtat());
+        stmt.setString(1, maisonCapteur.getName());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));
