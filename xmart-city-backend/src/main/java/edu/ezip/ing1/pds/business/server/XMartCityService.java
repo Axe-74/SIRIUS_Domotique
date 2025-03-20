@@ -20,23 +20,30 @@ public class XMartCityService {
     private final Logger logger = LoggerFactory.getLogger(LoggingLabel);
 
     private enum Queries {
-        //SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname FROM students t"),
-        SELECT_ALL_STUDENTS("SELECT t.name, t.firstname, t.groupname, t.id FROM students t"),
-        INSERT_STUDENT("INSERT into students (name, firstname, groupname) values (?, ?, ?)"),
+        //AUTOMATION
         SELECT_ALL_AUTOMATION("SELECT * FROM automatisations"),
-        INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
-        SELECT_ALL_CAPTEURS("SELECT id, nom_capteur, type_capteur, etat_capteur FROM capteurs"),
-        INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)"),
-        SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
-        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
+        INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
+        UPDATE_AUTOMATION("UPDATE automatisatiosn SET etat_automatisation = ? WHERE nom_automatisation = ?"),
+        DELETE_AUTOMATION("DELETE FROM automatisations WHERE id = ?"),
+
+        //PROGRAM
         SELECT_ALL_PROGRAM("SELECT * FROM programmes"),
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
+
+        //CAPTEUR
+        SELECT_ALL_CAPTEURS("SELECT id, nom_capteur, type_capteur, etat_capteur FROM capteurs"),
+        INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)"),
         UPDATE_CAPTEUR("UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?"),
         DELETE_CAPTEUR("DELETE FROM capteurs WHERE nom_capteur = ?"),
-        UPDATE_AUTOMATION("UPDATE automatisatiosn SET etat_automatisation = ? WHERE nom_automatisation = ?"),
-        DELETE_AUTOMATION("DELETE FROM automatisations WHERE id = ?"),;
+
+        //ROOM
+        SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
+        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
+
+        //FERMETURE
+        ;
 
         private final String query;
 
@@ -64,18 +71,33 @@ public class XMartCityService {
 
         final Queries queryEnum = Enum.valueOf(Queries.class, request.getRequestOrder());
         switch (queryEnum) {
-            case SELECT_ALL_STUDENTS:
-                response = SelectAllStudents(request, connection);
-                break;
-            case INSERT_STUDENT:
-                response = InsertStudent(request, connection);
-                break;
+    //AUTOMATION
             case SELECT_ALL_AUTOMATION:
                 response = SelectAllAutomation(request, connection);
                 break;
             case INSERT_AUTOMATION:
                 response = InsertAutomation(request, connection);
                 break;
+            case SELECT_NAME_AUTOMATION:
+                response = SelectNameAutomation(request, connection);
+                break;
+            case UPDATE_AUTOMATION:
+                response = UpdateAutomatisation(request, connection);
+                break;
+//            case DELETE_AUTOMATION:
+//                response = DeleteCapteur(request,connection);
+//                break;
+    //PROGRAM
+            case SELECT_ALL_PROGRAM:
+                response = SelectAllProgram(request, connection);
+                break;
+            case INSERT_PROGRAM:
+                response = InsertProgram(request, connection);
+                break;
+            case SELECT_NAME_PROGRAM:
+                response = SelectNameProgram(request, connection);
+                break;
+    //CAPTEUR
             case SELECT_ALL_CAPTEURS:
                 response = SelectAllCapteurs(request, connection);
                 break;
@@ -88,30 +110,14 @@ public class XMartCityService {
             case DELETE_CAPTEUR:
                 response = DeleteCapteur(request,connection);
                 break;
+    //ROOM
             case SELECT_ALL_ROOMS:
                 response = SelectAllRooms(request, connection);
                 break;
             case INSERT_ROOM:
                 response = InsertRoom(request, connection);
                 break;
-            case SELECT_NAME_AUTOMATION:
-                response = SelectNameAutomation(request, connection);
-                break;
-            case UPDATE_AUTOMATION:
-                response = UpdateAutomatisation(request, connection);
-                break;
-//            case DELETE_AUTOMATION:
-//                response = DeleteCapteur(request,connection);
-//                break;
-            case SELECT_ALL_PROGRAM:
-                response = SelectAllProgram(request, connection);
-                break;
-            case INSERT_PROGRAM:
-                response = InsertProgram(request, connection);
-                break;
-            case SELECT_NAME_PROGRAM:
-                response = SelectNameProgram(request, connection);
-                break;
+    //PAR DEFAUT
             default:
                 break;
         }
@@ -119,37 +125,9 @@ public class XMartCityService {
         return response;
     }
 
-    private Response InsertStudent(final Request request, final Connection connection) throws SQLException, IOException {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final Student student = objectMapper.readValue(request.getRequestBody(), Student.class);
-        final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_STUDENT.query);
-        stmt.setString(1, student.getName());
-        stmt.setString(2, student.getFirstname());
-        stmt.setString(3, student.getGroup());
-        stmt.executeUpdate();
-        final Statement stmt2 = connection.createStatement();
-        final ResultSet res = stmt2.executeQuery("SELECT LAST_INSERT_ID()");
-        res.next();
-        student.setId(res.getInt(1));
-        return new Response(request.getRequestId(), objectMapper.writeValueAsString(student));
-    }
 
-    private Response SelectAllStudents(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final Statement stmt = connection.createStatement();
-        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_STUDENTS.query);
-        Students students = new Students();
-        while (res.next()) {
-            Student student = new Student();
-            student.setName(res.getString(1));
-            student.setFirstname(res.getString(2));
-            student.setGroup(res.getString(3));
-            student.setId(res.getInt(4));
-            students.add(student);
-        }
-        return new Response(request.getRequestId(), objectMapper.writeValueAsString(students));
-    }
 
+//AUTOMATION
     private Response InsertAutomation(final Request request, final Connection connection) throws SQLException, IOException {
         final ObjectMapper objectMapper = new ObjectMapper();
         final MaisonAutomatisation maisonAutomatisation = objectMapper.readValue(request.getRequestBody(), MaisonAutomatisation.class);
@@ -194,6 +172,23 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation));
     }
 
+    private Response SelectNameAutomation(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_NAME_AUTOMATION.query);
+        MaisonAutomatisations maisonAutomatisations = new MaisonAutomatisations();
+        while (res.next()) {
+            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
+            maisonAutomatisation.setNomAutomatisation(res.getString(1));
+            System.out.println("NOM" + maisonAutomatisation.getNomAutomatisation());
+            maisonAutomatisations.add(maisonAutomatisation);
+        }
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
+    }
+
+
+
+//CAPTEUR
     private Response SelectAllCapteurs(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
         final ObjectMapper objectMapper = new ObjectMapper();
         final Statement stmt = connection.createStatement();
@@ -227,6 +222,7 @@ public class XMartCityService {
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));
     }
+
     private Response UpdateCapteur(final Request request, final Connection connection) throws SQLException, IOException {
 
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -254,6 +250,9 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));
     }
 
+
+
+//ROOM
     private Response InsertRoom(final Request request, final Connection connection) throws SQLException, IOException {
         final ObjectMapper objectMapper = new ObjectMapper();
         final MaisonRoom maisonRoom = objectMapper.readValue(request.getRequestBody(), MaisonRoom.class);
@@ -281,20 +280,8 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonRooms));
     }
 
-    private Response SelectNameAutomation(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
-        final ObjectMapper objectMapper = new ObjectMapper();
-        final Statement stmt = connection.createStatement();
-        final ResultSet res = stmt.executeQuery(Queries.SELECT_NAME_AUTOMATION.query);
-        MaisonAutomatisations maisonAutomatisations = new MaisonAutomatisations();
-        while (res.next()) {
-            MaisonAutomatisation maisonAutomatisation = new MaisonAutomatisation();
-            maisonAutomatisation.setNomAutomatisation(res.getString(1));
-            System.out.println("NOM" + maisonAutomatisation.getNomAutomatisation());
-            maisonAutomatisations.add(maisonAutomatisation);
-        }
-        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisations));
-    }
 
+//PROGRAM
     private Response SelectAllProgram(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
         final ObjectMapper objectMapper = new ObjectMapper();
         final Statement stmt = connection.createStatement();
