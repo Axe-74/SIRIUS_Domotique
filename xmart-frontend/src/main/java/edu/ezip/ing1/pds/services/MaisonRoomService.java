@@ -3,6 +3,7 @@ package edu.ezip.ing1.pds.services;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.ezip.commons.LoggingUtils;
+import edu.ezip.ing1.pds.business.dto.MaisonCapteur;
 import edu.ezip.ing1.pds.business.dto.MaisonRoom;
 import edu.ezip.ing1.pds.business.dto.MaisonRooms;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
@@ -27,6 +28,7 @@ public class MaisonRoomService {
 
     final String insertRequestOrder = "INSERT_ROOM";
     final String selectRequestOrder = "SELECT_ALL_ROOMS";
+    final String updateRequestOrder = "UPDATE_ROOM";
 
 
     private final NetworkConfig networkConfig;
@@ -35,7 +37,15 @@ public class MaisonRoomService {
         this.networkConfig = networkConfig;
     }
 
-    public void insertRoom(MaisonRoom maisonRoom, String requestOrder) throws InterruptedException, IOException {
+    public void updateRoom(MaisonRoom maisonRoom) throws InterruptedException, IOException {
+        iudRoom(maisonRoom, updateRequestOrder);
+    }
+
+    public void insertRoom(MaisonRoom maisonRoom) throws InterruptedException, IOException {
+        iudRoom(maisonRoom, insertRequestOrder);
+    }
+
+    public void iudRoom(MaisonRoom maisonRoom, String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 
         int birthdate = 0;
@@ -46,7 +56,7 @@ public class MaisonRoomService {
         final String requestId = UUID.randomUUID().toString();
         final Request request = new Request();
         request.setRequestId(requestId);
-        request.setRequestOrder(insertRequestOrder);
+        request.setRequestOrder(requestOrder);
         request.setRequestContent(jsonifiedGuy);
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         final byte []  requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
@@ -95,5 +105,4 @@ public class MaisonRoomService {
             return null;
         }
     }
-
 }

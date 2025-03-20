@@ -28,6 +28,7 @@ public class Application {
     public ArrayList<String> automatisationsNoms = new ArrayList<String>();
     public ArrayList<String> programmesNoms = new ArrayList<>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
+    public ArrayList<String> roomsNoms = new ArrayList<>();
     private final static String LoggingLabel = "Application";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String networkConfigFile = "network.yaml";
@@ -35,6 +36,7 @@ public class Application {
     final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
     final MaisonCapteurService update_delete_Capteur;
     final MaisonAutomatisationService update_delete_automatisation;
+    final MaisonRoomService update_delete_room;
     {
         try {
             update_delete_Capteur = new MaisonCapteurService(networkConfig);
@@ -49,6 +51,7 @@ public class Application {
             throw new RuntimeException(e);
         }
     }
+    {update_delete_room = new MaisonRoomService(networkConfig);}
 
     public void initialize() {
 
@@ -130,14 +133,17 @@ public class Application {
 
 // Gestion de la maison Menu Panel
         JPanel HouseManagementPanel = new JPanel();
-        HouseManagementPanel.setLayout(new GridLayout(3, 1));
+        HouseManagementPanel.setLayout(new GridLayout(4, 1));
 
         JButton btnNewRoom = new JButton("Nouvelle pièce");
         JButton btnViewRoom = new JButton("Mes pièces");
+        JButton btnModifierRoom = new JButton("Modifier une pièce");
+
         JButton btnBackToMenu_Room = new JButton("Retour");
 
         HouseManagementPanel.add(btnNewRoom);
         HouseManagementPanel.add(btnViewRoom);
+        HouseManagementPanel.add(btnModifierRoom);
         HouseManagementPanel.add(btnBackToMenu_Room);
 
         mainPanel.add(HouseManagementPanel, "HouseManagementPanel");
@@ -462,6 +468,56 @@ public class Application {
 
 
 
+// Choix de la pièce à modifier
+        JPanel RoomDefiniePanel = new JPanel();
+        RoomDefiniePanel.setLayout(new GridLayout(2, 2));
+
+        JLabel lblChoixRoom = new JLabel("Pièces :");
+
+        JComboBox<String> cbRoomsExistantes = new JComboBox<>(new String[]{
+        });
+
+        JButton btnChoisirRoom = new JButton("Choisir cette pièce");
+        JButton btnBackToMenu_ModifierRoom = new JButton("Retour au menu");
+
+        RoomDefiniePanel.add(lblChoixRoom);
+        RoomDefiniePanel.add(cbRoomsExistantes);
+        RoomDefiniePanel.add(btnBackToMenu_ModifierRoom);
+        RoomDefiniePanel.add(btnChoisirRoom);
+
+        mainPanel.add(RoomDefiniePanel, "RoomDefiniePanel");
+
+// Modification des données de la pièce choisie
+        JPanel pnlRoom2 = new JPanel();
+        pnlRoom2.setLayout(new GridLayout(4, 2));
+
+        JLabel lblNameRoom2 = new JLabel("Nom de la pièce :");
+        JTextField txtNameRoom2 = new JTextField();
+
+        JLabel lblTypeRoom2 = new JLabel("Type de pièce : ");
+        JComboBox<String> cbTypeRoom2 = new JComboBox<>(new String[]{
+                "Entree", "Salon", "Cuisine", "Salle_de_bain", "Toilettes", "Chambre", "Autre"
+        });
+
+        JLabel lblSurfaceRoom2 = new JLabel("Surface de la pièce (en m²) :");
+        JSpinner spSurfaceRoom2 = new JSpinner(new SpinnerNumberModel(1, 1, 200, 1));
+
+        JButton btnBackToMenuNewRoom2 = new JButton("Retour au menu");
+        JButton btnSaveModifRoom = new JButton("Enregistrer");
+
+        pnlRoom2.add(lblNameRoom2);
+        pnlRoom2.add(txtNameRoom2);
+        pnlRoom2.add(lblTypeRoom2);
+        pnlRoom2.add(cbTypeRoom2);
+        pnlRoom2.add(lblSurfaceRoom2);
+        pnlRoom2.add(spSurfaceRoom2);
+        pnlRoom2.add(btnBackToMenuNewRoom2);
+        pnlRoom2.add(btnSaveModifRoom);
+
+        mainPanel.add(pnlRoom2, "ModifierRoomPanel");
+
+
+
 //Capteur Supprimer Panel
         JPanel SupprimerCapteurPanel = new JPanel();
         SupprimerCapteurPanel.setLayout(new GridLayout(4, 1));
@@ -521,11 +577,15 @@ public class Application {
         //Retour Menu Rooms
         btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnBackToMenu_VoirRooms.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
+        btnBackToMenuNewRoom2.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
+        btnBackToMenu_ModifierRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
 
         //Boutons Rooms
         btnViewRoom.addActionListener(e -> cardLayout.show(mainPanel, "voirRoomPanel"));
         btnHouseManagement.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomPanel"));
+        btnModifierRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomDefiniePanel"));
+        btnChoisirRoom.addActionListener(e -> cardLayout.show(mainPanel, "ModifierRoomPanel"));
 
 
 //Boutons plus complexes
@@ -859,6 +919,80 @@ public class Application {
             }
         });
 
+        //Bouton Modifier les données d'une pièce
+        btnModifierRoom.addActionListener(e -> {
+            StringBuilder sb_room= new StringBuilder();
+            if (rooms.isEmpty()) {
+                sb_room.append("Aucune pièce enregistrée.\n");
+            } else {
+                sb_room.append("Pièces enregistrées :\n");
+                for (MaisonRooms maisonRooms : rooms)
+                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                        sb_room.append("Nom : ").append(maisonRoom.getName()).append("\n")
+                                .append("Type : ").append(maisonRoom.getType()).append("\n")
+                                .append("Surface : ").append(maisonRoom.getSurface()).append("\n\n");
+                    }
+            }
+
+            try {
+                roomsNoms.clear();
+                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRoomFind);
+                for (MaisonRooms maisonRooms : rooms)
+                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                        roomsNoms.add(maisonRoom.getName());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel model = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
+            cbRoomsExistantes.removeAllItems();
+            cbRoomsExistantes.setModel(model);
+        });
+
+        //Bouton enregistrer les modifications des données d'une pièce
+        btnSaveModifRoom.addActionListener(e -> {
+            String room_select = cbRoomsExistantes.getSelectedItem().toString();
+            String name_select = txtNameRoom2.getText().toString();
+            String type_select = cbTypeRoom2.getSelectedItem().toString();
+            Object surface_select = spSurfaceRoom2.getValue().toString();
+            int surface_select_int = Integer.parseInt(surface_select.toString());
+            if (name_select.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir le nom de la pièce.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRoomFind);
+                for (MaisonRooms maisonRooms : rooms) {
+                    System.out.println(maisonRooms);
+                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                        System.out.println(maisonRoom);
+                        if (maisonRoom.getName().equals(room_select)){
+                            System.out.println(maisonRoom.getId());
+                            maisonRoom.setName(name_select);
+                            maisonRoom.setType(type_select);
+                            maisonRoom.setSurface(surface_select_int);
+                            update_delete_room.updateRoom(maisonRoom);
+                            break;
+                        }
+                    }
+                }
+                JOptionPane.showMessageDialog(frame, "Pièce modifiée avec succès!");
+                cardLayout.show(mainPanel, "HouseManagementPanel");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
         //Bouton Suppression Automatisation
         btnDeleteAutomation.addActionListener(e -> {
             try {
@@ -1174,7 +1308,7 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "La surface de la pièce doit être srictement supérieur à 0.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            MaisonRoom maisonRoom = new MaisonRoom(nameRoom,typeRoom,surfaceRoom);
+            MaisonRoom maisonRoom = new MaisonRoom(nameRoom,typeRoom,surfaceRoom,0);
             int CountRoomNameEqual = 0;
             try {
                 MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
@@ -1199,7 +1333,7 @@ public class Application {
 
             try {
                 MaisonRoomService maisonRoomService =new MaisonRoomService(networkConfig);
-                maisonRoomService.insertRoom(maisonRoom,"INSERT_ROOM");
+                maisonRoomService.insertRoom(maisonRoom);
                 JOptionPane.showMessageDialog(frame, "Pièce enregistrée avec succès!");
                 cardLayout.show(mainPanel, "HouseManagementPanel");
             } catch (InterruptedException ex) {

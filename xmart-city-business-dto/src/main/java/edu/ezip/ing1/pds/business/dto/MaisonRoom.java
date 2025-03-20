@@ -27,10 +27,11 @@ public class MaisonRoom {
             throws SQLException, NoSuchFieldException, IllegalAccessException {
         return buildPreparedStatement(preparedStatement, name, type, String.valueOf(surface));
     }
-    public MaisonRoom(String name, String type, int surface) {
+    public MaisonRoom(String name, String type, int surface, int id) {
         this.name = name;
         this.type = type;
         this.surface = surface;
+        this.id = id;
     }
 
     public String getName() {
@@ -45,7 +46,9 @@ public class MaisonRoom {
         return surface;
     }
 
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     @JsonProperty("room_name")
     public void setName(String name) {
@@ -62,7 +65,7 @@ public class MaisonRoom {
         this.surface = surface;
     }
 
-    @JsonProperty("room_id")
+    @JsonProperty("id")
     public void setId(int id) {
         this.id = id;
     }
@@ -90,6 +93,7 @@ public class MaisonRoom {
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", surface='" + surface + '\'' +
+                ", id=" + id +  '\'' +
                 '}';
     }
 }
