@@ -100,8 +100,8 @@ public class Application {
         Automations_and_programsPanel.add(btnNewAutomations);
         Automations_and_programsPanel.add(btnViewAutomations);
         Automations_and_programsPanel.add(btnEtatAutomation);
-        Automations_and_programsPanel.add(btnNewPrograms);
         Automations_and_programsPanel.add(btnDeleteAutomation);
+        Automations_and_programsPanel.add(btnNewPrograms);
         Automations_and_programsPanel.add(btnViewPrograms);
         Automations_and_programsPanel.add(btnBacktoMainmenu);
 
@@ -190,8 +190,8 @@ public class Application {
         AutomationPanel.add(lblExplicationAutomatisationOFF);
         AutomationPanel.add(lblEtatAutomatisation);
         AutomationPanel.add(cbEtatAutomatisation);
-        AutomationPanel.add(btnSaveAutomation);
         AutomationPanel.add(btnBackToMenu_Automation);
+        AutomationPanel.add(btnSaveAutomation);
 
         mainPanel.add(AutomationPanel, "AutomationPanel");
 
@@ -217,8 +217,8 @@ public class Application {
         EtatAutomatisationPanel.add(lblEtatAutomatisation_EtatAutomatisation);
         EtatAutomatisationPanel.add(cbAutomatisationsExistantes);
         EtatAutomatisationPanel.add(cbEtatAutomatisation_ChangerEtat);
-        EtatAutomatisationPanel.add(btnEnregistrerEtatAutomatisation);
         EtatAutomatisationPanel.add(btnBackToMenu_ChangerEtatAutomatisation);
+        EtatAutomatisationPanel.add(btnEnregistrerEtatAutomatisation);
 
         mainPanel.add(EtatAutomatisationPanel, "EtatAutomatisationPanel");
 
@@ -240,7 +240,7 @@ public class Application {
 
 //Automatisation Supprimer Panel
         JPanel SupprimerAutomatisationPanel = new JPanel();
-        SupprimerAutomatisationPanel.setLayout(new GridLayout(3, 1));
+        SupprimerAutomatisationPanel.setLayout(new GridLayout(2, 2));
 
         JLabel lblSupprimerAutomatisation = new JLabel("Supprimer une automatisation:");
         lblSupprimerAutomatisation.setHorizontalAlignment(SwingConstants.CENTER);
@@ -309,8 +309,8 @@ public class Application {
         ProgramPanel.add(spHeureDebut);
         ProgramPanel.add(lblHeureFin);
         ProgramPanel.add(spHeureFin);
-        ProgramPanel.add(btnSaveProgram);
         ProgramPanel.add(btnBackToMenu_Program);
+        ProgramPanel.add(btnSaveProgram);
 
         mainPanel.add(ProgramPanel, "ProgramPanel");
 
@@ -353,8 +353,8 @@ public class Application {
         NewCapteursPanel.add(panelEtat);
         NewCapteursPanel.add(lblExplicationOFF);
         NewCapteursPanel.add(lblExplicationON);
-        NewCapteursPanel.add(btnSaveCapteur);
         NewCapteursPanel.add(btnBackToMenu_NewCapteur);
+        NewCapteursPanel.add(btnSaveCapteur);
 
         mainPanel.add(NewCapteursPanel, "NewCapteursPanel");
 
@@ -462,8 +462,8 @@ public class Application {
         EtatCapteurPanel.add(lblEtatCapteur_EtatCapteur);
         EtatCapteurPanel.add(cbCapteursExistants);
         EtatCapteurPanel.add(cbEtatCapteur_ChangerEtat);
-        EtatCapteurPanel.add(btnEnregistrerEtatCapteur);
         EtatCapteurPanel.add(btnBackToMenu_ChangerEtat);
+        EtatCapteurPanel.add(btnEnregistrerEtatCapteur);
 
         mainPanel.add(EtatCapteurPanel, "EtatCapteurPanel");
 
@@ -521,7 +521,7 @@ public class Application {
 
 //Capteur Supprimer Panel
         JPanel SupprimerCapteurPanel = new JPanel();
-        SupprimerCapteurPanel.setLayout(new GridLayout(4, 1));
+        SupprimerCapteurPanel.setLayout(new GridLayout(2, 2));
 
         JLabel lblSupprimerCapteur = new JLabel("Supprimer un capteur:");
         lblSupprimerCapteur.setHorizontalAlignment(SwingConstants.CENTER);
@@ -532,8 +532,8 @@ public class Application {
 
         SupprimerCapteurPanel.add(lblSupprimerCapteur);
         SupprimerCapteurPanel.add(cbCapteursExistants_Supp);
-        SupprimerCapteurPanel.add(btnEnregistrerSupprimerCapteur);
         SupprimerCapteurPanel.add(btnBackToMenu_SupprimerCapteur);
+        SupprimerCapteurPanel.add(btnEnregistrerSupprimerCapteur);
 
         mainPanel.add(SupprimerCapteurPanel, "SupprimerCapteurPanel");
 
@@ -541,7 +541,7 @@ public class Application {
         JPanel SupprimerRoomPanel = new JPanel();
         SupprimerRoomPanel.setLayout(new GridLayout(2, 2));
 
-        JLabel lblSupprimerRoom = new JLabel("Supprixmer une pièce :");
+        JLabel lblSupprimerRoom = new JLabel("Supprimer une pièce :");
         lblSupprimerRoom.setHorizontalAlignment(SwingConstants.CENTER);
         JComboBox<String> cbRoomsExistantes_Supp = new JComboBox<>(new String[]{});
 
@@ -821,7 +821,7 @@ public class Application {
                             cap.setEtat(etat_select);
                             update_delete_Capteur.updateCapteur(cap);
                             JOptionPane.showMessageDialog(frame, "Changement d'état enregistré avec succès!");
-                            cardLayout.show(mainPanel, "MenuPanel");
+                            cardLayout.show(mainPanel, "CapteursPanel");
                             break;
                         }
                     }
@@ -837,61 +837,6 @@ public class Application {
 
         //Bouton Changement Etat automatisation
         btnEtatAutomation.addActionListener(e -> {
-//            String query1 = "SELECT nom_capteur FROM capteurs;";
-//            capteursNoms_cE.clear();
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query1);
-//                 ResultSet  rs = stmt.executeQuery()){
-//                while (rs.next()){
-//                    String nom_capteur_comparaison = rs.getString("nom_capteur");;
-//                    capteursNoms_cE.add(nom_capteur_comparaison);
-//                }
-//                rs.close();
-//                stmt.close();
-//                System.out.println("Import réussi!");
-//            } catch (SQLException ex) {
-//                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
-//            }
-//            String query2 = "SELECT * FROM capteurs";
-//            capteurs_affichage.clear();
-//            try (Connection conn = DriverManager.getConnection(url, username, password);
-//                 PreparedStatement stmt = conn.prepareStatement(query2);
-//                 ResultSet rs = stmt.executeQuery()) {
-//                while (rs.next()) {
-//                    String nom = rs.getString("nom_capteur");
-//                    String type = rs.getString("type_capteur");
-//                    String etat = rs.getString("etat_capteur");
-//                    System.out.println(nom);
-//                    System.out.println(etat);
-//                    System.out.println("Type récupéré : " + type);
-//                    Maison_Capteurs.TypeCapteur typeCap = Maison_Capteurs.TypeCapteur.valueOf(type);
-//                    Maison_Capteurs.EtatCapteur etatCap = Maison_Capteurs.EtatCapteur.valueOf(etat);
-//                    Maison_Capteurs capteur = new Maison_Capteurs(nom, typeCap, etatCap);
-//                    System.out.println(capteur);
-//                    capteurs_affichage.add(nom);
-//                    capteurs_affichage.add(type);
-//                    capteurs_affichage.add(etat);}
-//                rs.close();
-//                stmt.close();
-//                System.out.println("Import réussi!");
-//                System.out.println(capteurs_affichage);
-//            } catch (SQLException ex) {
-//                throw new RuntimeException("Erreur lors de la récupération des capteurs : " + ex.getMessage());
-//            }
-//            StringBuilder sb_automatisation= new StringBuilder();
-//            if (automatisations.isEmpty()) {
-//                sb_automatisation.append("Aucune automatisation enregistré.\n");
-//            } else {
-//                sb_automatisation.append("Automatisations enregistrés :\n");
-//                for (MaisonAutomatisations maisonAutomatisations : automatisations)
-//                    for (MaisonAutomatisation auto : maisonAutomatisations.getMaisonAutomatisations()) {
-//                        sb_automatisation.append("Nom : ").append(auto.getNomAutomatisation()).append("\n")
-//                                .append("Type capteur: ").append(auto.getTypeCapteur()).append("\n")
-//                                .append("Type programme: ").append(auto.getTypeProgramme()).append("\n")
-//                                .append("Etat : ").append(auto.getEtatAutomatisation()).append("\n\n");
-//                    }
-//            }
-
             try {
                 automatisationsNoms.clear();
                 MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
@@ -1094,7 +1039,7 @@ public class Application {
                             logger.debug("Suppression du capteur : {}", cap.getName());
                             update_delete_Capteur.deleteCapteur(cap);
                             JOptionPane.showMessageDialog(frame, "Capteur supprimé avec succès!");
-                            cardLayout.show(mainPanel, "MenuPanel");
+                            cardLayout.show(mainPanel, "CapteursPanel");
                             break;
                         }
                     }
@@ -1320,7 +1265,7 @@ public class Application {
                 MaisonCapteurService maisonCapteurService =new MaisonCapteurService(networkConfig);
                 maisonCapteurService.insertCapteur(maisonCapteur);
                 JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
-                cardLayout.show(mainPanel, "MenuPanel");
+                cardLayout.show(mainPanel, "CapteursPanel");
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             } catch (IOException ex) {
