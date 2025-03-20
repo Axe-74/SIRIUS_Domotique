@@ -42,6 +42,8 @@ public class XMartCityService {
         SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
         INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
         UPDATE_ROOM("UPDATE rooms SET nom_room = ?, type_room = ?, room_surface = ? WHERE id = ?"),
+        DELETE_ROOM("DELETE FROM rooms WHERE nom_room = ?"),
+
 
         //FERMETURE
         ;
@@ -120,6 +122,9 @@ public class XMartCityService {
                 break;
             case UPDATE_ROOM:
                 response = UpdateRoom(request, connection);
+                break;
+            case DELETE_ROOM:
+                response = DeleteRoom(request, connection);
                 break;
     //PAR DEFAUT
             default:
@@ -307,6 +312,19 @@ public class XMartCityService {
         stmt.setString(2, maisonRoom.getType());
         stmt.setInt(3,maisonRoom.getSurface());
         stmt.setInt(4, maisonRoom.getId());
+        stmt.executeUpdate();
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonRoom));
+    }
+
+    private Response DeleteRoom(final Request request, final Connection connection) throws SQLException, IOException {
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final MaisonRoom maisonRoom = objectMapper.readValue(request.getRequestBody(), MaisonRoom.class);
+
+        final PreparedStatement stmt = connection.prepareStatement(Queries.DELETE_ROOM.query);
+
+        stmt.setString(1, maisonRoom.getName());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonRoom));

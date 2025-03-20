@@ -133,17 +133,18 @@ public class Application {
 
 // Gestion de la maison Menu Panel
         JPanel HouseManagementPanel = new JPanel();
-        HouseManagementPanel.setLayout(new GridLayout(4, 1));
+        HouseManagementPanel.setLayout(new GridLayout(5, 1));
 
         JButton btnNewRoom = new JButton("Nouvelle pièce");
         JButton btnViewRoom = new JButton("Mes pièces");
         JButton btnModifierRoom = new JButton("Modifier une pièce");
-
+        JButton btnSupprimerRoom = new JButton("Supprimer une pièce");
         JButton btnBackToMenu_Room = new JButton("Retour");
 
         HouseManagementPanel.add(btnNewRoom);
         HouseManagementPanel.add(btnViewRoom);
         HouseManagementPanel.add(btnModifierRoom);
+        HouseManagementPanel.add(btnSupprimerRoom);
         HouseManagementPanel.add(btnBackToMenu_Room);
 
         mainPanel.add(HouseManagementPanel, "HouseManagementPanel");
@@ -536,6 +537,24 @@ public class Application {
 
         mainPanel.add(SupprimerCapteurPanel, "SupprimerCapteurPanel");
 
+//Pièce Supprimer Panel
+        JPanel SupprimerRoomPanel = new JPanel();
+        SupprimerRoomPanel.setLayout(new GridLayout(2, 2));
+
+        JLabel lblSupprimerRoom = new JLabel("Supprixmer une pièce :");
+        lblSupprimerRoom.setHorizontalAlignment(SwingConstants.CENTER);
+        JComboBox<String> cbRoomsExistantes_Supp = new JComboBox<>(new String[]{});
+
+        JButton btnEnregistrerSupprimerRoom = new JButton("Supprimer");
+        JButton btnBackToMenu_SupprimerRoom = new JButton("Retour au menu");
+
+        SupprimerRoomPanel.add(lblSupprimerRoom);
+        SupprimerRoomPanel.add(cbRoomsExistantes_Supp);
+        SupprimerRoomPanel.add(btnBackToMenu_SupprimerRoom);
+        SupprimerRoomPanel.add(btnEnregistrerSupprimerRoom);
+
+        mainPanel.add(SupprimerRoomPanel, "SupprimerRoomPanel");
+
 
         // Events
         CardLayout cardLayout = (CardLayout) mainPanel.getLayout();
@@ -579,6 +598,7 @@ public class Application {
         btnBackToMenu_VoirRooms.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnBackToMenuNewRoom2.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnBackToMenu_ModifierRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
+        btnBackToMenu_SupprimerRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
 
         //Boutons Rooms
         btnViewRoom.addActionListener(e -> cardLayout.show(mainPanel, "voirRoomPanel"));
@@ -586,6 +606,7 @@ public class Application {
         btnNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomPanel"));
         btnModifierRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomDefiniePanel"));
         btnChoisirRoom.addActionListener(e -> cardLayout.show(mainPanel, "ModifierRoomPanel"));
+        btnSupprimerRoom.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerRoomPanel"));
 
 
 //Boutons plus complexes
@@ -1074,6 +1095,52 @@ public class Application {
                             update_delete_Capteur.deleteCapteur(cap);
                             JOptionPane.showMessageDialog(frame, "Capteur supprimé avec succès!");
                             cardLayout.show(mainPanel, "MenuPanel");
+                            break;
+                        }
+                    }
+                }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        //Bouton Suppression Pièce
+        btnSupprimerRoom.addActionListener(e -> {
+            try {
+                roomsNoms.clear();
+                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRoomFind);
+                for (MaisonRooms maisonRooms : rooms)
+                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                        roomsNoms.add(maisonRoom.getName());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel model = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
+            cbRoomsExistantes_Supp.removeAllItems();
+            cbRoomsExistantes_Supp.setModel(model);
+        });
+        btnEnregistrerSupprimerRoom.addActionListener(e -> {
+            String room_select = cbRoomsExistantes_Supp.getSelectedItem().toString();
+            try {
+                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRoomFind);
+                for (MaisonRooms maisonRooms : rooms) {
+                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                        if (maisonRoom.getName().equals(room_select)){
+                            logger.debug("Suppression de la pièce : {}", maisonRoom.getName());
+                            update_delete_room.deleteRoom(maisonRoom);
+                            JOptionPane.showMessageDialog(frame, "Pièce supprimée avec succès!");
+                            cardLayout.show(mainPanel, "HouseManagementPanel");
                             break;
                         }
                     }

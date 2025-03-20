@@ -29,6 +29,7 @@ public class MaisonRoomService {
     final String insertRequestOrder = "INSERT_ROOM";
     final String selectRequestOrder = "SELECT_ALL_ROOMS";
     final String updateRequestOrder = "UPDATE_ROOM";
+    final String deleteRequestOrder = "DELETE_ROOM";
 
 
     private final NetworkConfig networkConfig;
@@ -37,12 +38,17 @@ public class MaisonRoomService {
         this.networkConfig = networkConfig;
     }
 
+    public void insertRoom(MaisonRoom maisonRoom) throws InterruptedException, IOException {
+        iudRoom(maisonRoom, insertRequestOrder);
+    }
+
     public void updateRoom(MaisonRoom maisonRoom) throws InterruptedException, IOException {
         iudRoom(maisonRoom, updateRequestOrder);
     }
 
-    public void insertRoom(MaisonRoom maisonRoom) throws InterruptedException, IOException {
-        iudRoom(maisonRoom, insertRequestOrder);
+    public void deleteRoom(MaisonRoom maisonRoom)throws InterruptedException, IOException {
+        logger.debug("deleteRoom pour : {}", maisonRoom.getName());
+        iudRoom(maisonRoom, deleteRequestOrder);
     }
 
     public void iudRoom(MaisonRoom maisonRoom, String requestOrder) throws InterruptedException, IOException {
