@@ -23,7 +23,6 @@ import java.util.UUID;
 public class MaisonAutomatisationService {
     private final static String LoggingLabel = "FrontEnd - MaisonAutomatisationService";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
-    private final static String studentsToBeInserted = "students-to-be-inserted.yaml";
 
     final String insertRequestOrder = "INSERT_AUTOMATION";
     final String selectRequestOrder = "SELECT_ALL_AUTOMATION";
@@ -38,6 +37,7 @@ public class MaisonAutomatisationService {
     }
 
     public void updateAutomation(MaisonAutomatisation maisonAutomatisation)throws InterruptedException, IOException {
+        logger.debug("updateAutomation pour : {}", maisonAutomatisation.getNomAutomatisation());
         insert_update_delete_Automation(maisonAutomatisation, updateRequestOrder);
     }
 
@@ -78,9 +78,9 @@ public class MaisonAutomatisationService {
             final ClientRequest clientRequest2 = clientRequests.pop();
             clientRequest2.join();
             final MaisonAutomatisation maisonAutomatisation2 = (MaisonAutomatisation) clientRequest2.getInfo();
-            logger.debug("Thread {} complete : {} {} {} --> {}",
+            logger.debug("Thread {} complete : {} {} {} {} --> {}",
                     clientRequest2.getThreadName(),
-                    maisonAutomatisation2.getNomAutomatisation(), maisonAutomatisation2.getTypeCapteur(), maisonAutomatisation2.getTypeProgramme(),
+                    maisonAutomatisation2.getNomAutomatisation(), maisonAutomatisation2.getTypeCapteur(), maisonAutomatisation2.getTypeProgramme(), maisonAutomatisation2.getEtatAutomatisation(),
                     clientRequest2.getResult());
         }
     }

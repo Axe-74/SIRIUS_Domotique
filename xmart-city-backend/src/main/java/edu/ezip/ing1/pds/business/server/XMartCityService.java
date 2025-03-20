@@ -24,7 +24,7 @@ public class XMartCityService {
         SELECT_ALL_AUTOMATION("SELECT * FROM automatisations"),
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
         INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
-        UPDATE_AUTOMATION("UPDATE automatisatiosn SET etat_automatisation = ? WHERE nom_automatisation = ?"),
+        UPDATE_AUTOMATION("UPDATE automatisations SET etat_automatisation = ? WHERE nom_automatisation = ?"),
         DELETE_AUTOMATION("DELETE FROM automatisations WHERE nom_automatisation = ?"),
 
         //PROGRAM
@@ -169,8 +169,8 @@ public class XMartCityService {
 
         final PreparedStatement stmt = connection.prepareStatement(Queries.UPDATE_AUTOMATION.query);
 
-        stmt.setString(1, maisonAutomatisation.getNomAutomatisation());
-        stmt.setString(2, maisonAutomatisation.getEtatAutomatisation());
+        stmt.setString(2, maisonAutomatisation.getNomAutomatisation());
+        stmt.setString(1, maisonAutomatisation.getEtatAutomatisation());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation));
