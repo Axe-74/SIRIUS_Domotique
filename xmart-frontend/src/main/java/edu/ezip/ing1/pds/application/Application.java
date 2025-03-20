@@ -709,6 +709,8 @@ public class Application {
                         if (cap.getName().equals(cap_select)){
                             cap.setEtat(etat_select);
                             update_delete_Capteur.updateCapteur(cap);
+                            JOptionPane.showMessageDialog(frame, "Changement d'état enregistré avec succès!");
+                            cardLayout.show(mainPanel, "MenuPanel");
                             break;
                         }
                     }
@@ -860,6 +862,8 @@ public class Application {
                         if (cap.getName().equals(cap_select)){
                             logger.debug("Suppression du capteur : {}", cap.getName());
                             update_delete_Capteur.deleteCapteur(cap);
+                            JOptionPane.showMessageDialog(frame, "Capteur supprimé avec succès!");
+                            cardLayout.show(mainPanel, "MenuPanel");
                             break;
                         }
                     }
