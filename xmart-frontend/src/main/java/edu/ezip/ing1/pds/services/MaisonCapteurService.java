@@ -35,18 +35,21 @@ public class MaisonCapteurService {
     }
 
     public void insertCapteur(MaisonCapteur maisonCapteur)throws InterruptedException, IOException {
-        insertCapteurs(maisonCapteur, insertRequestOrder);
+        logger.debug("insertCapteur pour : {}", maisonCapteur.getName());
+        iudCapteurs(maisonCapteur, insertRequestOrder);
     }
 
     public void updateCapteur(MaisonCapteur maisonCapteur)throws InterruptedException, IOException {
-        insertCapteurs(maisonCapteur, updateRequestOrder);
+        logger.debug("updateCapteur pour : {}", maisonCapteur.getName());
+        iudCapteurs(maisonCapteur, updateRequestOrder);
     }
 
     public void deleteCapteur(MaisonCapteur maisonCapteur)throws InterruptedException, IOException {
-        insertCapteurs(maisonCapteur, deleteRequestOrder);
+        logger.debug("deleteCapteur pour : {}", maisonCapteur.getName());
+        iudCapteurs(maisonCapteur, deleteRequestOrder);
     }
 
-    public void insertCapteurs(MaisonCapteur maisonCapteur, String requestOrder) throws InterruptedException, IOException {
+    public void iudCapteurs(MaisonCapteur maisonCapteur, String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 //        final MaisonCapteurs guys = ConfigLoader.loadConfig(MaisonCapteurs.class, studentsToBeInserted);
 

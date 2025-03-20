@@ -35,11 +35,11 @@ public class Application {
     private final static String networkConfigFile = "network.yaml";
     private static final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
     final NetworkConfig networkConfig = ConfigLoader.loadConfig(NetworkConfig.class, networkConfigFile);
-    final MaisonCapteurService update;
+    final MaisonCapteurService update_delete_Capteur;
     final MaisonAutomatisationService update_automatisation;
     {
         try {
-            update = new MaisonCapteurService(networkConfig);
+            update_delete_Capteur = new MaisonCapteurService(networkConfig);
         } catch (InterruptedException e) {
             throw new RuntimeException(e);
         }
@@ -119,19 +119,22 @@ public class Application {
 
 // Capteurs Menu Panel
         JPanel CapteursPanel = new JPanel();
-        CapteursPanel.setLayout(new GridLayout(4, 1));
+        CapteursPanel.setLayout(new GridLayout(5, 1));
 
         JButton btnNewCapteur = new JButton("Définir un nouveau capteur");
         JButton btnVoirCapteurs = new JButton("Voir les capteurs");
         JButton btnChangerEtat = new JButton("Changer l'état des capteurs");
         JButton btnRetourCapteurs = new JButton("Retour");
+        JButton btnSupprimerCapteur = new JButton("Supprimer un capteur");
 
         CapteursPanel.add(btnNewCapteur);
         CapteursPanel.add(btnVoirCapteurs);
         CapteursPanel.add(btnChangerEtat);
+        CapteursPanel.add(btnSupprimerCapteur);
         CapteursPanel.add(btnRetourCapteurs);
 
         mainPanel.add(CapteursPanel, "CapteursPanel");
+
 
 
 
@@ -438,7 +441,22 @@ public class Application {
 
         mainPanel.add(EtatCapteurPanel, "EtatCapteurPanel");
 
+//Capteur Supprimer Panel
+        JPanel SupprimerCapteurPanel = new JPanel();
+        SupprimerCapteurPanel.setLayout(new GridLayout(4, 1));
 
+        JLabel lblSupprimerCapteur = new JLabel("Supprimer un capteur:");
+        JComboBox<String> cbCapteursExistants_Supp = new JComboBox<>(new String[]{});
+
+        JButton btnEnregistrerSupprimerCapteur = new JButton("Supprimer");
+        JButton btnBackToMenu_SupprimerCapteur = new JButton("Retour au menu");
+
+        SupprimerCapteurPanel.add(lblSupprimerCapteur);
+        SupprimerCapteurPanel.add(cbCapteursExistants_Supp);
+        SupprimerCapteurPanel.add(btnEnregistrerSupprimerCapteur);
+        SupprimerCapteurPanel.add(btnBackToMenu_SupprimerCapteur);
+
+        mainPanel.add(SupprimerCapteurPanel, "SupprimerCapteurPanel");
 
 
         // Events
@@ -468,11 +486,13 @@ public class Application {
         btnBackToMenu_NewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
         btnBackToMenu_VoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
         btnBackToMenu_ChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
+        btnBackToMenu_SupprimerCapteur.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
 
         //Boutons Capteurs
         btnVoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "voirCapteurPanel"));
         btnNewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
         btnChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "EtatCapteurPanel"));
+        btnSupprimerCapteur.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerCapteurPanel"));
 
         //Retour Menu Rooms
         btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
@@ -808,7 +828,7 @@ public class Application {
                     for (MaisonCapteur cap : capt.getCapteurs()) {
                         if (cap.getName().equals(cap_select)){
                             cap.setEtat(etat_select);
-                            update.updateCapteur(cap);
+                            update_delete_Capteur.updateCapteur(cap);
                             break;
                         }
                     }
@@ -820,7 +840,7 @@ public class Application {
             }
         });
 
-        //Bouton Changement etat automatisation
+        //Bouton Changement Etat automatisation
         btnEtatAutomation.addActionListener(e -> {
 //            String query1 = "SELECT nom_capteur FROM capteurs;";
 //            capteursNoms_cE.clear();
@@ -912,6 +932,51 @@ public class Application {
                         if (aut.getNomAutomatisation().equals(auto_select)){
                             aut.setEtatAutomatisation(etat_auto_select);
                             update_automatisation.updateAutomation(aut);
+                            break;
+                        }
+                    }
+                }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        //Bouton Suppression Capteur
+        btnSupprimerCapteur.addActionListener(e -> {
+            try {
+                capteursNoms_cE.clear();
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs)
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        capteursNoms_cE.add(cap.getName());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel model = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
+            cbCapteursExistants_Supp.removeAllItems();
+            cbCapteursExistants_Supp.setModel(model);
+        });
+
+        btnEnregistrerSupprimerCapteur.addActionListener(e -> {
+            String cap_select = cbCapteursExistants_Supp.getSelectedItem().toString();
+            try {
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs) {
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        if (cap.getName().equals(cap_select)){
+                            logger.debug("Suppression du capteur : {}", cap.getName());
+                            update_delete_Capteur.deleteCapteur(cap);
                             break;
                         }
                     }
@@ -1046,7 +1111,6 @@ public class Application {
 //                throw new RuntimeException("Erreur lors de la sauvegarde des programmes : " + ex.getMessage());
 //            }
         });
-
 
         btnSaveCapteur.addActionListener(e -> {
             //Récupération des données
