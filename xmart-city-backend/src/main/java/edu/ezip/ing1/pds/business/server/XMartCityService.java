@@ -250,8 +250,8 @@ public class XMartCityService {
 
         final PreparedStatement stmt = connection.prepareStatement(Queries.UPDATE_CAPTEUR.query);
 
-        stmt.setString(2, maisonCapteur.getEtat());
-        stmt.setString(1, maisonCapteur.getName());
+        stmt.setString(1, maisonCapteur.getEtat());
+        stmt.setString(2, maisonCapteur.getName());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));
