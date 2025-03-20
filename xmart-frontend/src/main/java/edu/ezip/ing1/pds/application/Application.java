@@ -294,19 +294,26 @@ public class Application {
         NewCapteursPanel.setLayout(new GridLayout(5, 2));
 
         JLabel lblNomCapteur = new JLabel("Nom du capteur:");
+        lblNomCapteur.setHorizontalAlignment(SwingConstants.CENTER);
         JTextField txtNomCapteur = new JTextField();
 
         JLabel lblTypeCapteur = new JLabel("Type du capteur: ");
+        lblTypeCapteur.setHorizontalAlignment(SwingConstants.CENTER);
         JComboBox<String> cbTypeCapteur = new JComboBox<>(new String[]{
                 "TEMPERATURE", "LUMINOSITE", "MOUVEMENT"
         });
 
         JLabel lblEtatCapteur = new JLabel("Etat du capteur:");
+        lblEtatCapteur.setHorizontalAlignment(SwingConstants.CENTER);
         JCheckBox cbEtatCapteur = new JCheckBox();
         cbEtatCapteur.setSelected(true);
+        JPanel panelEtat = new JPanel(new FlowLayout(FlowLayout.CENTER));
+        panelEtat.add(cbEtatCapteur);
 
         JLabel lblExplicationOFF = new JLabel("Pas coché = OFF");
+        lblExplicationOFF.setHorizontalAlignment(SwingConstants.CENTER);
         JLabel lblExplicationON = new JLabel("Coché = ON");
+        lblExplicationON.setHorizontalAlignment(SwingConstants.CENTER);
 
         JButton btnSaveCapteur = new JButton("Enregistrer");
         JButton btnBackToMenu_NewCapteur = new JButton("Retour au menu");
@@ -316,7 +323,7 @@ public class Application {
         NewCapteursPanel.add(lblTypeCapteur);
         NewCapteursPanel.add(cbTypeCapteur);
         NewCapteursPanel.add(lblEtatCapteur);
-        NewCapteursPanel.add(cbEtatCapteur);
+        NewCapteursPanel.add(panelEtat);
         NewCapteursPanel.add(lblExplicationOFF);
         NewCapteursPanel.add(lblExplicationON);
         NewCapteursPanel.add(btnSaveCapteur);
@@ -440,6 +447,7 @@ public class Application {
         SupprimerCapteurPanel.setLayout(new GridLayout(4, 1));
 
         JLabel lblSupprimerCapteur = new JLabel("Supprimer un capteur:");
+        lblSupprimerCapteur.setHorizontalAlignment(SwingConstants.CENTER);
         JComboBox<String> cbCapteursExistants_Supp = new JComboBox<>(new String[]{});
 
         JButton btnEnregistrerSupprimerCapteur = new JButton("Supprimer");
