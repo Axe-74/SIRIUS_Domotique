@@ -94,6 +94,12 @@
             <scope>compile</scope>
         </dependency>
 
+        <dependency>
+            <groupId>edu.ezip.ing1.pds</groupId>
+            <artifactId>xmart-app</artifactId>
+            <version>1.0-SNAPSHOT</version>
+        </dependency>
+
     </dependencies>
 
 </project>
