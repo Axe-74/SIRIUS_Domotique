@@ -20,7 +20,7 @@ public class MaisonCapteur {
     }
     public final MaisonCapteur build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "nameCapteur", "typeCapteur", "etat", "idCapteur");
+        setFieldsFromResulset(resultSet, "id", "nom_capteur", "type_capteur", "etat_capteur");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)

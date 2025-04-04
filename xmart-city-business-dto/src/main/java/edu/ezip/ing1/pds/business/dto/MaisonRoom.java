@@ -8,29 +8,30 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@JsonRootName(value = "room")
-public class Room {
+@JsonRootName(value = "MaisonRoom")
+public class MaisonRoom {
     private  String name;
     private  String type;
     private  int surface;
     private  int id;
 
 
-    public Room() {
+    public MaisonRoom() {
     }
-    public final Room build(final ResultSet resultSet)
+    public final MaisonRoom build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "name", "type", "surface");
+        setFieldsFromResulset(resultSet, "id", "name_room", "type_room", "room_surface");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        return buildPreparedStatement(preparedStatement, name, type);
+        return buildPreparedStatement(preparedStatement, name, type, String.valueOf(surface));
     }
-    public Room(String name, String type, int surface) {
+    public MaisonRoom(String name, String type, int surface, int id) {
         this.name = name;
         this.type = type;
         this.surface = surface;
+        this.id = id;
     }
 
     public String getName() {
@@ -45,7 +46,9 @@ public class Room {
         return surface;
     }
 
-    public int getId() { return id; }
+    public int getId() {
+        return id;
+    }
 
     @JsonProperty("room_name")
     public void setName(String name) {
@@ -62,7 +65,7 @@ public class Room {
         this.surface = surface;
     }
 
-    @JsonProperty("room_id")
+    @JsonProperty("id")
     public void setId(int id) {
         this.id = id;
     }
@@ -90,6 +93,7 @@ public class Room {
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
                 ", surface='" + surface + '\'' +
+                ", id=" + id +  '\'' +
                 '}';
     }
 }

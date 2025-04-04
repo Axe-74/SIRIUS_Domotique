@@ -8,30 +8,36 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-@JsonRootName(value = "Maison_Automatisation")
-public class Maison_Automatisation {
+@JsonRootName(value = "MaisonAutomatisation")
+public class MaisonAutomatisation {
     private  String NomAutomatisation;
     private  String TypeCapteur;
     private  String TypeProgramme;
-    private int id;
+    private String EtatAutomatisation;
+    private int Id;
 
-
-
-    public Maison_Automatisation() {
+    public MaisonAutomatisation() {
     }
-    public final Maison_Automatisation  build(final ResultSet resultSet)
+
+    public final MaisonAutomatisation build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "NomAutomatisation", "TypeCapteur","TypeProgramme");
+        setFieldsFromResulset(resultSet, "id", "nom_automatisation", "type_capteur","type_programme,etat_automatisation");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        return buildPreparedStatement(preparedStatement, NomAutomatisation, TypeCapteur,TypeProgramme);
+        return buildPreparedStatement(preparedStatement, String.valueOf(Id), NomAutomatisation, TypeCapteur,TypeProgramme,EtatAutomatisation);
     }
-    public Maison_Automatisation(String NomAutomatisation, String TypeCapteur, String TypeProgramme) {
+    public MaisonAutomatisation(Integer Id, String NomAutomatisation, String TypeCapteur, String TypeProgramme, String EtatAutomatisation) {
+        this.Id = Id;
         this.NomAutomatisation = NomAutomatisation;
         this.TypeCapteur = TypeCapteur;
         this.TypeProgramme = TypeProgramme;
+        this.EtatAutomatisation = EtatAutomatisation;
+    }
+
+    public Integer getId() {
+        return Id;
     }
 
     public String getNomAutomatisation() {
@@ -46,31 +52,33 @@ public class Maison_Automatisation {
         return TypeProgramme;
     }
 
-    public int getId() {
-        return id;
-    }
-
+    public String getEtatAutomatisation(){return EtatAutomatisation;}
 
     @JsonProperty("Maison_Automatisation_NomAutomatisation")
-    public void setNomAutomatisation(String name) {
+    public void setNomAutomatisation(String NomAutomatisation) {
         this.NomAutomatisation = NomAutomatisation;
     }
 
     @JsonProperty("Maison_Automatisation_TypeCapteurs")
-    public void setTypeCapteur(String firstname) {
+    public void setTypeCapteur(String TypeCapteur) {
         this.TypeCapteur = TypeCapteur;
     }
 
     @JsonProperty("Maison_Automatisation_TypeProgramme")
-    public void setTypeProgramme(String group) {
+    public void setTypeProgramme(String TypeProgramme) {
         this.TypeProgramme = TypeProgramme;
+    }
+
+    @JsonProperty("Maison_Automatisation_EtatAutomatisation")
+    public void setEtatAutomatisation(String EtatAutomatisation) {
+        this.EtatAutomatisation = EtatAutomatisation;
     }
 
     @JsonProperty("Maison_Automatisation_id")
     public void setId(int id) {
-        this.id = id;
+        this.Id = id;
     }
-    
+
     private void setFieldsFromResulset(final ResultSet resultSet, final String ... fieldNames )
             throws NoSuchFieldException, SQLException, IllegalAccessException {
         for(final String fieldName : fieldNames ) {
@@ -93,6 +101,7 @@ public class Maison_Automatisation {
                 "NomAutomatisation='" + NomAutomatisation + '\'' +
                 ", TypeCapteur='" + TypeCapteur + '\'' +
                 ", TypeProgramme='" + TypeProgramme + '\'' +
+                ", EtatAutomatisation='" + EtatAutomatisation + '\'' +
                 '}';
     }
 }

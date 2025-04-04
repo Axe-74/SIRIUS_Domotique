@@ -1,6 +1,6 @@
 databaseName: "domotique"
-host: "127.0.0.1"
-port: 3308
-username : "root"
-password: ""
-poolSize: 1
+host: "172.31.249.134"
+port: 3306
+username : "sirius"
+password: "domotique"
+poolSize: 5
