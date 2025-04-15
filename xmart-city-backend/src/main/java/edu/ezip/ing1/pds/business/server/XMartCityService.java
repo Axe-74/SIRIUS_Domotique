@@ -21,14 +21,14 @@ public class XMartCityService {
 
     private enum Queries {
         //AUTOMATION
-        SELECT_ALL_AUTOMATION("SELECT * FROM automatisations"),
+        SELECT_ALL_AUTOMATION("SELECT * FROM automatisations ORDER BY id"),
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
         INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
         UPDATE_AUTOMATION("UPDATE automatisations SET etat_automatisation = ? WHERE nom_automatisation = ?"),
         DELETE_AUTOMATION("DELETE FROM automatisations WHERE nom_automatisation = ?"),
 
         //PROGRAM
-        SELECT_ALL_PROGRAM("SELECT * FROM programmes"),
+        SELECT_ALL_PROGRAM("SELECT * FROM programmes ORDER BY programmes.nom_programme"),
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
 

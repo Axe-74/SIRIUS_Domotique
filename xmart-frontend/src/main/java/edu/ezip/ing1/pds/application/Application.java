@@ -1,6 +1,9 @@
 package edu.ezip.ing1.pds.application;
 
 import javax.swing.*;
+import javax.swing.table.DefaultTableCellRenderer;
+import javax.swing.table.DefaultTableModel;
+import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.io.IOException;
 import java.sql.*;
@@ -216,18 +219,42 @@ public class Application {
 
 
 //View Automation panel
+
         JPanel viewAutomationPanel = new JPanel();
         viewAutomationPanel.setLayout(new BorderLayout());
 
-        JTextArea txtAutomations = new JTextArea();
-        txtAutomations.setEditable(false);
-        JScrollPane scrollPaneAutomation = new JScrollPane(txtAutomations);
+        String[] columnNamesAutomation = {
+                "Nom", "Programme exécuté ","Capteur écouté","Etat"
+        };
+
+        DefaultTableModel tableModelAutomation = new DefaultTableModel(columnNamesAutomation, 0);
+        JTable tableAutomation = new JTable(tableModelAutomation);
+
+        tableAutomation.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        tableAutomation.setRowHeight(24);
+        tableAutomation.setGridColor(Color.LIGHT_GRAY);
+        tableAutomation.setSelectionBackground(new Color(200, 230, 255));
+        tableAutomation.setSelectionForeground(Color.BLACK);
+        tableAutomation.setBackground(Color.WHITE);
+        tableAutomation.setForeground(Color.DARK_GRAY);
+
+        JTableHeader headerAutomation = tableAutomation.getTableHeader();
+        headerAutomation.setFont(new Font("SansSerif", Font.BOLD, 15));
+        headerAutomation.setBackground(new Color(240, 240, 240));
+
+        DefaultTableCellRenderer centerRendererAutomation = new DefaultTableCellRenderer();
+        centerRendererAutomation.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < tableAutomation.getColumnCount(); i++) {
+            tableAutomation.getColumnModel().getColumn(i).setCellRenderer(centerRendererAutomation);
+        }
+        JScrollPane scrollPaneAutomation = new JScrollPane(tableAutomation);
+        
+        viewAutomationPanel.add(scrollPaneAutomation, BorderLayout.CENTER);
 
         JButton btnBackToMenuAutomationProgramm = new JButton("Retour au menu");
-        viewAutomationPanel.add(scrollPaneAutomation, BorderLayout.CENTER);
         viewAutomationPanel.add(btnBackToMenuAutomationProgramm, BorderLayout.SOUTH);
 
-        mainPanel.add(viewAutomationPanel, "ViewAutomationPanel");
+        mainPanel.add(viewAutomationPanel, "ViewAutomationsPanel");
 
 //Automatisation Supprimer Panel
         JPanel SupprimerAutomatisationPanel = new JPanel();
@@ -380,19 +407,45 @@ public class Application {
 
 
 //View Programm panel
+        
         JPanel viewProgramsPanel = new JPanel();
         viewProgramsPanel.setLayout(new BorderLayout());
 
-        JTextArea txtPrograms = new JTextArea();
-        txtPrograms.setEditable(false);
+        String[] columnNames = {
+                "Nom", "Pièce", "Chauffage", "Jour", "Température", "Heure Début", "Heure Fin"
+        };
 
-        JScrollPane scrollPaneProgram = new JScrollPane(txtPrograms);
+        DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
+        JTable table = new JTable(tableModel);
+
+        table.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        table.setRowHeight(24);
+        table.setGridColor(Color.LIGHT_GRAY);
+        table.setSelectionBackground(new Color(200, 230, 255));
+        table.setSelectionForeground(Color.BLACK);
+        table.setBackground(Color.WHITE);
+        table.setForeground(Color.DARK_GRAY);
+
+        JTableHeader header = table.getTableHeader();
+        header.setFont(new Font("SansSerif", Font.BOLD, 15));
+        header.setBackground(new Color(240, 240, 240));
+
+        DefaultTableCellRenderer centerRenderer = new DefaultTableCellRenderer();
+        centerRenderer.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < table.getColumnCount(); i++) {
+            table.getColumnModel().getColumn(i).setCellRenderer(centerRenderer);
+        }
+        JScrollPane scrollPane = new JScrollPane(table);
+
+
+
+        viewProgramsPanel.add(scrollPane, BorderLayout.CENTER);
 
         JButton btnBackToMenuViewProgramm = new JButton("Retour au menu");
-        viewProgramsPanel.add(scrollPaneProgram, BorderLayout.CENTER);
         viewProgramsPanel.add(btnBackToMenuViewProgramm, BorderLayout.SOUTH);
 
         mainPanel.add(viewProgramsPanel, "ViewProgramsPanel");
+
 
 
 
@@ -612,23 +665,26 @@ public class Application {
                 throw new RuntimeException(ex);
             }
 
-            StringBuilder sb_program= new StringBuilder();
+            tableModel.setRowCount(0); // ➤ vide l'ancien contenu
             if (programmes.isEmpty()) {
-                sb_program.append("Aucun programme enregistré.\n");
+                // Affiche une ligne vide ou un message dans une autre UI si besoin
+                tableModel.addRow(new Object[]{"Aucun programme", "", "", "", "", "", ""});
             } else {
-                sb_program.append("programme enregistrés :\n");
-                for (MaisonProgrammes Maisonprogramme : programmes)
-                    for (MaisonProgramme programme : Maisonprogramme.getMaisonProgrammes()) {
-                        sb_program.append("Nom : ").append(programme.getNomProgramme()).append("\n")
-                                .append("Piéce : ").append(programme.getTypePiece()).append("\n")
-                                .append("Chauffage : ").append(programme.getTypeChauffage()).append("\n")
-                                .append("Jour : ").append(programme.getJourSemaine()).append("\n")
-                                .append("Température : ").append(programme.getTemperature()).append("\n")
-                                .append("Heure début : ").append(programme.getHeureDebut()).append("\n")
-                                .append("Heure fin : ").append(programme.getHeureFin()).append("\n\n");
+                for (MaisonProgrammes maisonProg : programmes) {
+                    for (MaisonProgramme prog : maisonProg.getMaisonProgrammes()) {
+                        Object[] row = {
+                                prog.getNomProgramme(),
+                                prog.getTypePiece(),
+                                prog.getTypeChauffage(),
+                                prog.getJourSemaine(),
+                                prog.getTemperature(),
+                                prog.getHeureDebut(),
+                                prog.getHeureFin()
+                        };
+                        tableModel.addRow(row);
                     }
+                }
             }
-            txtPrograms.setText(sb_program.toString());
             cardLayout.show(mainPanel, "ViewProgramsPanel");
         });
 
@@ -645,21 +701,24 @@ public class Application {
                 throw new RuntimeException(ex);
             }
 
-            StringBuilder sb_automation= new StringBuilder();
+            tableModelAutomation.setRowCount(0); // ➤ vide l'ancien contenu
             if (automatisations.isEmpty()) {
-                sb_automation.append("Aucune automatisation enregistré.\n");
+                // Affiche une ligne vide ou un message dans une autre UI si besoin
+                tableModelAutomation.addRow(new Object[]{"Aucune automatisations", "", "", "", "", "", ""});
             } else {
-                sb_automation.append("Automatisations enregistrés :\n");
-                for (MaisonAutomatisations Maisonauto : automatisations)
-                    for (MaisonAutomatisation auto : Maisonauto.getMaisonAutomatisations()) {
-                        sb_automation.append("Nom : ").append(auto.getNomAutomatisation()).append("\n")
-                                .append("Capteur écouté ").append(auto.getTypeCapteur()).append("\n")
-                                .append("Programme executé : ").append(auto.getTypeProgramme()).append("\n")
-                                .append("Etat de l'automatisation : ").append(auto.getEtatAutomatisation()).append("\n\n");
+                for (MaisonAutomatisations maisonauto : automatisations) {
+                    for (MaisonAutomatisation auto : maisonauto.getMaisonAutomatisations()) {
+                        Object[] row = {
+                                auto.getNomAutomatisation(),
+                                auto.getTypeProgramme() ,
+                                auto.getTypeCapteur(),
+                                auto.getEtatAutomatisation()
+                        };
+                        tableModelAutomation.addRow(row);
                     }
+                }
             }
-            txtPrograms.setText(sb_automation.toString());
-            cardLayout.show(mainPanel, "ViewProgramsPanel");
+            cardLayout.show(mainPanel, "ViewAutomationsPanel");
         });
 
         btnVoirCapteurs.addActionListener(e -> {
@@ -1065,7 +1124,7 @@ public class Application {
                 programmes.add(maisonProgrammeFind);
                 for (MaisonProgrammes Maisonprogramme : programmes)
                     for (MaisonProgramme programme : Maisonprogramme.getMaisonProgrammes()) {
-                        if (nomProgramme.equals(programme.getNomProgramme())){
+                        if (nomProgramme.equalsIgnoreCase(programme.getNomProgramme())){
                             CountProgramNameEqual = CountProgramNameEqual + 1;
                         }
                     }
@@ -1116,7 +1175,7 @@ public class Application {
                         automatisations.add(maisonAutomatisationFind);
                         for (MaisonAutomatisations Maisonauto : automatisations)
                             for (MaisonAutomatisation auto : Maisonauto.getMaisonAutomatisations()) {
-                                if (nomAutomation.equals(auto.getNomAutomatisation())) {
+                                if (nomAutomation.equalsIgnoreCase(auto.getNomAutomatisation())) {
                                     CountAutomationNameEqual = CountAutomationNameEqual + 1;
                                 }
                             }
