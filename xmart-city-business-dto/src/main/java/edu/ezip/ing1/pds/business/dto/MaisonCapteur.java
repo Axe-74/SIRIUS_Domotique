@@ -13,6 +13,7 @@ import java.sql.SQLException;
 public class MaisonCapteur {
     private  String nameCapteur;
     private  String typeCapteur;
+    private String pieceCapteur;
     private  String etat;
     private int idCapteur;
 
@@ -27,9 +28,10 @@ public class MaisonCapteur {
             throws SQLException, NoSuchFieldException, IllegalAccessException {
         return buildPreparedStatement(preparedStatement, nameCapteur, typeCapteur,etat);
     }
-    public MaisonCapteur(String nameCapteur, String typeCapteur, String etat, int idCapteur) {
+    public MaisonCapteur(String nameCapteur, String typeCapteur, String pieceCapteur, String etat, int idCapteur) {
         this.nameCapteur = nameCapteur;
         this.typeCapteur = typeCapteur;
+        this.pieceCapteur = pieceCapteur;
         this.etat = etat;
         this.idCapteur = idCapteur;
     }
@@ -37,7 +39,11 @@ public class MaisonCapteur {
         return nameCapteur;
     }
 
-    public String getTypecapteur() {
+    public String getPieceCapteur() {
+        return pieceCapteur;
+    }
+
+    public String getTypeCapteur () {
         return typeCapteur;
     }
 
@@ -62,6 +68,11 @@ public class MaisonCapteur {
     @JsonProperty("capteur_etat")
     public void setEtat(String etat) {
         this.etat = etat;
+    }
+
+    @JsonProperty("capteur_piece")
+    public void setPieceCapteur(String pieceCapteur) {
+        this.pieceCapteur = pieceCapteur;
     }
 
     @JsonProperty("capteur_id")
@@ -92,6 +103,7 @@ public class MaisonCapteur {
                 "name='" + nameCapteur + '\'' +
                 ", type='" + typeCapteur + '\'' +
                 ", etat='" + etat + '\'' +
+                ", piece='" + pieceCapteur + '\'' +
                 ", id='" + idCapteur + '\'' +
                 '}';
     }

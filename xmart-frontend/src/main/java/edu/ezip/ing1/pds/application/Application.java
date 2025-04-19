@@ -345,6 +345,12 @@ public class Application {
                 "TEMPERATURE", "LUMINOSITE", "MOUVEMENT"
         });
 
+        JLabel lblPieceCapteur = new JLabel("Pièce du capteur: ");
+        lblPieceCapteur.setHorizontalAlignment(SwingConstants.CENTER);
+        JComboBox<String> cbPieceCapteur = new JComboBox<>(new String[]{
+                "PIECE1", "PIECE2", "PIECE3"
+        });
+
         JLabel lblEtatCapteur = new JLabel("Etat du capteur:");
         lblEtatCapteur.setHorizontalAlignment(SwingConstants.CENTER);
         JCheckBox cbEtatCapteur = new JCheckBox();
@@ -364,6 +370,8 @@ public class Application {
         NewCapteursPanel.add(txtNomCapteur);
         NewCapteursPanel.add(lblTypeCapteur);
         NewCapteursPanel.add(cbTypeCapteur);
+        NewCapteursPanel.add(lblPieceCapteur);
+        NewCapteursPanel.add(cbPieceCapteur);
         NewCapteursPanel.add(lblEtatCapteur);
         NewCapteursPanel.add(panelEtat);
         NewCapteursPanel.add(lblExplicationOFF);
@@ -453,10 +461,32 @@ public class Application {
         JPanel voirCapteurPanel = new JPanel();
         voirCapteurPanel.setLayout(new BorderLayout());
 
-        JTextArea txtCapteurs = new JTextArea();
-        txtCapteurs.setEditable(false);
+        String[] columnNamesCapteurs = {
+                "Nom", "Type","Pièce","Etat"
+        };
 
-        JScrollPane scrollPane_capteurs = new JScrollPane(txtCapteurs);
+        DefaultTableModel tableModelCapteur = new DefaultTableModel(columnNamesCapteurs, 0);
+        JTable tableCapteur = new JTable(tableModelCapteur);
+
+        tableCapteur.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        tableCapteur.setRowHeight(24);
+        tableCapteur.setGridColor(Color.LIGHT_GRAY);
+        tableCapteur.setSelectionBackground(new Color(200, 230, 255));
+        tableCapteur.setSelectionForeground(Color.BLACK);
+        tableCapteur.setBackground(Color.WHITE);
+        tableCapteur.setForeground(Color.DARK_GRAY);
+
+        JTableHeader headerCapteur = tableCapteur.getTableHeader();
+        headerCapteur.setFont(new Font("SansSerif", Font.BOLD, 15));
+        headerCapteur.setBackground(new Color(240, 240, 240));
+
+        DefaultTableCellRenderer centerRendererCapteur = new DefaultTableCellRenderer();
+        centerRendererCapteur.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < tableCapteur.getColumnCount(); i++) {
+            tableCapteur.getColumnModel().getColumn(i).setCellRenderer(centerRendererCapteur);
+        }
+
+        JScrollPane scrollPane_capteurs = new JScrollPane(tableCapteur);
         JButton btnBackToMenu_VoirCapteurs = new JButton("Retour au menu");
 
         voirCapteurPanel.add(scrollPane_capteurs, BorderLayout.CENTER);
@@ -735,20 +765,38 @@ public class Application {
                 throw new RuntimeException(ex);
             }
 
-            StringBuilder sb_capteur= new StringBuilder();
+//            StringBuilder sb_capteur= new StringBuilder();
+//            if (capteurs.isEmpty()) {
+//                sb_capteur.append("Aucun capteur enregistré.\n");
+//            } else {
+//                sb_capteur.append("Capteurs enregistrés :\n");
+//                for (MaisonCapteurs maisonCapteurs : capteurs)
+//                    for (MaisonCapteur cap : maisonCapteurs.getCapteurs()) {
+//                        sb_capteur.append("Nom : ").append(cap.getName()).append("\n")
+//                                .append("Type : ").append(cap.getTypeCapteur()).append("\n")
+//                                .append("Piece : ").append(cap.getPieceCapteur()).append("\n")
+//                                .append("Etat : ").append(cap.getEtat()).append("\n\n");
+//                    }
+//            }
+//            txtCapteurs.setText(sb_capteur.toString());
+
+            tableModelCapteur.setRowCount(0); // vide l'ancien contenu
             if (capteurs.isEmpty()) {
-                sb_capteur.append("Aucun capteur enregistré.\n");
+                tableModelCapteur.addRow(new Object[]{"Aucun capteur.", "", "", "", "", "", ""});
             } else {
-                sb_capteur.append("Capteurs enregistrés :\n");
-                for (MaisonCapteurs maisonCapteurs : capteurs)
-                    for (MaisonCapteur cap : maisonCapteurs.getCapteurs()) {
-                        sb_capteur.append("Nom : ").append(cap.getName()).append("\n")
-                                .append("Type : ").append(cap.getTypecapteur()).append("\n")
-                                .append("Etat : ").append(cap.getEtat()).append("\n\n");
+                for (MaisonCapteurs maisoncapt : capteurs) {
+                    for (MaisonCapteur capt : maisoncapt.getCapteurs()) {
+                        Object[] row = {
+                                capt.getName(),
+                                capt.getTypeCapteur(),
+                                capt.getPieceCapteur(),
+                                capt.getEtat()
+                        };
+                        tableModelCapteur.addRow(row);
                     }
+                }
+                cardLayout.show(mainPanel, "voirCapteurPanel");
             }
-            txtCapteurs.setText(sb_capteur.toString());
-            cardLayout.show(mainPanel, "voirCapteurPanel");
         });
 
         btnViewRoom.addActionListener(e -> {
@@ -1202,7 +1250,8 @@ public class Application {
         btnSaveCapteur.addActionListener(e -> {
             //Récupération des données
             String nomCapteur = txtNomCapteur.getText().trim();
-            String capteurSelect = (String) cbTypeCapteur.getSelectedItem();
+            String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
+            String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
             String etatSelect ;
             if (cbEtatCapteur.isSelected()) {
                 etatSelect = "ON";
@@ -1216,7 +1265,7 @@ public class Application {
             }
             // Insertion des données
             int CountAutomationNameEqual = 0;
-            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,capteurSelect,etatSelect, 0);
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,capteurTypeSelect,capteurPieceSelect, etatSelect, 0);
             try {
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
