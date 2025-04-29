@@ -31,6 +31,7 @@ public class Application {
     public ArrayList<String> automatisationsNoms = new ArrayList<String>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
     public ArrayList<String> roomsNoms = new ArrayList<>();
+    public ArrayList<String> JourSemaine = new ArrayList<>();
     private final static String LoggingLabel = "Application";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String networkConfigFile = "network.yaml";
@@ -68,6 +69,8 @@ public class Application {
         logger.debug("Load Network config file : {}", networkConfig.toString());
 
 
+
+
 // Main Menu panel
         JPanel menuPanel = new JPanel();
         menuPanel.setLayout(new GridLayout(3, 1));
@@ -87,10 +90,11 @@ public class Application {
 
         JButton btnNewAutomations = new JButton("Définir une nouvelle automatisation");
         JButton btnViewAutomations = new JButton("Voir les automatisations");
-        JButton btnNewPrograms = new JButton("Définir un nouveau programme");
         JButton btnDeleteAutomation = new JButton("Supprimer une automatisation");
+        JButton btnNewPrograms = new JButton("Définir un nouveau programme");
         JButton btnViewPrograms = new JButton("Voir les programmes");
         JButton btnEtatAutomation = new JButton("Changer l'état d'une automatisation");
+        JButton btnSimuleAutomation = new JButton("Simuler les automatisations");
         JButton btnBacktoMainmenu = new JButton("Retour au menu principal");
 
         Automations_and_programsPanel.add(btnNewAutomations);
@@ -99,6 +103,7 @@ public class Application {
         Automations_and_programsPanel.add(btnDeleteAutomation);
         Automations_and_programsPanel.add(btnNewPrograms);
         Automations_and_programsPanel.add(btnViewPrograms);
+        Automations_and_programsPanel.add(btnSimuleAutomation);
         Automations_and_programsPanel.add(btnBacktoMainmenu);
 
         mainPanel.add(Automations_and_programsPanel, "Automations_and_ProgramsPanel");
@@ -275,6 +280,26 @@ public class Application {
         mainPanel.add(SupprimerAutomatisationPanel, "SupprimerAutomatisationPanel");
 
 
+// Simule Automation Panel
+
+        JPanel SimulerAutomatisationsPanel = new JPanel();
+        SimulerAutomatisationsPanel.setLayout(new GridLayout(2, 2));
+
+        JLabel lblSimulerAutomatisation = new JLabel("Supprimer une automatisation:");
+        lblSimulerAutomatisation.setHorizontalAlignment(SwingConstants.CENTER);
+        JComboBox<String> cbAutomatisationsExistantes_Simuler = new JComboBox<>(new String[]{});
+
+        JButton btnSimulerAutomatisation = new JButton("Simuler les automatisations");
+        JButton btnBackToMenu_SimulerAutomatisation = new JButton("Retour au menu");
+
+        SimulerAutomatisationsPanel.add(lblSimulerAutomatisation);
+        SimulerAutomatisationsPanel.add(cbAutomatisationsExistantes_Simuler);
+        SimulerAutomatisationsPanel.add(btnBackToMenu_SimulerAutomatisation);
+        SimulerAutomatisationsPanel.add(btnSimulerAutomatisation);
+
+        mainPanel.add(SimulerAutomatisationsPanel, "SimulerAutomatisationPanel");
+
+
 
 // Program Definition Panel
         JPanel ProgramPanel = new JPanel();
@@ -295,6 +320,21 @@ public class Application {
 
         JLabel lblTemperature = new JLabel("Température:");
         JSpinner spTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));
+
+//        try {MaisonProgrammeService maisonProgrammeService = new MaisonProgrammeService(networkConfig);
+//            MaisonProgrammes maisonProgrammes = maisonProgrammeService.select_jour_semaine();
+//            JourSemaine.clear();
+//            JourSemaine.add(maisonProgrammes.toString());
+//            System.out.println("Import réussi!");
+//            System.out.println(JourSemaine);
+//        } catch (InterruptedException ex) {
+//            throw new RuntimeException(ex);
+//        } catch (IOException ex) {
+//            throw new RuntimeException(ex);
+//        }
+//
+//
+
 
         JLabel lblJour = new JLabel("Jour:");
         JComboBox<String> cbJour = new JComboBox<>(new String[]{
@@ -642,6 +682,7 @@ public class Application {
         btnAutomations_and_programs.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_ChangerEtatAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_SupprimerAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
+        btnBackToMenu_SimulerAutomatisation.addActionListener(e -> cardLayout.show(mainPanel,"Automations_and_ProgramsPanel"));
 
 
         //Boutons Automatisations et Programmes
@@ -649,6 +690,8 @@ public class Application {
         btnNewPrograms.addActionListener(e -> cardLayout.show(mainPanel, "ProgramPanel"));
         btnEtatAutomation.addActionListener(e -> cardLayout.show(mainPanel, "EtatAutomatisationPanel"));
         btnDeleteAutomation.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerAutomatisationPanel"));
+        btnSimuleAutomation.addActionListener(e -> cardLayout.show(mainPanel, "SimulerAutomatisationPanel"));
+
 
         //Retour Menu Capteurs
         btnSensorsManagement.addActionListener(e -> cardLayout.show(mainPanel, "CapteursPanel"));
@@ -1050,6 +1093,29 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+        });
+
+        //Bouton Simulation Automatisation
+        btnSimuleAutomation.addActionListener(e -> {
+            try {
+                automatisationsNoms.clear();
+                MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
+                MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationService.select_all_automation();
+                automatisations.clear();
+                automatisations.add(maisonAutomatisationsFind);
+                System.out.println(automatisations);
+                for (MaisonAutomatisations auto : automatisations)
+                    for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
+                        automatisationsNoms.add(aut.getNomAutomatisation());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel model = new DefaultComboBoxModel(automatisationsNoms.toArray(new String[0]));
+            cbAutomatisationsExistantes_Simuler.removeAllItems();
+            cbAutomatisationsExistantes_Simuler.setModel(model);
         });
 
         //Bouton Suppression Capteur

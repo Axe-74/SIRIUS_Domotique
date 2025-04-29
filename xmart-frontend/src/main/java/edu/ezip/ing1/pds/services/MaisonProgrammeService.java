@@ -29,6 +29,7 @@ public class MaisonProgrammeService {
 
     final String insertRequestOrder = "INSERT_PROGRAM";
     final String selectRequestOrder = "SELECT_ALL_PROGRAM";
+    final String selectDayRequestOrder ="SELECT_JOUR_SEMAINE";
     final String selectNameRequestOrder = "SELECT_NAME_PROGRAM";
 
     private final NetworkConfig networkConfig;
@@ -127,4 +128,32 @@ public class MaisonProgrammeService {
             return null;
         }
     }
+
+    public MaisonProgrammes select_jour_semaine() throws InterruptedException, IOException {
+        int birthdate = 0;
+        final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final String requestId = UUID.randomUUID().toString();
+        final Request request = new Request();
+        request.setRequestId(requestId);
+        request.setRequestOrder(selectDayRequestOrder);
+        objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
+        final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
+        LoggingUtils.logDataMultiLine(logger, Level.TRACE, requestBytes);
+        final SelectAllProgramsClientRequest clientRequest = new SelectAllProgramsClientRequest(
+                networkConfig,
+                birthdate++, request, null, requestBytes);
+        clientRequests.push(clientRequest);
+
+        if (!clientRequests.isEmpty()) {
+            final ClientRequest joinedClientRequest = clientRequests.pop();
+            joinedClientRequest.join();
+            logger.debug("Thread {} complete.", joinedClientRequest.getThreadName());
+            return (MaisonProgrammes) joinedClientRequest.getResult();
+        } else {
+            logger.error("No program found");
+            return null;
+        }
+    }
+
 }

@@ -13,6 +13,7 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
+import java.util.ArrayList;
 
 public class XMartCityService {
 
@@ -26,6 +27,7 @@ public class XMartCityService {
         INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
         UPDATE_AUTOMATION("UPDATE automatisations SET etat_automatisation = ? WHERE nom_automatisation = ?"),
         DELETE_AUTOMATION("DELETE FROM automatisations WHERE nom_automatisation = ?"),
+        SELECT_JOUR_SEMAINE("SELECT Nom FROM para_jour_semaine"),
 
         //PROGRAM
         SELECT_ALL_PROGRAM("SELECT * FROM programmes ORDER BY programmes.nom_programme"),
@@ -100,6 +102,8 @@ public class XMartCityService {
             case SELECT_NAME_PROGRAM:
                 response = SelectNameProgram(request, connection);
                 break;
+            case SELECT_JOUR_SEMAINE:
+                response = SelectJourSemaine(request, connection);
     //CAPTEUR
             case SELECT_ALL_CAPTEURS:
                 response = SelectAllCapteurs(request, connection);
@@ -208,7 +212,7 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation));
     }
 
-//CAPTEUR
+    //CAPTEUR
     private Response SelectAllCapteurs(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
         final ObjectMapper objectMapper = new ObjectMapper();
         final Statement stmt = connection.createStatement();
@@ -224,7 +228,7 @@ public class XMartCityService {
             System.out.println("id: " + capteur.getIdCapteur());
             System.out.println("name: " + capteur.getName());
             System.out.println("etat: " + capteur.getEtat());
-            System.out.println("type: " + capteur.getTypecapteur());
+            System.out.println("type: " + capteur.getTypeCapteur());
             System.out.println(capteur);
             System.out.println(capteurs);
         }
@@ -236,7 +240,7 @@ public class XMartCityService {
         final MaisonCapteur maisonCapteur = objectMapper.readValue(request.getRequestBody(), MaisonCapteur.class);
         final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_CAPTEUR.query);
         stmt.setString(1, maisonCapteur.getName());
-        stmt.setString(2, maisonCapteur.getTypecapteur());
+        stmt.setString(2, maisonCapteur.getTypeCapteur());
         stmt.setString(3, maisonCapteur.getEtat());
         stmt.executeUpdate();
 
@@ -376,6 +380,21 @@ public class XMartCityService {
             MaisonProgramme maisonProgramme = new MaisonProgramme();
             maisonProgramme.setNomProgramme(res.getString(2));
             maisonProgrammes.add(maisonProgramme);
+        }
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
+    }
+
+    private Response SelectJourSemaine(final Request request, final Connection connection) throws SQLException, IOException {
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_JOUR_SEMAINE.query);
+        MaisonProgrammes maisonProgrammes = new MaisonProgrammes();
+        while (res.next()) {
+            MaisonProgramme maisonProgramme = new MaisonProgramme();
+            maisonProgramme.setJourSemaine(res.getString(1));
+            maisonProgrammes.add((maisonProgramme));
+            System.out.println(maisonProgrammes);
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
     }
