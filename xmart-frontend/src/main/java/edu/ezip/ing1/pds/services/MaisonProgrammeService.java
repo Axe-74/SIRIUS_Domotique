@@ -72,8 +72,6 @@ public class MaisonProgrammeService {
         }
     }
 
-
-
     public MaisonProgrammes select_all_program() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
@@ -100,7 +98,6 @@ public class MaisonProgrammeService {
             return null;
         }
     }
-
 
     public MaisonProgrammes  select_name_program() throws InterruptedException, IOException {
         int birthdate = 0;

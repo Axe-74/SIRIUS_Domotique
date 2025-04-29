@@ -28,7 +28,7 @@ public class MaisonAutomatisations {
     @Override
     public String toString() {
         return "Maison_Automatisations{" +
-                "Maison_Programmes=" + maisonAutomatisations +
+                "MaisonAutomatisations=" + maisonAutomatisations +
                 '}';
     }
 }

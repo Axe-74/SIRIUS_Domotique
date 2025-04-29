@@ -27,12 +27,13 @@ public class XMartCityService {
         INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
         UPDATE_AUTOMATION("UPDATE automatisations SET etat_automatisation = ? WHERE nom_automatisation = ?"),
         DELETE_AUTOMATION("DELETE FROM automatisations WHERE nom_automatisation = ?"),
-        SELECT_JOUR_SEMAINE("SELECT Nom FROM para_jour_semaine"),
+
 
         //PROGRAM
         SELECT_ALL_PROGRAM("SELECT * FROM programmes ORDER BY programmes.nom_programme"),
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
+        SELECT_JOUR_SEMAINE("SELECT Nom FROM para_jour_semaine"),
 
         //CAPTEUR
         SELECT_ALL_CAPTEURS("SELECT id, nom_capteur, type_capteur, etat_capteur FROM capteurs"),
@@ -393,6 +394,7 @@ public class XMartCityService {
         while (res.next()) {
             MaisonProgramme maisonProgramme = new MaisonProgramme();
             maisonProgramme.setJourSemaine(res.getString(1));
+            System.out.println(maisonProgramme);
             maisonProgrammes.add((maisonProgramme));
             System.out.println(maisonProgrammes);
         }

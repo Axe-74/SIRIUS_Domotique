@@ -1098,24 +1098,28 @@ public class Application {
         //Bouton Simulation Automatisation
         btnSimuleAutomation.addActionListener(e -> {
             try {
-                automatisationsNoms.clear();
-                MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
-                MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationService.select_all_automation();
-                automatisations.clear();
-                automatisations.add(maisonAutomatisationsFind);
-                System.out.println(automatisations);
-                for (MaisonAutomatisations auto : automatisations)
-                    for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
-                        automatisationsNoms.add(aut.getNomAutomatisation());
+                capteursNoms_cE.clear();
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs)
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        capteursNoms_cE.add(cap.getName());
                     }
+                System.out.println(capteursNoms_cE);
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            DefaultComboBoxModel model = new DefaultComboBoxModel(automatisationsNoms.toArray(new String[0]));
+            DefaultComboBoxModel model = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
             cbAutomatisationsExistantes_Simuler.removeAllItems();
             cbAutomatisationsExistantes_Simuler.setModel(model);
+        });
+        btnSimulerAutomatisation.addActionListener(e -> {
+            String auto_simule_select = cbAutomatisationsExistantes_Simuler.getSelectedItem().toString();
+
         });
 
         //Bouton Suppression Capteur
