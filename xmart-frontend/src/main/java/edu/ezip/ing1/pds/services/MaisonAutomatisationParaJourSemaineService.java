@@ -24,11 +24,11 @@ public class MaisonAutomatisationParaJourSemaineService {
     private final static String LoggingLabel = "FrontEnd - MaisonAutomatisationParaJourSemaineService";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
 
-    final String insertRequestOrder = "INSERT_AUTOMATION";
-    final String selectRequestOrder = "SELECT_ALL_AUTOMATION";
+    final String insertRequestOrder = "INSERT_NAME_DAY";
+    final String selectRequestOrder = "SELECT_ALL_NAME_DAY";
     final String selectNameAutomation = "SELECT_NAME_AUTOMATION";
-    final String updateRequestOrder = "UPDATE_AUTOMATION";
-    final String deleteRequestOrder = "DELETE_AUTOMATION";
+    final String updateRequestOrder = "UPDATE_NAME_DAY";
+    final String deleteRequestOrder = "DELETE_NAME_DAY";
 
     private final NetworkConfig networkConfig;
 
@@ -36,17 +36,17 @@ public class MaisonAutomatisationParaJourSemaineService {
         this.networkConfig = networkConfig;
     }
 
-    public void updateAutomation(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
+    public void updatename_day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
         logger.debug("updateAutomation pour : {}", maisonAutomatisation_para_jour_semaine.getNom());
         insert_update_delete_Automation(maisonAutomatisation_para_jour_semaine, updateRequestOrder);
     }
 
-    public void deleteAutomation(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
+    public void deletename_day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
         logger.debug("deleteAutomation pour : {}", maisonAutomatisation_para_jour_semaine.getNom());
         insert_update_delete_Automation(maisonAutomatisation_para_jour_semaine, deleteRequestOrder);
     }
 
-    public void insertAutomation(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
+    public void insertname_day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
         logger.debug("insertAutomation pour : {}", maisonAutomatisation_para_jour_semaine.getNom());
         insert_update_delete_Automation(maisonAutomatisation_para_jour_semaine, insertRequestOrder);
     }
@@ -84,7 +84,7 @@ public class MaisonAutomatisationParaJourSemaineService {
         }
     }
 
-    public MaisonAutomatisation_Para_Jour_Semaines select_all_automation() throws InterruptedException, IOException {
+    public MaisonAutomatisation_Para_Jour_Semaines select_all_name_day() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final ObjectMapper objectMapper = new ObjectMapper();

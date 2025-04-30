@@ -33,7 +33,6 @@ public class XMartCityService {
         SELECT_ALL_PROGRAM("SELECT * FROM programmes ORDER BY programmes.nom_programme"),
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
-        SELECT_JOUR_SEMAINE("SELECT Nom FROM para_jour_semaine"),
 
         //CAPTEUR
         SELECT_ALL_CAPTEURS("SELECT id, nom_capteur, type_capteur, etat_capteur FROM capteurs"),
@@ -46,6 +45,9 @@ public class XMartCityService {
         INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
         UPDATE_ROOM("UPDATE rooms SET nom_room = ?, type_room = ?, room_surface = ? WHERE id = ?"),
         DELETE_ROOM("DELETE FROM rooms WHERE nom_room = ?"),
+
+        //NAME DAY
+        SELECT_ALL_NAME_DAY("SELECT * FROM para_jour_semaine ORDER BY ID_Para_Jour_Semaine"),
 
 
         //FERMETURE
@@ -103,8 +105,6 @@ public class XMartCityService {
             case SELECT_NAME_PROGRAM:
                 response = SelectNameProgram(request, connection);
                 break;
-            case SELECT_JOUR_SEMAINE:
-                response = SelectJourSemaine(request, connection);
     //CAPTEUR
             case SELECT_ALL_CAPTEURS:
                 response = SelectAllCapteurs(request, connection);
@@ -131,6 +131,9 @@ public class XMartCityService {
             case DELETE_ROOM:
                 response = DeleteRoom(request, connection);
                 break;
+    // NAME DAY
+            case SELECT_ALL_NAME_DAY:
+                response = SelectNameDay(request, connection);
     //PAR DEFAUT
             default:
                 break;
@@ -385,20 +388,20 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
     }
 
-    private Response SelectJourSemaine(final Request request, final Connection connection) throws SQLException, IOException {
+    private Response SelectNameDay(final Request request, final Connection connection) throws SQLException, IOException {
 
         final ObjectMapper objectMapper = new ObjectMapper();
         final Statement stmt = connection.createStatement();
-        final ResultSet res = stmt.executeQuery(Queries.SELECT_JOUR_SEMAINE.query);
-        MaisonProgrammes maisonProgrammes = new MaisonProgrammes();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_NAME_DAY.query);
+        MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = new MaisonAutomatisation_Para_Jour_Semaines();
         while (res.next()) {
-            MaisonProgramme maisonProgramme = new MaisonProgramme();
-            maisonProgramme.setJourSemaine(res.getString(1));
-            System.out.println(maisonProgramme);
-            maisonProgrammes.add((maisonProgramme));
-            System.out.println(maisonProgrammes);
+            MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine = new MaisonAutomatisation_Para_Jour_Semaine();
+            maisonAutomatisation_para_jour_semaine.setID_Para_Jour_Semaine(Integer.parseInt(res.getString(1)));
+            maisonAutomatisation_para_jour_semaine.setNom(res.getString(2));
+            maisonAutomatisation_para_jour_semaines.add((maisonAutomatisation_para_jour_semaine));
+            System.out.println(maisonAutomatisation_para_jour_semaines);
         }
-        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation_para_jour_semaines));
     }
 
 }

@@ -10,10 +10,7 @@ import java.sql.*;
 import java.util.*;
 
 import edu.ezip.ing1.pds.business.dto.*;
-import edu.ezip.ing1.pds.services.MaisonAutomatisationService;
-import edu.ezip.ing1.pds.services.MaisonCapteurService;
-import edu.ezip.ing1.pds.services.MaisonProgrammeService;
-import edu.ezip.ing1.pds.services.MaisonRoomService;
+import edu.ezip.ing1.pds.services.*;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.ConfigLoader;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
@@ -30,8 +27,9 @@ public class Application {
     public ArrayList<MaisonRooms> rooms = new ArrayList<>();
     public ArrayList<String> automatisationsNoms = new ArrayList<String>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
+    public ArrayList<String> JourSemaine_cE = new ArrayList<>();
     public ArrayList<String> roomsNoms = new ArrayList<>();
-    public ArrayList<String> JourSemaine = new ArrayList<>();
+    public ArrayList<MaisonAutomatisation_Para_Jour_Semaines> JourSemaine = new ArrayList<>();
     private final static String LoggingLabel = "Application";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String networkConfigFile = "network.yaml";
@@ -321,25 +319,30 @@ public class Application {
         JLabel lblTemperature = new JLabel("Température:");
         JSpinner spTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));
 
-//        try {MaisonProgrammeService maisonProgrammeService = new MaisonProgrammeService(networkConfig);
-//            MaisonProgrammes maisonProgrammes = maisonProgrammeService.select_jour_semaine();
-//            JourSemaine.clear();
-//            JourSemaine.add(maisonProgrammes.toString());
-//            System.out.println("Import réussi!");
-//            System.out.println(JourSemaine);
-//        } catch (InterruptedException ex) {
-//            throw new RuntimeException(ex);
-//        } catch (IOException ex) {
-//            throw new RuntimeException(ex);
-//        }
-//
-//
-
+        try {
+            MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);
+            MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = maisonAutomatisationParaJourSemaineService.select_all_name_day();
+            JourSemaine.clear();
+            JourSemaine.add(maisonAutomatisation_para_jour_semaines);
+            System.out.println("Import réussi!");
+            System.out.println(JourSemaine);
+            for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
+                for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
+                    JourSemaine_cE.add(Jour.getNom());
+                }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
 
         JLabel lblJour = new JLabel("Jour:");
-        JComboBox<String> cbJour = new JComboBox<>(new String[]{
-                "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"
-        });
+        String[] TableauJourSemaine = JourSemaine_cE.toArray(new String[0]);
+        JComboBox<String> cbJour = new JComboBox<>(TableauJourSemaine);
+
+//        JComboBox<String> cbJour = new JComboBox<>(new String[]{
+//                "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"
+//        });
 
         JLabel lblHeureDebut = new JLabel("Heure de début:");
         JSpinner spHeureDebut = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
