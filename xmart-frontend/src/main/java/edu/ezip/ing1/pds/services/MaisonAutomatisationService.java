@@ -6,6 +6,7 @@ import edu.ezip.commons.LoggingUtils;
 import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation;
 import edu.ezip.ing1.pds.business.dto.MaisonAutomatisations;
 import edu.ezip.ing1.pds.business.dto.MaisonCapteur;
+import edu.ezip.ing1.pds.business.dto.MaisonProgramme;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
