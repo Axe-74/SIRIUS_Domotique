@@ -2,7 +2,6 @@ package edu.ezip.ing1.pds.requests;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import edu.ezip.ing1.pds.business.dto.Capteur_Para_Types;
-import edu.ezip.ing1.pds.business.dto.MaisonAutomatisation_Para_Type_Chauffages;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
