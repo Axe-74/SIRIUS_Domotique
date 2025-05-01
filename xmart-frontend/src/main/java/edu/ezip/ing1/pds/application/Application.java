@@ -67,8 +67,6 @@ public class Application {
         logger.debug("Load Network config file : {}", networkConfig.toString());
 
 
-
-
 // Main Menu panel
         JPanel menuPanel = new JPanel();
         menuPanel.setLayout(new GridLayout(3, 1));
@@ -81,10 +79,9 @@ public class Application {
         mainPanel.add(menuPanel, "MenuPanel");
 
 
-
 // Automations and programs Menu Panel
         JPanel Automations_and_programsPanel = new JPanel();
-        Automations_and_programsPanel.setLayout(new GridLayout(7, 1));
+        Automations_and_programsPanel.setLayout(new GridLayout(8, 1));
 
         JButton btnNewAutomations = new JButton("Définir une nouvelle automatisation");
         JButton btnViewAutomations = new JButton("Voir les automatisations");
@@ -107,8 +104,6 @@ public class Application {
         mainPanel.add(Automations_and_programsPanel, "Automations_and_ProgramsPanel");
 
 
-
-
 // Capteurs Menu Panel
         JPanel CapteursPanel = new JPanel();
         CapteursPanel.setLayout(new GridLayout(5, 1));
@@ -126,8 +121,6 @@ public class Application {
         CapteursPanel.add(btnRetourCapteurs);
 
         mainPanel.add(CapteursPanel, "CapteursPanel");
-
-
 
 
 // Gestion de la maison Menu Panel
@@ -149,7 +142,6 @@ public class Application {
         mainPanel.add(HouseManagementPanel, "HouseManagementPanel");
 
 
-
 // Automation Definition Panel
         JPanel AutomationPanel = new JPanel();
         AutomationPanel.setLayout(new GridLayout(6, 2));
@@ -158,9 +150,32 @@ public class Application {
         JTextField txtAutomationName = new JTextField();
 
         JLabel lblSensor_activation = new JLabel("Activation du capteur: ");
-        JComboBox<String> cbSensor_activation = new JComboBox<>(new String[]{
-                "Capteur 1", "Capteur 2", "Capteur 3", "Capteur 4", "Capteur 5"
-        });
+        JComboBox<String> cbSensor_activation = new JComboBox<>();
+        try {
+            capteursNoms_cE.clear();
+            MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+            MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+            capteurs.clear();
+            capteurs.add(maisonCapteurFind);
+            for (MaisonCapteurs capt : capteurs)
+                for (MaisonCapteur cap : capt.getCapteurs()) {
+                    capteursNoms_cE.add(cap.getName());
+                }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        DefaultComboBoxModel ComboBoxSensorAutomation = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
+        cbSensor_activation.removeAllItems();
+        cbSensor_activation.setModel(ComboBoxSensorAutomation);
+
+
+
+
+//        JComboBox<String> cbSensor_activation = new JComboBox<>(new String[]{
+//                "Capteur 1", "Capteur 2", "Capteur 3", "Capteur 4", "Capteur 5"
+//        });
 
         JLabel lblSensor_program = new JLabel("Execution du programme:");
         JComboBox<String> cbSensor_programme = new JComboBox<>(new String[]{
@@ -306,10 +321,34 @@ public class Application {
         JLabel lblProgramName = new JLabel("Nom du programme:");
         JTextField txtProgramName = new JTextField();
 
+
         JLabel lblPiece = new JLabel("Pièce:");
-        JComboBox<String> cbPiece = new JComboBox<>(new String[]{
-                "Entree", "Cuisine", "Salon", "Salle de bain", "Chambre parents", "Chambre enfants 1", "Chambre enfants 2", "Chambre enfants 3", "Chambre enfants 4"
-        });
+        JComboBox<String> cbPiece = new JComboBox<>();
+
+
+        try {
+            roomsNoms.clear();
+            MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+            MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+            rooms.clear();
+            rooms.add(maisonRoomFind);
+            for (MaisonRooms maisonRooms : rooms)
+                for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                    roomsNoms.add(maisonRoom.getName());
+                }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        DefaultComboBoxModel ComboBoxRoom = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
+        cbPiece.removeAllItems();
+        cbPiece.setModel(ComboBoxRoom);
+
+
+//        JComboBox<String> cbPiece = new JComboBox<>(new String[]{
+//                "Entree", "Cuisine", "Salon", "Salle de bain", "Chambre parents", "Chambre enfants 1", "Chambre enfants 2", "Chambre enfants 3", "Chambre enfants 4"
+//        });
 
         JLabel lblChauffage = new JLabel("Type de chauffage:");
         JComboBox<String> cbChauffage = new JComboBox<>(new String[]{
@@ -319,30 +358,30 @@ public class Application {
         JLabel lblTemperature = new JLabel("Température:");
         JSpinner spTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));
 
-        try {
-            MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);
-            MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = maisonAutomatisationParaJourSemaineService.select_all_name_day();
-            JourSemaine.clear();
-            JourSemaine.add(maisonAutomatisation_para_jour_semaines);
-            System.out.println("Import réussi!");
-            System.out.println(JourSemaine);
-            for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
-                for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
-                    JourSemaine_cE.add(Jour.getNom());
-                }
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
+        JLabel lblJour = new JLabel("Jour de la semaine");
+        JComboBox<String> cbJour = new JComboBox<>();
 
-        JLabel lblJour = new JLabel("Jour:");
-        String[] TableauJourSemaine = JourSemaine_cE.toArray(new String[0]);
-        JComboBox<String> cbJour = new JComboBox<>(TableauJourSemaine);
+//        try {
+//            MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);
+//            MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = maisonAutomatisationParaJourSemaineService.select_all_name_day();
+//            JourSemaine.clear();
+//            JourSemaine.add(maisonAutomatisation_para_jour_semaines);
+//            System.out.println("Import réussi!");
+//            System.out.println(JourSemaine);
+//            for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
+//                for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
+//                    JourSemaine_cE.add(Jour.getNom());
+//                }
+//        } catch (InterruptedException ex) {
+//            throw new RuntimeException(ex);
+//        } catch (IOException ex) {
+//            throw new RuntimeException(ex);
+//        }
+//
+//        DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_cE.toArray(new String[0]));
+//        cbJour.removeAllItems();
+//        cbJour.setModel(ComboBoxDay);
 
-//        JComboBox<String> cbJour = new JComboBox<>(new String[]{
-//                "Lundi", "Mardi", "Mercredi", "Jeudi", "Vendredi", "Samedi", "Dimanche"
-//        });
 
         JLabel lblHeureDebut = new JLabel("Heure de début:");
         JSpinner spHeureDebut = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));

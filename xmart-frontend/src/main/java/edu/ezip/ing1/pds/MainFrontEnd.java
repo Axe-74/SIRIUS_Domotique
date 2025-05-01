@@ -41,6 +41,7 @@ public class MainFrontEnd {
         }
         asciiTableStudent.addRule();*/
 
+
 //        final MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
 //        //studentService.insertStudents();
 //        MaisonAutomatisations maisonAutomatisations = maisonAutomatisationService.select_all_automation();
