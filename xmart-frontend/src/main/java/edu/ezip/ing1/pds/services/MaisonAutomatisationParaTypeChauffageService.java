@@ -7,10 +7,7 @@ import edu.ezip.ing1.pds.business.dto.*;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
-import edu.ezip.ing1.pds.requests.InsertAutomationClientRequest;
-import edu.ezip.ing1.pds.requests.InsertParaJourSemaineClientRequest;
-import edu.ezip.ing1.pds.requests.SelectAllAutomationClientRequest;
-import edu.ezip.ing1.pds.requests.SelectAllParaJourSemaineClientRequest;
+import edu.ezip.ing1.pds.requests.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -20,45 +17,45 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.UUID;
 
-public class MaisonAutomatisationParaJourSemaineService {
-    private final static String LoggingLabel = "FrontEnd - MaisonAutomatisationParaJourSemaineService";
+public class MaisonAutomatisationParaTypeChauffageService {
+    private final static String LoggingLabel = "FrontEnd - MaisonAutomatisationParaTypeChauffageService";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
 
-    final String insertRequestOrder = "INSERT_NAME_DAY";
-    final String selectRequestOrder = "SELECT_ALL_NAME_DAY";
+    final String insertRequestOrder = "INSERT_NAME_HEATER";
+    final String selectRequestOrder = "SELECT_ALL_NAME_HEATER";
     final String selectNameAutomation = "SELECT_NAME_AUTOMATION";
     final String updateRequestOrder = "UPDATE_NAME_DAY";
     final String deleteRequestOrder = "DELETE_NAME_DAY";
 
     private final NetworkConfig networkConfig;
 
-    public MaisonAutomatisationParaJourSemaineService(NetworkConfig networkConfig) throws InterruptedException {
+    public MaisonAutomatisationParaTypeChauffageService(NetworkConfig networkConfig) throws InterruptedException {
         this.networkConfig = networkConfig;
     }
 
-    public void updatename_day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
-        logger.debug("updateAutomation pour : {}", maisonAutomatisation_para_jour_semaine.getNom());
-        insert_update_delete_Name_Day(maisonAutomatisation_para_jour_semaine, updateRequestOrder);
+    public void updatename_heater(MaisonAutomatisation_Para_Type_Chauffage maisonAutomatisation_para_type_chauffage) throws InterruptedException, IOException {
+        logger.debug("updateAutomation pour : {}", maisonAutomatisation_para_type_chauffage.getNom());
+        insert_update_delete_Name_heater(maisonAutomatisation_para_type_chauffage, updateRequestOrder);
     }
 
-    public void deletename_day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
-        logger.debug("deleteAutomation pour : {}", maisonAutomatisation_para_jour_semaine.getNom());
-        insert_update_delete_Name_Day(maisonAutomatisation_para_jour_semaine, deleteRequestOrder);
+    public void deletename_heater(MaisonAutomatisation_Para_Type_Chauffage maisonAutomatisation_para_type_chauffage) throws InterruptedException, IOException {
+        logger.debug("deleteAutomation pour : {}", maisonAutomatisation_para_type_chauffage.getNom());
+        insert_update_delete_Name_heater(maisonAutomatisation_para_type_chauffage, deleteRequestOrder);
     }
 
-    public void insertname_day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
-        logger.debug("insertAutomation pour : {}", maisonAutomatisation_para_jour_semaine.getNom());
-        insert_update_delete_Name_Day(maisonAutomatisation_para_jour_semaine, insertRequestOrder);
+    public void insertname_heater(MaisonAutomatisation_Para_Type_Chauffage maisonAutomatisation_para_type_chauffage) throws InterruptedException, IOException {
+        logger.debug("insertAutomation pour : {}", maisonAutomatisation_para_type_chauffage.getNom());
+        insert_update_delete_Name_heater(maisonAutomatisation_para_type_chauffage, insertRequestOrder);
     }
 
 
-    public void insert_update_delete_Name_Day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine, String requestOrder) throws InterruptedException, IOException {
+    public void insert_update_delete_Name_heater(MaisonAutomatisation_Para_Type_Chauffage maisonAutomatisation_para_type_chauffage, String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 
         int birthdate = 0;
 
         final ObjectMapper objectMapper = new ObjectMapper();
-        final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(maisonAutomatisation_para_jour_semaine);
+        final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(maisonAutomatisation_para_type_chauffage);
         logger.trace("Automation with its JSON face : {}", jsonifiedGuy);
         final String requestId = UUID.randomUUID().toString();
         final Request request = new Request();
@@ -68,23 +65,23 @@ public class MaisonAutomatisationParaJourSemaineService {
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
 
-        final InsertParaJourSemaineClientRequest clientRequest = new InsertParaJourSemaineClientRequest(
+        final InsertParaTypeChauffageClientRequest clientRequest = new InsertParaTypeChauffageClientRequest(
                 networkConfig,
-                birthdate++, request, maisonAutomatisation_para_jour_semaine, requestBytes);
+                birthdate++, request, maisonAutomatisation_para_type_chauffage, requestBytes);
         clientRequests.push(clientRequest);
 
         while (!clientRequests.isEmpty()) {
             final ClientRequest clientRequest2 = clientRequests.pop();
             clientRequest2.join();
-            final MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine1 = (MaisonAutomatisation_Para_Jour_Semaine) clientRequest2.getInfo();
+            final MaisonAutomatisation_Para_Type_Chauffage maisonAutomatisation_para_type_chauffage1 = (MaisonAutomatisation_Para_Type_Chauffage) clientRequest2.getInfo();
             logger.debug("Thread {} complete : {} {} {} {} --> {}",
                     clientRequest2.getThreadName(),
-                    maisonAutomatisation_para_jour_semaine1.getID_Para_Jour_Semaine(), maisonAutomatisation_para_jour_semaine1.getNom(),
+                    maisonAutomatisation_para_type_chauffage1.getID_Para_Jour_Chauffage(), maisonAutomatisation_para_type_chauffage1.getNom(),
                     clientRequest2.getResult());
         }
     }
 
-    public MaisonAutomatisation_Para_Jour_Semaines select_all_name_day() throws InterruptedException, IOException {
+    public MaisonAutomatisation_Para_Type_Chauffages select_all_name_heater() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -95,7 +92,7 @@ public class MaisonAutomatisationParaJourSemaineService {
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
         LoggingUtils.logDataMultiLine(logger, Level.TRACE, requestBytes);
-        final SelectAllParaJourSemaineClientRequest clientRequest = new SelectAllParaJourSemaineClientRequest(
+        final SelectAllParaTypeChauffageClientRequest clientRequest = new SelectAllParaTypeChauffageClientRequest(
                 networkConfig,
                 birthdate++, request, null, requestBytes);
         clientRequests.push(clientRequest);
@@ -104,7 +101,7 @@ public class MaisonAutomatisationParaJourSemaineService {
             final ClientRequest joinedClientRequest = clientRequests.pop();
             joinedClientRequest.join();
             logger.debug("Thread {} complete.", joinedClientRequest.getThreadName());
-            return (MaisonAutomatisation_Para_Jour_Semaines) joinedClientRequest.getResult();
+            return (MaisonAutomatisation_Para_Type_Chauffages) joinedClientRequest.getResult();
         } else {
             logger.error("No automations found");
             return null;

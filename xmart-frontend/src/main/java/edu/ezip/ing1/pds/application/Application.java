@@ -28,8 +28,10 @@ public class Application {
     public ArrayList<String> automatisationsNoms = new ArrayList<String>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
     public ArrayList<String> JourSemaine_cE = new ArrayList<>();
+    public ArrayList<String> TypeChauffage_cE = new ArrayList<>();
     public ArrayList<String> roomsNoms = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Jour_Semaines> JourSemaine = new ArrayList<>();
+    public ArrayList<MaisonAutomatisation_Para_Type_Chauffages> TypeChauffage = new ArrayList<>();
     private final static String LoggingLabel = "Application";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String networkConfigFile = "network.yaml";
@@ -151,24 +153,24 @@ public class Application {
 
         JLabel lblSensor_activation = new JLabel("Activation du capteur: ");
         JComboBox<String> cbSensor_activation = new JComboBox<>();
-        try {
-            capteursNoms_cE.clear();
-            MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
-            MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
-            capteurs.clear();
-            capteurs.add(maisonCapteurFind);
-            for (MaisonCapteurs capt : capteurs)
-                for (MaisonCapteur cap : capt.getCapteurs()) {
-                    capteursNoms_cE.add(cap.getName());
-                }
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        DefaultComboBoxModel ComboBoxSensorAutomation = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
-        cbSensor_activation.removeAllItems();
-        cbSensor_activation.setModel(ComboBoxSensorAutomation);
+//        try {
+//            capteursNoms_cE.clear();
+//            MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+//            MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+//            capteurs.clear();
+//            capteurs.add(maisonCapteurFind);
+//            for (MaisonCapteurs capt : capteurs)
+//                for (MaisonCapteur cap : capt.getCapteurs()) {
+//                    capteursNoms_cE.add(cap.getName());
+//                }
+//        } catch (InterruptedException ex) {
+//            throw new RuntimeException(ex);
+//        } catch (IOException ex) {
+//            throw new RuntimeException(ex);
+//        }
+//        DefaultComboBoxModel ComboBoxSensorAutomation = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
+//        cbSensor_activation.removeAllItems();
+//        cbSensor_activation.setModel(ComboBoxSensorAutomation);
 
 
 
@@ -351,9 +353,31 @@ public class Application {
 //        });
 
         JLabel lblChauffage = new JLabel("Type de chauffage:");
-        JComboBox<String> cbChauffage = new JComboBox<>(new String[]{
-                "Radiateur", "Seche-serviette"
-        });
+        JComboBox<String> cbChauffage = new JComboBox<>();
+
+//        try {
+//            MaisonAutomatisationParaTypeChauffageService maisonAutomatisationParaTypeChauffageService = new MaisonAutomatisationParaTypeChauffageService(networkConfig);
+//            MaisonAutomatisation_Para_Type_Chauffages maisonAutomatisation_para_type_chauffages = maisonAutomatisationParaTypeChauffageService.select_all_name_heater();
+//            TypeChauffage.clear();
+//            TypeChauffage.add(maisonAutomatisation_para_type_chauffages);
+//            System.out.println("Import réussi!");
+//            System.out.println(TypeChauffage);
+//            for (MaisonAutomatisation_Para_Type_Chauffages ChauffageSe : TypeChauffage)
+//                for (MaisonAutomatisation_Para_Type_Chauffage Chauffage : ChauffageSe.getMaisonAutomatisation_para_type_chauffages()) {
+//                    TypeChauffage_cE.add(Chauffage.getNom());
+//                }
+//        } catch (InterruptedException ex) {
+//            throw new RuntimeException(ex);
+//        } catch (IOException ex) {
+//            throw new RuntimeException(ex);
+//        }
+//
+//        DefaultComboBoxModel ComboBoxHeater = new DefaultComboBoxModel(TypeChauffage_cE.toArray(new String[0]));
+//        cbChauffage.removeAllItems();
+//        cbChauffage.setModel(ComboBoxHeater);
+//        JComboBox<String> cbChauffage = new JComboBox<>(new String[]{
+//                "Radiateur", "Seche-serviette"
+//        });
 
         JLabel lblTemperature = new JLabel("Température:");
         JSpinner spTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));

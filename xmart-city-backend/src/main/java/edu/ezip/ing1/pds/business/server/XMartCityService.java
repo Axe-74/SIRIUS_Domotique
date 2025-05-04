@@ -49,6 +49,9 @@ public class XMartCityService {
         //NAME DAY
         SELECT_ALL_NAME_DAY("SELECT * FROM para_jour_semaine ORDER BY ID_Para_Jour_Semaine"),
 
+        //NAME CHAUFFAGE
+        SELECT_ALL_NAME_HEATER("SELECT * FROM para_type_chauffage ORDER BY ID_Para_type_chauffage"),
+
 
         //FERMETURE
         ;
@@ -134,12 +137,15 @@ public class XMartCityService {
     // NAME DAY
             case SELECT_ALL_NAME_DAY:
                 response = SelectNameDay(request, connection);
+    // NAME DAY
+            case SELECT_ALL_NAME_HEATER:
+                response = SelectNameHeater(request, connection);
     //PAR DEFAUT
             default:
                 break;
         }
 
-        return response;
+        return response; 
     }
 
 
@@ -388,7 +394,7 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
     }
 
-    private Response SelectNameDay(final Request request, final Connection connection) throws SQLException, IOException {
+    private Response SelectNameDay(final Request request, final Connection connection) throws SQLException, IOException     {
 
         final ObjectMapper objectMapper = new ObjectMapper();
         final Statement stmt = connection.createStatement();
@@ -399,9 +405,25 @@ public class XMartCityService {
             maisonAutomatisation_para_jour_semaine.setID_Para_Jour_Semaine(Integer.parseInt(res.getString(1)));
             maisonAutomatisation_para_jour_semaine.setNom(res.getString(2));
             maisonAutomatisation_para_jour_semaines.add((maisonAutomatisation_para_jour_semaine));
-            System.out.println(maisonAutomatisation_para_jour_semaines);
+//            System.out.println(maisonAutomatisation_para_jour_semaines);
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation_para_jour_semaines));
+    }
+
+    private Response SelectNameHeater(final Request request, final Connection connection) throws SQLException, IOException {
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_NAME_HEATER.query);
+        MaisonAutomatisation_Para_Type_Chauffages maisonAutomatisation_para_type_chauffages = new MaisonAutomatisation_Para_Type_Chauffages();
+        while (res.next()) {
+            MaisonAutomatisation_Para_Type_Chauffage maisonAutomatisation_para_type_chauffage= new MaisonAutomatisation_Para_Type_Chauffage();
+            maisonAutomatisation_para_type_chauffage.setID_Para_Jour_Chauffage(Integer.parseInt(res.getString(1)));
+            maisonAutomatisation_para_type_chauffage.setNom(res.getString(2));
+            maisonAutomatisation_para_type_chauffages.add((maisonAutomatisation_para_type_chauffage));
+            System.out.println(maisonAutomatisation_para_type_chauffages);
+        }
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation_para_type_chauffages));
     }
 
 }
