@@ -30,18 +30,34 @@ public class XMartCityService {
 
 
         //PROGRAM
-        SELECT_ALL_PROGRAM("SELECT * FROM programmes ORDER BY programmes.nom_programme"),
+        SELECT_ALL_PROGRAM("SELECT \n" +
+                "    p.ID_Programme,\n" +
+                "    p.Nom_Programme,\n" +
+                "    ptp.Nom AS Nom_Type_Piece,\n" +
+                "    ptc.Nom AS Nom_Type_Chauffage,\n" +
+                "    p.Temperature_Piece,\n" +
+                "    pjs.Nom AS Jour_Semaine,\n" +
+                "    p.Heure_Debut,\n" +
+                "    p.Heure_Fin\n" +
+                "FROM \n" +
+                "    Programmes p\n" +
+                "JOIN \n" +
+                "    Para_Type_Piece ptp ON p.ID_Para_Type_Piece = ptp.ID_Para_Type_Piece\n" +
+                "JOIN \n" +
+                "    Para_Type_Chauffage ptc ON p.ID_Para_Type_Chauffage = ptc.ID_Para_Type_Chauffage\n" +
+                "JOIN \n" +
+                "    Para_Jour_Semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
 
         //CAPTEUR
-        SELECT_ALL_CAPTEURS("SELECT id, nom_capteur, type_capteur, etat_capteur FROM capteurs"),
+        SELECT_ALL_CAPTEURS("SELECT * FROM capteurs"),
         INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)"),
         UPDATE_CAPTEUR("UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?"),
         DELETE_CAPTEUR("DELETE FROM capteurs WHERE nom_capteur = ?"),
 
         //ROOM
-        SELECT_ALL_ROOMS("SELECT r.nom_room, r.type_room, r.room_surface, r.id FROM rooms r"),
+        SELECT_ALL_ROOMS("SELECT * FROM pieces"),
         INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
         UPDATE_ROOM("UPDATE rooms SET nom_room = ?, type_room = ?, room_surface = ? WHERE id = ?"),
         DELETE_ROOM("DELETE FROM rooms WHERE nom_room = ?"),
@@ -137,6 +153,7 @@ public class XMartCityService {
     // NAME DAY
             case SELECT_ALL_NAME_DAY:
                 response = SelectNameDay(request, connection);
+                break;
     // NAME DAY
             case SELECT_ALL_NAME_HEATER:
                 response = SelectNameHeater(request, connection);
@@ -306,8 +323,8 @@ public class XMartCityService {
         MaisonRooms maisonRooms = new MaisonRooms();
         while (res.next()) {
             MaisonRoom maisonRoom = new MaisonRoom();
-            maisonRoom.setName(res.getString(1));
-            maisonRoom.setType(res.getString(2));
+            maisonRoom.setName(res.getString(2));
+            maisonRoom.setType(res.getString(1));
             maisonRoom.setSurface(Integer.parseInt(res.getString(3)));
             maisonRoom.setId(Integer.parseInt(res.getString(4)));
             maisonRooms.add(maisonRoom);
@@ -362,6 +379,7 @@ public class XMartCityService {
             maisonProgramme.setHeureFin(Integer.parseInt(res.getString(8)));
             maisonProgrammes.add(maisonProgramme);
         }
+        System.out.println(maisonProgrammes);
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
     }
 
@@ -405,8 +423,8 @@ public class XMartCityService {
             maisonAutomatisation_para_jour_semaine.setID_Para_Jour_Semaine(Integer.parseInt(res.getString(1)));
             maisonAutomatisation_para_jour_semaine.setNom(res.getString(2));
             maisonAutomatisation_para_jour_semaines.add((maisonAutomatisation_para_jour_semaine));
-//            System.out.println(maisonAutomatisation_para_jour_semaines);
         }
+        System.out.println(maisonAutomatisation_para_jour_semaines);
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation_para_jour_semaines));
     }
 
@@ -421,7 +439,6 @@ public class XMartCityService {
             maisonAutomatisation_para_type_chauffage.setID_Para_Jour_Chauffage(Integer.parseInt(res.getString(1)));
             maisonAutomatisation_para_type_chauffage.setNom(res.getString(2));
             maisonAutomatisation_para_type_chauffages.add((maisonAutomatisation_para_type_chauffage));
-            System.out.println(maisonAutomatisation_para_type_chauffages);
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation_para_type_chauffages));
     }

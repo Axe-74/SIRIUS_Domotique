@@ -29,6 +29,7 @@ public class Application {
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
     public ArrayList<String> JourSemaine_cE = new ArrayList<>();
     public ArrayList<String> TypeChauffage_cE = new ArrayList<>();
+    public ArrayList<String> ProgrammeNoms_cE = new ArrayList<>();
     public ArrayList<String> roomsNoms = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Jour_Semaines> JourSemaine = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Type_Chauffages> TypeChauffage = new ArrayList<>();
@@ -153,24 +154,24 @@ public class Application {
 
         JLabel lblSensor_activation = new JLabel("Activation du capteur: ");
         JComboBox<String> cbSensor_activation = new JComboBox<>();
-//        try {
-//            capteursNoms_cE.clear();
-//            MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
-//            MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
-//            capteurs.clear();
-//            capteurs.add(maisonCapteurFind);
-//            for (MaisonCapteurs capt : capteurs)
-//                for (MaisonCapteur cap : capt.getCapteurs()) {
-//                    capteursNoms_cE.add(cap.getName());
-//                }
-//        } catch (InterruptedException ex) {
-//            throw new RuntimeException(ex);
-//        } catch (IOException ex) {
-//            throw new RuntimeException(ex);
-//        }
-//        DefaultComboBoxModel ComboBoxSensorAutomation = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
-//        cbSensor_activation.removeAllItems();
-//        cbSensor_activation.setModel(ComboBoxSensorAutomation);
+        try {
+            capteursNoms_cE.clear();
+            MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+            MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+            capteurs.clear();
+            capteurs.add(maisonCapteurFind);
+            for (MaisonCapteurs capt : capteurs)
+                for (MaisonCapteur cap : capt.getCapteurs()) {
+                    capteursNoms_cE.add(cap.getName());
+                }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        DefaultComboBoxModel ComboBoxSensorAutomation = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
+        cbSensor_activation.removeAllItems();
+        cbSensor_activation.setModel(ComboBoxSensorAutomation);
 
 
 
@@ -178,11 +179,29 @@ public class Application {
 //        JComboBox<String> cbSensor_activation = new JComboBox<>(new String[]{
 //                "Capteur 1", "Capteur 2", "Capteur 3", "Capteur 4", "Capteur 5"
 //        });
-
+        JComboBox<String> cbSensor_programme = new JComboBox<>();
         JLabel lblSensor_program = new JLabel("Execution du programme:");
-        JComboBox<String> cbSensor_programme = new JComboBox<>(new String[]{
-                "Programme 1", "Programme 2", "Programme 3", "Programme 4", "Programme 5"
-        });
+        try {
+            ProgrammeNoms_cE.clear();
+            MaisonProgrammeService maisonProgrammeService = new MaisonProgrammeService(networkConfig);
+            MaisonProgrammes maisonProgrammeFind = maisonProgrammeService.select_all_program();
+            programmes.clear();
+            programmes.add(maisonProgrammeFind);
+            for (MaisonProgrammes Prog : programmes)
+                for (MaisonProgramme Pro : Prog.getMaisonProgrammes()) {
+                    ProgrammeNoms_cE.add(Pro.getNomProgramme());
+                }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+        DefaultComboBoxModel ComboBoxProgrammAutomation = new DefaultComboBoxModel(ProgrammeNoms_cE.toArray(new String[0]));
+        cbSensor_programme.removeAllItems();
+        cbSensor_programme.setModel(ComboBoxProgrammAutomation);
+//        JComboBox<String> cbSensor_programme = new JComboBox<>(new String[]{
+//                "Programme 1", "Programme 2", "Programme 3", "Programme 4", "Programme 5"
+//        });
 
         JLabel lblEtatAutomatisation = new JLabel("Etat de l'automatisation:");
         JCheckBox cbEtatAutomatisation = new JCheckBox();
@@ -355,26 +374,26 @@ public class Application {
         JLabel lblChauffage = new JLabel("Type de chauffage:");
         JComboBox<String> cbChauffage = new JComboBox<>();
 
-//        try {
-//            MaisonAutomatisationParaTypeChauffageService maisonAutomatisationParaTypeChauffageService = new MaisonAutomatisationParaTypeChauffageService(networkConfig);
-//            MaisonAutomatisation_Para_Type_Chauffages maisonAutomatisation_para_type_chauffages = maisonAutomatisationParaTypeChauffageService.select_all_name_heater();
-//            TypeChauffage.clear();
-//            TypeChauffage.add(maisonAutomatisation_para_type_chauffages);
-//            System.out.println("Import réussi!");
-//            System.out.println(TypeChauffage);
-//            for (MaisonAutomatisation_Para_Type_Chauffages ChauffageSe : TypeChauffage)
-//                for (MaisonAutomatisation_Para_Type_Chauffage Chauffage : ChauffageSe.getMaisonAutomatisation_para_type_chauffages()) {
-//                    TypeChauffage_cE.add(Chauffage.getNom());
-//                }
-//        } catch (InterruptedException ex) {
-//            throw new RuntimeException(ex);
-//        } catch (IOException ex) {
-//            throw new RuntimeException(ex);
-//        }
-//
-//        DefaultComboBoxModel ComboBoxHeater = new DefaultComboBoxModel(TypeChauffage_cE.toArray(new String[0]));
-//        cbChauffage.removeAllItems();
-//        cbChauffage.setModel(ComboBoxHeater);
+        try {
+            MaisonAutomatisationParaTypeChauffageService maisonAutomatisationParaTypeChauffageService = new MaisonAutomatisationParaTypeChauffageService(networkConfig);
+            MaisonAutomatisation_Para_Type_Chauffages maisonAutomatisation_para_type_chauffages = maisonAutomatisationParaTypeChauffageService.select_all_name_heater();
+            TypeChauffage.clear();
+            TypeChauffage.add(maisonAutomatisation_para_type_chauffages);
+            System.out.println("Import réussi!");
+            System.out.println(TypeChauffage);
+            for (MaisonAutomatisation_Para_Type_Chauffages ChauffageSe : TypeChauffage)
+                for (MaisonAutomatisation_Para_Type_Chauffage Chauffage : ChauffageSe.getMaisonAutomatisation_para_type_chauffages()) {
+                    TypeChauffage_cE.add(Chauffage.getNom());
+                }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        DefaultComboBoxModel ComboBoxHeater = new DefaultComboBoxModel(TypeChauffage_cE.toArray(new String[0]));
+        cbChauffage.removeAllItems();
+        cbChauffage.setModel(ComboBoxHeater);
 //        JComboBox<String> cbChauffage = new JComboBox<>(new String[]{
 //                "Radiateur", "Seche-serviette"
 //        });
@@ -385,26 +404,26 @@ public class Application {
         JLabel lblJour = new JLabel("Jour de la semaine");
         JComboBox<String> cbJour = new JComboBox<>();
 
-//        try {
-//            MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);
-//            MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = maisonAutomatisationParaJourSemaineService.select_all_name_day();
-//            JourSemaine.clear();
-//            JourSemaine.add(maisonAutomatisation_para_jour_semaines);
-//            System.out.println("Import réussi!");
-//            System.out.println(JourSemaine);
-//            for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
-//                for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
-//                    JourSemaine_cE.add(Jour.getNom());
-//                }
-//        } catch (InterruptedException ex) {
-//            throw new RuntimeException(ex);
-//        } catch (IOException ex) {
-//            throw new RuntimeException(ex);
-//        }
-//
-//        DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_cE.toArray(new String[0]));
-//        cbJour.removeAllItems();
-//        cbJour.setModel(ComboBoxDay);
+        try {
+            MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);
+            MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = maisonAutomatisationParaJourSemaineService.select_all_name_day();
+            JourSemaine.clear();
+            JourSemaine.add(maisonAutomatisation_para_jour_semaines);
+            System.out.println("Import réussi!");
+            System.out.println(JourSemaine);
+            for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
+                for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
+                    JourSemaine_cE.add(Jour.getNom());
+                }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_cE.toArray(new String[0]));
+        cbJour.removeAllItems();
+        cbJour.setModel(ComboBoxDay);
 
 
         JLabel lblHeureDebut = new JLabel("Heure de début:");
