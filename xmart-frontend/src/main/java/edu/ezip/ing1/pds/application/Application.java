@@ -154,25 +154,6 @@ public class Application {
 
         JLabel lblSensor_activation = new JLabel("Activation du capteur: ");
         JComboBox<String> cbSensor_activation = new JComboBox<>();
-        try {
-            capteursNoms_cE.clear();
-            MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
-            MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
-            capteurs.clear();
-            capteurs.add(maisonCapteurFind);
-            for (MaisonCapteurs capt : capteurs)
-                for (MaisonCapteur cap : capt.getCapteurs()) {
-                    capteursNoms_cE.add(cap.getName());
-                }
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        DefaultComboBoxModel ComboBoxSensorAutomation = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
-        cbSensor_activation.removeAllItems();
-        cbSensor_activation.setModel(ComboBoxSensorAutomation);
-
 
 
 
@@ -181,24 +162,7 @@ public class Application {
 //        });
         JComboBox<String> cbSensor_programme = new JComboBox<>();
         JLabel lblSensor_program = new JLabel("Execution du programme:");
-        try {
-            ProgrammeNoms_cE.clear();
-            MaisonProgrammeService maisonProgrammeService = new MaisonProgrammeService(networkConfig);
-            MaisonProgrammes maisonProgrammeFind = maisonProgrammeService.select_all_program();
-            programmes.clear();
-            programmes.add(maisonProgrammeFind);
-            for (MaisonProgrammes Prog : programmes)
-                for (MaisonProgramme Pro : Prog.getMaisonProgrammes()) {
-                    ProgrammeNoms_cE.add(Pro.getNomProgramme());
-                }
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        DefaultComboBoxModel ComboBoxProgrammAutomation = new DefaultComboBoxModel(ProgrammeNoms_cE.toArray(new String[0]));
-        cbSensor_programme.removeAllItems();
-        cbSensor_programme.setModel(ComboBoxProgrammAutomation);
+
 //        JComboBox<String> cbSensor_programme = new JComboBox<>(new String[]{
 //                "Programme 1", "Programme 2", "Programme 3", "Programme 4", "Programme 5"
 //        });
@@ -346,27 +310,6 @@ public class Application {
         JLabel lblPiece = new JLabel("Pièce:");
         JComboBox<String> cbPiece = new JComboBox<>();
 
-
-        try {
-            roomsNoms.clear();
-            MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
-            MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
-            rooms.clear();
-            rooms.add(maisonRoomFind);
-            for (MaisonRooms maisonRooms : rooms)
-                for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
-                    roomsNoms.add(maisonRoom.getName());
-                }
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-        DefaultComboBoxModel ComboBoxRoom = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
-        cbPiece.removeAllItems();
-        cbPiece.setModel(ComboBoxRoom);
-
-
 //        JComboBox<String> cbPiece = new JComboBox<>(new String[]{
 //                "Entree", "Cuisine", "Salon", "Salle de bain", "Chambre parents", "Chambre enfants 1", "Chambre enfants 2", "Chambre enfants 3", "Chambre enfants 4"
 //        });
@@ -374,26 +317,6 @@ public class Application {
         JLabel lblChauffage = new JLabel("Type de chauffage:");
         JComboBox<String> cbChauffage = new JComboBox<>();
 
-        try {
-            MaisonAutomatisationParaTypeChauffageService maisonAutomatisationParaTypeChauffageService = new MaisonAutomatisationParaTypeChauffageService(networkConfig);
-            MaisonAutomatisation_Para_Type_Chauffages maisonAutomatisation_para_type_chauffages = maisonAutomatisationParaTypeChauffageService.select_all_name_heater();
-            TypeChauffage.clear();
-            TypeChauffage.add(maisonAutomatisation_para_type_chauffages);
-            System.out.println("Import réussi!");
-            System.out.println(TypeChauffage);
-            for (MaisonAutomatisation_Para_Type_Chauffages ChauffageSe : TypeChauffage)
-                for (MaisonAutomatisation_Para_Type_Chauffage Chauffage : ChauffageSe.getMaisonAutomatisation_para_type_chauffages()) {
-                    TypeChauffage_cE.add(Chauffage.getNom());
-                }
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        DefaultComboBoxModel ComboBoxHeater = new DefaultComboBoxModel(TypeChauffage_cE.toArray(new String[0]));
-        cbChauffage.removeAllItems();
-        cbChauffage.setModel(ComboBoxHeater);
 //        JComboBox<String> cbChauffage = new JComboBox<>(new String[]{
 //                "Radiateur", "Seche-serviette"
 //        });
@@ -403,28 +326,6 @@ public class Application {
 
         JLabel lblJour = new JLabel("Jour de la semaine");
         JComboBox<String> cbJour = new JComboBox<>();
-
-        try {
-            MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);
-            MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = maisonAutomatisationParaJourSemaineService.select_all_name_day();
-            JourSemaine.clear();
-            JourSemaine.add(maisonAutomatisation_para_jour_semaines);
-            System.out.println("Import réussi!");
-            System.out.println(JourSemaine);
-            for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
-                for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
-                    JourSemaine_cE.add(Jour.getNom());
-                }
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-
-        DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_cE.toArray(new String[0]));
-        cbJour.removeAllItems();
-        cbJour.setModel(ComboBoxDay);
-
 
         JLabel lblHeureDebut = new JLabel("Heure de début:");
         JSpinner spHeureDebut = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
@@ -771,8 +672,111 @@ public class Application {
 
 
         //Boutons Automatisations et Programmes
-        btnNewAutomations.addActionListener(e -> cardLayout.show(mainPanel, "AutomationPanel"));
-        btnNewPrograms.addActionListener(e -> cardLayout.show(mainPanel, "ProgramPanel"));
+        btnNewAutomations.addActionListener(e -> {
+            try {
+                capteursNoms_cE.clear();
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs)
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        capteursNoms_cE.add(cap.getName());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxSensorAutomation = new DefaultComboBoxModel(capteursNoms_cE.toArray(new String[0]));
+            cbSensor_activation.removeAllItems();
+            cbSensor_activation.setModel(ComboBoxSensorAutomation);
+
+            try {
+                ProgrammeNoms_cE.clear();
+                MaisonProgrammeService maisonProgrammeService = new MaisonProgrammeService(networkConfig);
+                MaisonProgrammes maisonProgrammeFind = maisonProgrammeService.select_all_program();
+                programmes.clear();
+                programmes.add(maisonProgrammeFind);
+                for (MaisonProgrammes Prog : programmes)
+                    for (MaisonProgramme Pro : Prog.getMaisonProgrammes()) {
+                        ProgrammeNoms_cE.add(Pro.getNomProgramme());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxProgrammAutomation = new DefaultComboBoxModel(ProgrammeNoms_cE.toArray(new String[0]));
+            cbSensor_programme.removeAllItems();
+            cbSensor_programme.setModel(ComboBoxProgrammAutomation);
+
+            cardLayout.show(mainPanel, "AutomationPanel");
+        });
+        btnNewPrograms.addActionListener(e -> {
+            try {
+                roomsNoms.clear();
+                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRoomFind);
+                for (MaisonRooms maisonRooms : rooms)
+                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                        roomsNoms.add(maisonRoom.getName());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxRoom = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
+            cbPiece.removeAllItems();
+            cbPiece.setModel(ComboBoxRoom);
+
+            try {
+                MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);
+                MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = maisonAutomatisationParaJourSemaineService.select_all_name_day();
+                JourSemaine.clear();
+                JourSemaine.add(maisonAutomatisation_para_jour_semaines);
+                System.out.println("Import réussi!");
+                System.out.println(JourSemaine);
+                for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
+                    for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
+                        JourSemaine_cE.add(Jour.getNom());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_cE.toArray(new String[0]));
+            cbJour.removeAllItems();
+            cbJour.setModel(ComboBoxDay);
+
+            try {
+                MaisonAutomatisationParaTypeChauffageService maisonAutomatisationParaTypeChauffageService = new MaisonAutomatisationParaTypeChauffageService(networkConfig);
+                MaisonAutomatisation_Para_Type_Chauffages maisonAutomatisation_para_type_chauffages = maisonAutomatisationParaTypeChauffageService.select_all_name_heater();
+                TypeChauffage.clear();
+                TypeChauffage.add(maisonAutomatisation_para_type_chauffages);
+                System.out.println("Import réussi!");
+                System.out.println(TypeChauffage);
+                for (MaisonAutomatisation_Para_Type_Chauffages ChauffageSe : TypeChauffage)
+                    for (MaisonAutomatisation_Para_Type_Chauffage Chauffage : ChauffageSe.getMaisonAutomatisation_para_type_chauffages()) {
+                        TypeChauffage_cE.add(Chauffage.getNom());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            DefaultComboBoxModel ComboBoxHeater = new DefaultComboBoxModel(TypeChauffage_cE.toArray(new String[0]));
+            cbChauffage.removeAllItems();
+            cbChauffage.setModel(ComboBoxHeater);
+
+            cardLayout.show(mainPanel, "ProgramPanel");
+        });
         btnEtatAutomation.addActionListener(e -> cardLayout.show(mainPanel, "EtatAutomatisationPanel"));
         btnDeleteAutomation.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerAutomatisationPanel"));
         btnSimuleAutomation.addActionListener(e -> cardLayout.show(mainPanel, "SimulerAutomatisationPanel"));
@@ -1009,7 +1013,6 @@ public class Application {
         });
 
 
-
         //Bouton Changement Etat automatisation
         btnEtatAutomation.addActionListener(e -> {
             try {
@@ -1204,7 +1207,34 @@ public class Application {
         });
         btnSimulerAutomatisation.addActionListener(e -> {
             String auto_simule_select = cbAutomatisationsExistantes_Simuler.getSelectedItem().toString();
+            try {MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
+                MaisonAutomatisations maisonAutomatisations = maisonAutomatisationService.select_all_automation();
+                automatisations.clear();
+                automatisations.add(maisonAutomatisations);
+                System.out.println("Import réussi!");
+                System.out.println(automatisations);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            for (MaisonAutomatisations maisonauto : automatisations) {
+                for (MaisonAutomatisation auto : maisonauto.getMaisonAutomatisations()) {
+                    if (auto_simule_select.equalsIgnoreCase(auto.getTypeCapteur())) {
+                        automatisationsNoms.clear();
+                        automatisationsNoms.add(auto.getNomAutomatisation());
+                    }
+                }
+            }
+                    StringBuilder SbAutoTrigger = new StringBuilder("Automatisations exécutées :\n");
+                    for (String element : automatisationsNoms) {
+                        SbAutoTrigger.append("- ").append(element).append("\n");
+                    }
 
+                    // Affichage dans une boîte de dialogue
+                    JOptionPane.showMessageDialog(null, SbAutoTrigger.toString(), "Domotique maison", JOptionPane.INFORMATION_MESSAGE);
+
+            System.out.println(automatisationsNoms);
         });
 
         //Bouton Suppression Capteur

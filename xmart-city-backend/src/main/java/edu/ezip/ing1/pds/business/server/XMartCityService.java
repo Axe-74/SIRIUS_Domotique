@@ -9,7 +9,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
-
 import java.io.IOException;
 import java.lang.reflect.InvocationTargetException;
 import java.sql.*;
@@ -21,8 +20,10 @@ public class XMartCityService {
     private final Logger logger = LoggerFactory.getLogger(LoggingLabel);
 
     private enum Queries {
+
+
         //AUTOMATION
-        SELECT_ALL_AUTOMATION("SELECT * FROM automatisations ORDER BY id"),
+        SELECT_ALL_AUTOMATION("SELECT * FROM automatisations  "),
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
         INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
         UPDATE_AUTOMATION("UPDATE automatisations SET etat_automatisation = ? WHERE nom_automatisation = ?"),
