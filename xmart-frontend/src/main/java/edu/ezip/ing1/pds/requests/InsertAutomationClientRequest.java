@@ -22,6 +22,6 @@ public class InsertAutomationClientRequest extends ClientRequest<MaisonAutomatis
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> automationIdMap = mapper.readValue(body, Map.class);
         final String result  = automationIdMap.get("automation_id").toString();
-        return result;
+        return "yo";
     }
 }

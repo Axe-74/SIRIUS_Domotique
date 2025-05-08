@@ -6,12 +6,10 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import java.awt.*;
 import java.io.IOException;
-import java.sql.*;
 import java.util.*;
 
 import edu.ezip.ing1.pds.business.dto.*;
 import edu.ezip.ing1.pds.services.*;
-import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.ConfigLoader;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 
@@ -28,6 +26,12 @@ public class Application {
     public ArrayList<String> automatisationsNoms = new ArrayList<String>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
     public ArrayList<String> JourSemaine_cE = new ArrayList<>();
+    public Map<String, String> Pieces_dic = new HashMap<>();
+    public Map<String, String> JourSemaine_dic = new HashMap<>();
+    public Map<String, String> TypeChauffage_dic = new HashMap<>();
+    public String valueIDJour;
+    public String valueIDTypeChauffage;
+    public String valueIDPiece;
     public ArrayList<String> TypeChauffage_cE = new ArrayList<>();
     public ArrayList<String> ProgrammeNoms_cE = new ArrayList<>();
     public ArrayList<String> roomsNoms = new ArrayList<>();
@@ -742,7 +746,9 @@ public class Application {
                 System.out.println(JourSemaine);
                 for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
                     for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
-                        JourSemaine_cE.add(Jour.getNom());
+                        JourSemaine_dic.put(Jour.getNom(), Jour.getID_Para_Jour_Semaine().toString());
+//                        JourSemaine_cE.add(Jour.getNom());
+
                     }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -750,7 +756,7 @@ public class Application {
                 throw new RuntimeException(ex);
             }
 
-            DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_cE.toArray(new String[0]));
+            DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_dic.keySet().toArray(new String[0]));
             cbJour.removeAllItems();
             cbJour.setModel(ComboBoxDay);
 
@@ -763,7 +769,8 @@ public class Application {
                 System.out.println(TypeChauffage);
                 for (MaisonAutomatisation_Para_Type_Chauffages ChauffageSe : TypeChauffage)
                     for (MaisonAutomatisation_Para_Type_Chauffage Chauffage : ChauffageSe.getMaisonAutomatisation_para_type_chauffages()) {
-                        TypeChauffage_cE.add(Chauffage.getNom());
+//                        TypeChauffage_cE.add(Chauffage.getNom());
+                        TypeChauffage_dic.put(Chauffage.getNom(),Chauffage.getID_Para_Jour_Chauffage().toString());
                     }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -771,7 +778,7 @@ public class Application {
                 throw new RuntimeException(ex);
             }
 
-            DefaultComboBoxModel ComboBoxHeater = new DefaultComboBoxModel(TypeChauffage_cE.toArray(new String[0]));
+            DefaultComboBoxModel ComboBoxHeater = new DefaultComboBoxModel(TypeChauffage_dic.keySet().toArray(new String[0]));
             cbChauffage.removeAllItems();
             cbChauffage.setModel(ComboBoxHeater);
 
@@ -1348,7 +1355,7 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            MaisonProgramme maisonProgramme = new MaisonProgramme(nomProgramme,PieceSelection,ChauffageSelection,JourSelection,TemperatureSelection,HeureDebutSelection,HeureFinSelection);
+            MaisonProgramme maisonProgramme = new MaisonProgramme(nomProgramme,PieceSelection,valueIDTypeChauffage, valueIDJour,TemperatureSelection,HeureDebutSelection,HeureFinSelection);
             int CountProgramNameEqual = 0;
             try {
                 MaisonProgrammeService maisonProgrammeServiceFind = new MaisonProgrammeService(networkConfig);
@@ -1382,6 +1389,23 @@ public class Application {
             }
 
         });
+
+        cbJour.addActionListener(e ->  {
+                String selectedKeyDay = (String) cbJour.getSelectedItem();
+
+                valueIDJour = JourSemaine_dic.get(selectedKeyDay);
+
+                System.out.println("Jour sélectionné : " + selectedKeyDay + ", ID associé : " + valueIDJour);
+        });
+
+        cbChauffage.addActionListener(e ->  {
+            String selectedKeyTypeChauffage = (String) cbChauffage.getSelectedItem();
+
+            valueIDTypeChauffage = TypeChauffage_dic.get(selectedKeyTypeChauffage);
+
+            System.out.println("Chauffage Séléctionné : " + selectedKeyTypeChauffage + ", ID associé : " + valueIDTypeChauffage);
+        });
+
 
         btnSaveAutomation.addActionListener(e -> {
                     // Validation des données

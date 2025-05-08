@@ -31,7 +31,7 @@ public class MaisonProgramme {
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        return buildPreparedStatement(preparedStatement, NomProgramme,TypePiece,TypeChauffage,JourSemaine, String.valueOf(Temperature),String.valueOf(HeureDebut), String.valueOf(HeureFin));
+        return buildPreparedStatement(preparedStatement, NomProgramme,TypePiece,TypeChauffage, JourSemaine, String.valueOf(Temperature),String.valueOf(HeureDebut), String.valueOf(HeureFin));
     }
     public MaisonProgramme(String NomProgramme, String TypePiece, String TypeChauffage, String JourSemaine,int Temperature, int HeureDebut, int HeureFin) {
         this.id = id;

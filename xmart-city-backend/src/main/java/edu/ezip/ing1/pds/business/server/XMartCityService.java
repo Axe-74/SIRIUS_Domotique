@@ -23,9 +23,9 @@ public class XMartCityService {
 
 
         //AUTOMATION
-        SELECT_ALL_AUTOMATION("SELECT * FROM automatisations  "),
+        SELECT_ALL_AUTOMATION("SELECT * FROM automatisations ORDER BY ID_Automatisation ASC "),
         SELECT_NAME_AUTOMATION("SELECT nom_automatisation FROM automatisations"),
-        INSERT_AUTOMATION("INSERT INTO automatisations (nom_automatisation, type_capteur, type_programme, etat_automatisation) VALUES (?, ?, ?, ?)"),
+        INSERT_AUTOMATION("INSERT INTO automatisations (Nom_Automatisation, Nom_Capteur, Nom_Programme, Etat_Automatisation) VALUES (?, ?, ?, ?)"),
         UPDATE_AUTOMATION("UPDATE automatisations SET etat_automatisation = ? WHERE nom_automatisation = ?"),
         DELETE_AUTOMATION("DELETE FROM automatisations WHERE nom_automatisation = ?"),
 
@@ -34,7 +34,7 @@ public class XMartCityService {
         SELECT_ALL_PROGRAM("SELECT \n" +
                 "    p.ID_Programme,\n" +
                 "    p.Nom_Programme,\n" +
-                "    ptp.Nom AS Nom_Type_Piece,\n" +
+                "    p.Pieces,\n" +
                 "    ptc.Nom AS Nom_Type_Chauffage,\n" +
                 "    p.Temperature_Piece,\n" +
                 "    pjs.Nom AS Jour_Semaine,\n" +
@@ -43,12 +43,10 @@ public class XMartCityService {
                 "FROM \n" +
                 "    Programmes p\n" +
                 "JOIN \n" +
-                "    Para_Type_Piece ptp ON p.ID_Para_Type_Piece = ptp.ID_Para_Type_Piece\n" +
-                "JOIN \n" +
                 "    Para_Type_Chauffage ptc ON p.ID_Para_Type_Chauffage = ptc.ID_Para_Type_Chauffage\n" +
                 "JOIN \n" +
                 "    Para_Jour_Semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
-        INSERT_PROGRAM("INSERT INTO programmes (nom_programme, type_piece, type_chauffage,  jour_semaine,temperature_piece, heure_debut, heure_fin) VALUES (?, ?, ?, ?, ?, ?, ?)"),
+        INSERT_PROGRAM("INSERT INTO programmes (nom_programme,Pieces,ID_Para_Type_Chauffage, Temperature_Piece ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
 
         //CAPTEUR
@@ -64,10 +62,10 @@ public class XMartCityService {
         DELETE_ROOM("DELETE FROM rooms WHERE nom_room = ?"),
 
         //NAME DAY
-        SELECT_ALL_NAME_DAY("SELECT * FROM para_jour_semaine ORDER BY ID_Para_Jour_Semaine"),
+        SELECT_ALL_NAME_DAY("SELECT * FROM para_jour_semaine ORDER BY ID_Para_Jour_Semaine ASC"),
 
         //NAME CHAUFFAGE
-        SELECT_ALL_NAME_HEATER("SELECT * FROM para_type_chauffage ORDER BY ID_Para_type_chauffage"),
+        SELECT_ALL_NAME_HEATER("SELECT * FROM para_type_chauffage ORDER BY ID_Para_type_chauffage ASC"),
 
 
         //FERMETURE
@@ -390,9 +388,9 @@ public class XMartCityService {
         final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_PROGRAM.query);
         stmt.setString(1, maisonProgramme.getNomProgramme());
         stmt.setString(2, maisonProgramme.getTypePiece());
-        stmt.setString(3, maisonProgramme.getTypeChauffage());
-        stmt.setString(4, maisonProgramme.getJourSemaine());
-        stmt.setInt(5,maisonProgramme.getTemperature());
+        stmt.setInt(3, Integer.valueOf(maisonProgramme.getTypeChauffage()));
+        stmt.setInt(5, Integer.valueOf(maisonProgramme.getJourSemaine()));
+        stmt.setInt(4,maisonProgramme.getTemperature());
         stmt.setInt(6,maisonProgramme.getHeureDebut());
         stmt.setInt(7,maisonProgramme.getHeureFin());
         stmt.executeUpdate();
