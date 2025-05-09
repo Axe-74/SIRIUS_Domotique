@@ -7,10 +7,7 @@ import edu.ezip.ing1.pds.business.dto.*;
 import edu.ezip.ing1.pds.client.commons.ClientRequest;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
 import edu.ezip.ing1.pds.commons.Request;
-import edu.ezip.ing1.pds.requests.InsertAutomationClientRequest;
-import edu.ezip.ing1.pds.requests.InsertParaJourSemaineClientRequest;
-import edu.ezip.ing1.pds.requests.SelectAllAutomationClientRequest;
-import edu.ezip.ing1.pds.requests.SelectAllParaJourSemaineClientRequest;
+import edu.ezip.ing1.pds.requests.*;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.slf4j.event.Level;
@@ -20,44 +17,44 @@ import java.util.ArrayDeque;
 import java.util.Deque;
 import java.util.UUID;
 
-public class MaisonAutomatisationParaJourSemaineService {
-    private final static String LoggingLabel = "FrontEnd - MaisonAutomatisationParaJourSemaineService";
+public class MaisonAutomatisationParaLumiereService {
+    private final static String LoggingLabel = "FrontEnd - MaisonAutomatisationParaLumiereService";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
 
-    final String insertRequestOrder = "INSERT_NAME_DAY";
-    final String selectRequestOrder = "SELECT_ALL_NAME_DAY";
-    final String updateRequestOrder = "UPDATE_NAME_DAY";
-    final String deleteRequestOrder = "DELETE_NAME_DAY";
+    final String insertRequestOrder = "INSERT_NAME_LIGHT";
+    final String selectRequestOrder = "SELECT_ALL_NAME_LIGHT";
+    final String updateRequestOrder = "UPDATE_NAME_LIGHT";
+    final String deleteRequestOrder = "DELETE_NAME_LIGHT";
 
     private final NetworkConfig networkConfig;
 
-    public MaisonAutomatisationParaJourSemaineService(NetworkConfig networkConfig) throws InterruptedException {
+    public MaisonAutomatisationParaLumiereService(NetworkConfig networkConfig) throws InterruptedException {
         this.networkConfig = networkConfig;
     }
 
-    public void updatename_day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
-        logger.debug("updateAutomation pour : {}", maisonAutomatisation_para_jour_semaine.getNom());
-        insert_update_delete_Name_Day(maisonAutomatisation_para_jour_semaine, updateRequestOrder);
+    public void updatename_light(MaisonAutomatisation_Para_Lumiere maisonAutomatisation_para_lumiere) throws InterruptedException, IOException {
+        logger.debug("updateAutomation pour : {}", maisonAutomatisation_para_lumiere.getNom());
+        insert_update_delete_Name_Day(maisonAutomatisation_para_lumiere, updateRequestOrder);
     }
 
-    public void deletename_day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
-        logger.debug("deleteAutomation pour : {}", maisonAutomatisation_para_jour_semaine.getNom());
-        insert_update_delete_Name_Day(maisonAutomatisation_para_jour_semaine, deleteRequestOrder);
+    public void deletename_light(MaisonAutomatisation_Para_Lumiere maisonAutomatisation_para_lumiere) throws InterruptedException, IOException {
+        logger.debug("deleteAutomation pour : {}", maisonAutomatisation_para_lumiere.getNom());
+        insert_update_delete_Name_Day(maisonAutomatisation_para_lumiere, deleteRequestOrder);
     }
 
-    public void insertname_day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine) throws InterruptedException, IOException {
-        logger.debug("insertAutomation pour : {}", maisonAutomatisation_para_jour_semaine.getNom());
-        insert_update_delete_Name_Day(maisonAutomatisation_para_jour_semaine, insertRequestOrder);
+    public void insertname_light(MaisonAutomatisation_Para_Lumiere maisonAutomatisation_para_lumiere) throws InterruptedException, IOException {
+        logger.debug("insertAutomation pour : {}", maisonAutomatisation_para_lumiere.getNom());
+        insert_update_delete_Name_Day(maisonAutomatisation_para_lumiere, insertRequestOrder);
     }
 
 
-    public void insert_update_delete_Name_Day(MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine, String requestOrder) throws InterruptedException, IOException {
+    public void insert_update_delete_Name_Day(MaisonAutomatisation_Para_Lumiere maisonAutomatisation_para_lumiere, String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 
         int birthdate = 0;
 
         final ObjectMapper objectMapper = new ObjectMapper();
-        final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(maisonAutomatisation_para_jour_semaine);
+        final String jsonifiedGuy = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsString(maisonAutomatisation_para_lumiere);
         logger.trace("Automation with its JSON face : {}", jsonifiedGuy);
         final String requestId = UUID.randomUUID().toString();
         final Request request = new Request();
@@ -67,18 +64,18 @@ public class MaisonAutomatisationParaJourSemaineService {
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
 
-        final InsertParaJourSemaineClientRequest clientRequest = new InsertParaJourSemaineClientRequest(
+        final InsertParaLumiereClientRequest clientRequest = new InsertParaLumiereClientRequest(
                 networkConfig,
-                birthdate++, request, maisonAutomatisation_para_jour_semaine, requestBytes);
+                birthdate++, request, maisonAutomatisation_para_lumiere, requestBytes);
         clientRequests.push(clientRequest);
 
         while (!clientRequests.isEmpty()) {
             final ClientRequest clientRequest2 = clientRequests.pop();
             clientRequest2.join();
-            final MaisonAutomatisation_Para_Jour_Semaine maisonAutomatisation_para_jour_semaine1 = (MaisonAutomatisation_Para_Jour_Semaine) clientRequest2.getInfo();
+            final MaisonAutomatisation_Para_Lumiere maisonAutomatisation_para_lumiere1 = (MaisonAutomatisation_Para_Lumiere) clientRequest2.getInfo();
             logger.debug("Thread {} complete : {} {} {} {} --> {}",
                     clientRequest2.getThreadName(),
-                    maisonAutomatisation_para_jour_semaine1.getID_Para_Jour_Semaine(), maisonAutomatisation_para_jour_semaine1.getNom(),
+                    maisonAutomatisation_para_lumiere1.getID_Para_Lumiere(), maisonAutomatisation_para_lumiere1.getNom(),
                     clientRequest2.getResult());
         }
     }

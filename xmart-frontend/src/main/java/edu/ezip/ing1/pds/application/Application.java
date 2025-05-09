@@ -1406,7 +1406,6 @@ public class Application {
             System.out.println("Chauffage Séléctionné : " + selectedKeyTypeChauffage + ", ID associé : " + valueIDTypeChauffage);
         });
 
-
         btnSaveAutomation.addActionListener(e -> {
                     // Validation des données
                     String nomAutomation = txtAutomationName.getText().trim();

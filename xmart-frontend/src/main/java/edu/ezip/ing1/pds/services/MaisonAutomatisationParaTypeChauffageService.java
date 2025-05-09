@@ -23,9 +23,8 @@ public class MaisonAutomatisationParaTypeChauffageService {
 
     final String insertRequestOrder = "INSERT_NAME_HEATER";
     final String selectRequestOrder = "SELECT_ALL_NAME_HEATER";
-    final String selectNameAutomation = "SELECT_NAME_AUTOMATION";
-    final String updateRequestOrder = "UPDATE_NAME_DAY";
-    final String deleteRequestOrder = "DELETE_NAME_DAY";
+    final String updateRequestOrder = "UPDATE_NAME_HEATER";
+    final String deleteRequestOrder = "DELETE_NAME_HEATER";
 
     private final NetworkConfig networkConfig;
 
