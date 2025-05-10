@@ -80,7 +80,7 @@ public class MaisonAutomatisationParaLumiereService {
         }
     }
 
-    public MaisonAutomatisation_Para_Jour_Semaines select_all_name_day() throws InterruptedException, IOException {
+    public MaisonAutomatisation_Para_Lumieres select_all_name_light() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -91,7 +91,7 @@ public class MaisonAutomatisationParaLumiereService {
         objectMapper.enable(SerializationFeature.WRAP_ROOT_VALUE);
         final byte[] requestBytes = objectMapper.writerWithDefaultPrettyPrinter().writeValueAsBytes(request);
         LoggingUtils.logDataMultiLine(logger, Level.TRACE, requestBytes);
-        final SelectAllParaJourSemaineClientRequest clientRequest = new SelectAllParaJourSemaineClientRequest(
+        final SelectAllParaLumiereClientRequest clientRequest = new SelectAllParaLumiereClientRequest(
                 networkConfig,
                 birthdate++, request, null, requestBytes);
         clientRequests.push(clientRequest);
@@ -100,7 +100,7 @@ public class MaisonAutomatisationParaLumiereService {
             final ClientRequest joinedClientRequest = clientRequests.pop();
             joinedClientRequest.join();
             logger.debug("Thread {} complete.", joinedClientRequest.getThreadName());
-            return (MaisonAutomatisation_Para_Jour_Semaines) joinedClientRequest.getResult();
+            return (MaisonAutomatisation_Para_Lumieres) joinedClientRequest.getResult();
         } else {
             logger.error("No automations found");
             return null;

@@ -26,17 +26,22 @@ public class Application {
     public ArrayList<String> automatisationsNoms = new ArrayList<String>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
     public ArrayList<String> JourSemaine_cE = new ArrayList<>();
-    public Map<String, String> Pieces_dic = new HashMap<>();
+    public Map<String, String> Lumiere_dic = new HashMap<>();
     public Map<String, String> JourSemaine_dic = new HashMap<>();
     public Map<String, String> TypeChauffage_dic = new HashMap<>();
+    public Map<String, String> Fenetre_dic = new HashMap<>();
     public String valueIDJour;
     public String valueIDTypeChauffage;
     public String valueIDPiece;
+    public String valueIDLumiere;
+    public String valueIDFenetre;
     public ArrayList<String> TypeChauffage_cE = new ArrayList<>();
     public ArrayList<String> ProgrammeNoms_cE = new ArrayList<>();
     public ArrayList<String> roomsNoms = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Jour_Semaines> JourSemaine = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Type_Chauffages> TypeChauffage = new ArrayList<>();
+    public ArrayList<MaisonAutomatisation_Para_Lumieres> Lumiere = new ArrayList<>();
+    public ArrayList<MaisonAutomatisation_Para_Fenetres> Fenetre = new ArrayList<>();
     private final static String LoggingLabel = "Application";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
     private final static String networkConfigFile = "network.yaml";
@@ -301,29 +306,35 @@ public class Application {
 
         mainPanel.add(SimulerAutomatisationsPanel, "SimulerAutomatisationPanel");
 
+// All Program panel
+        JPanel AllProgramPanel = new JPanel();
+        AllProgramPanel.setLayout(new GridLayout(4,1));
 
+        JButton btnProgram = new JButton("Programmer un chauffage");
+        JButton btnProgramLight = new JButton("Programmer une lumière");
+        JButton btnProgramWindow = new JButton("Programmer une fenêtre");
+        JButton btnBackToMenu_AllProgram = new JButton("Retour au menu");
+
+        AllProgramPanel.add(btnProgram);
+        AllProgramPanel.add(btnProgramWindow);
+        AllProgramPanel.add(btnProgramLight);
+        AllProgramPanel.add(btnBackToMenu_AllProgram);
+
+        mainPanel.add(AllProgramPanel, "AllProgramPanel");
 
 // Program Definition Panel
+
         JPanel ProgramPanel = new JPanel();
         ProgramPanel.setLayout(new GridLayout(8, 2));
 
         JLabel lblProgramName = new JLabel("Nom du programme:");
         JTextField txtProgramName = new JTextField();
 
-
         JLabel lblPiece = new JLabel("Pièce:");
         JComboBox<String> cbPiece = new JComboBox<>();
 
-//        JComboBox<String> cbPiece = new JComboBox<>(new String[]{
-//                "Entree", "Cuisine", "Salon", "Salle de bain", "Chambre parents", "Chambre enfants 1", "Chambre enfants 2", "Chambre enfants 3", "Chambre enfants 4"
-//        });
-
         JLabel lblChauffage = new JLabel("Type de chauffage:");
         JComboBox<String> cbChauffage = new JComboBox<>();
-
-//        JComboBox<String> cbChauffage = new JComboBox<>(new String[]{
-//                "Radiateur", "Seche-serviette"
-//        });
 
         JLabel lblTemperature = new JLabel("Température:");
         JSpinner spTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));
@@ -359,7 +370,101 @@ public class Application {
 
         mainPanel.add(ProgramPanel, "ProgramPanel");
 
+// Program light Definition Panel
 
+        JPanel ProgramLightPanel = new JPanel();
+        ProgramLightPanel.setLayout(new GridLayout(8, 2));
+
+        JLabel lblProgramLightName = new JLabel("Nom du programme:");
+        JTextField txtProgramLightName = new JTextField();
+
+        JLabel lblLightPiece = new JLabel("Pièce:");
+        JComboBox<String> cbLightPiece = new JComboBox<>();
+
+        JLabel lblLight = new JLabel("Lumière:");
+        JComboBox<String> cbLight = new JComboBox<>();
+
+        JLabel lblLightTemperature = new JLabel("Température:");
+        JSpinner spLightTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));
+
+        JLabel lblLightJour = new JLabel("Jour de la semaine");
+        JComboBox<String> cbLightJour = new JComboBox<>();
+
+        JLabel lblLightHeureDebut = new JLabel("Heure de début:");
+        JSpinner spLightHeureDebut = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
+
+        JLabel lblLightHeureFin = new JLabel("Heure de fin:");
+        JSpinner spLightHeureFin = new JSpinner(new SpinnerNumberModel(0, 0, 24, 1));
+
+        JButton btnLightSaveProgram = new JButton("Enregistrer");
+        JButton btnLightBackToMenu_Program = new JButton("Retour au menu");
+
+        ProgramPanel.add(lblProgramLightName);
+        ProgramPanel.add(txtProgramLightName);
+        ProgramPanel.add(lblLightPiece);
+        ProgramPanel.add(cbLightPiece);
+        ProgramPanel.add(lblLight);
+        ProgramPanel.add(cbLight);
+        ProgramPanel.add(lblLightTemperature);
+        ProgramPanel.add(spLightTemperature);
+        ProgramPanel.add(lblLightJour);
+        ProgramPanel.add(cbLightJour);
+        ProgramPanel.add(lblLightHeureDebut);
+        ProgramPanel.add(spLightHeureDebut);
+        ProgramPanel.add(lblLightHeureFin);
+        ProgramPanel.add(spLightHeureFin);
+        ProgramPanel.add(btnLightBackToMenu_Program);
+        ProgramPanel.add(btnLightSaveProgram);
+
+        mainPanel.add(ProgramPanel, "ProgramLightPanel");
+
+// Program Definition Panel
+
+        JPanel ProgramWindowPanel = new JPanel();
+        ProgramWindowPanel.setLayout(new GridLayout(8, 2));
+
+        JLabel lblProgramWindowName = new JLabel("Nom du programme:");
+        JTextField txtProgramWindowName = new JTextField();
+
+        JLabel lblWindowPiece = new JLabel("Pièce:");
+        JComboBox<String> cbWindowPiece = new JComboBox<>();
+
+        JLabel lblWindow = new JLabel("Fenêtre:");
+        JComboBox<String> cbWindow = new JComboBox<>();
+
+        JLabel lblWindowTemperature = new JLabel("Température:");
+        JSpinner spWindowTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));
+
+        JLabel lbWindowlJour = new JLabel("Jour de la semaine");
+        JComboBox<String> cbWindowJour = new JComboBox<>();
+
+        JLabel lblWindowHeureDebut = new JLabel("Heure de début:");
+        JSpinner spWindowHeureDebut = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
+
+        JLabel lblWindowHeureFin = new JLabel("Heure de fin:");
+        JSpinner spWindowHeureFin = new JSpinner(new SpinnerNumberModel(0, 0, 24, 1));
+
+        JButton btnWindowSaveProgram = new JButton("Enregistrer");
+        JButton btnWindowBackToMenu_Program = new JButton("Retour au menu");
+
+        ProgramPanel.add(lblProgramWindowName);
+        ProgramPanel.add(txtProgramWindowName);
+        ProgramPanel.add(lblWindowPiece);
+        ProgramPanel.add(cbWindowPiece);
+        ProgramPanel.add(lblWindow);
+        ProgramPanel.add(cbWindow);
+        ProgramPanel.add(lblWindowTemperature);
+        ProgramPanel.add(spWindowTemperature);
+        ProgramPanel.add(lbWindowlJour);
+        ProgramPanel.add(cbWindowJour);
+        ProgramPanel.add(lblWindowHeureDebut);
+        ProgramPanel.add(spWindowHeureDebut);
+        ProgramPanel.add(lblWindowHeureFin);
+        ProgramPanel.add(spWindowHeureFin);
+        ProgramPanel.add(btnWindowBackToMenu_Program);
+        ProgramPanel.add(btnWindowSaveProgram);
+
+        mainPanel.add(ProgramWindowPanel, "ProgramWindowPanel");
 
 // NewCapteur Panel
         JPanel NewCapteursPanel = new JPanel();
@@ -668,7 +773,11 @@ public class Application {
         btnBackToMenu_Automation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenuViewProgramm.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenuAutomationProgramm.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
-        btnBackToMenu_Program.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
+        btnBackToMenu_AllProgram.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
+        btnBackToMenu_Program.addActionListener(e -> cardLayout.show(mainPanel, "AllProgramPanel"));
+        btnWindowBackToMenu_Program.addActionListener(e -> cardLayout.show(mainPanel, "AllProgramPanel"));
+        btnLightBackToMenu_Program.addActionListener(e -> cardLayout.show(mainPanel, "AllProgramPanel"));
+        btnNewPrograms.addActionListener(e -> cardLayout.show(mainPanel, "AllProgramPanel"));
         btnAutomations_and_programs.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_ChangerEtatAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_SupprimerAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
@@ -717,7 +826,7 @@ public class Application {
 
             cardLayout.show(mainPanel, "AutomationPanel");
         });
-        btnNewPrograms.addActionListener(e -> {
+        btnProgram.addActionListener(e -> {
             try {
                 roomsNoms.clear();
                 MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
@@ -783,6 +892,140 @@ public class Application {
             cbChauffage.setModel(ComboBoxHeater);
 
             cardLayout.show(mainPanel, "ProgramPanel");
+        });
+        btnProgramLight.addActionListener(e -> {
+            try {
+                roomsNoms.clear();
+                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRoomFind);
+                for (MaisonRooms maisonRooms : rooms)
+                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                        roomsNoms.add(maisonRoom.getName());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxRoom = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
+            cbLightPiece.removeAllItems();
+            cbLightPiece.setModel(ComboBoxRoom);
+
+            try {
+                MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);
+                MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = maisonAutomatisationParaJourSemaineService.select_all_name_day();
+                JourSemaine.clear();
+                JourSemaine.add(maisonAutomatisation_para_jour_semaines);
+                System.out.println("Import réussi!");
+                System.out.println(JourSemaine);
+                for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
+                    for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
+                        JourSemaine_dic.put(Jour.getNom(), Jour.getID_Para_Jour_Semaine().toString());
+//                        JourSemaine_cE.add(Jour.getNom());
+
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_dic.keySet().toArray(new String[0]));
+            cbLightJour.removeAllItems();
+            cbLightJour.setModel(ComboBoxDay);
+
+            try {
+                MaisonAutomatisationParaLumiereService maisonAutomatisationParaLumiereService = new MaisonAutomatisationParaLumiereService(networkConfig);
+                MaisonAutomatisation_Para_Lumieres maisonAutomatisation_para_lumieres = maisonAutomatisationParaLumiereService.select_all_name_light();
+                Lumiere.clear();
+                Lumiere.add(maisonAutomatisation_para_lumieres);
+                System.out.println("Import réussi!");
+                System.out.println(Lumiere);
+                for (MaisonAutomatisation_Para_Lumieres LumiereSe : Lumiere)
+                    for (MaisonAutomatisation_Para_Lumiere Lumiere : LumiereSe.getMaisonAutomatisation_para_lumieres()) {
+//                        TypeChauffage_cE.add(Chauffage.getNom());
+                        Lumiere_dic.put(Lumiere.getNom(),Lumiere.getID_Para_Lumiere().toString());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            DefaultComboBoxModel ComboBoxHeater = new DefaultComboBoxModel(Lumiere_dic.keySet().toArray(new String[0]));
+            cbLight.removeAllItems();
+            cbLight.setModel(ComboBoxHeater);
+
+            cardLayout.show(mainPanel, "ProgramLightPanel");
+        });
+        btnProgramWindow.addActionListener(e -> {
+            try {
+                roomsNoms.clear();
+                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRoomFind);
+                for (MaisonRooms maisonRooms : rooms)
+                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                        roomsNoms.add(maisonRoom.getName());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxRoom = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
+            cbWindowPiece.removeAllItems();
+            cbWindowPiece.setModel(ComboBoxRoom);
+
+            try {
+                MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);
+                MaisonAutomatisation_Para_Jour_Semaines maisonAutomatisation_para_jour_semaines = maisonAutomatisationParaJourSemaineService.select_all_name_day();
+                JourSemaine.clear();
+                JourSemaine.add(maisonAutomatisation_para_jour_semaines);
+                System.out.println("Import réussi!");
+                System.out.println(JourSemaine);
+                for (MaisonAutomatisation_Para_Jour_Semaines JourSe : JourSemaine)
+                    for (MaisonAutomatisation_Para_Jour_Semaine Jour : JourSe.getMaisonAutomatisation_para_jour_semaines()) {
+                        JourSemaine_dic.put(Jour.getNom(), Jour.getID_Para_Jour_Semaine().toString());
+//                        JourSemaine_cE.add(Jour.getNom());
+
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_dic.keySet().toArray(new String[0]));
+            cbWindowPiece.removeAllItems();
+            cbWindowPiece.setModel(ComboBoxDay);
+
+            try {
+                MaisonAutomatisationParaFenetreService maisonAutomatisationParaFenetreService = new MaisonAutomatisationParaFenetreService(networkConfig);
+                MaisonAutomatisation_Para_Fenetres maisonAutomatisation_para_fenetres = maisonAutomatisationParaFenetreService.select_all_name_window();
+                Fenetre.clear();
+                Fenetre.add(maisonAutomatisation_para_fenetres);
+                System.out.println("Import réussi!");
+                System.out.println(Fenetre);
+                for (MaisonAutomatisation_Para_Fenetres FentereSe : Fenetre)
+                    for (MaisonAutomatisation_Para_Fenetre Fenetre : FentereSe.getMaisonAutomatisation_para_fentres()) {
+//                        TypeChauffage_cE.add(Chauffage.getNom());
+                        Fenetre_dic.put(Fenetre.getNom(),Fenetre.getID_Para_Fenetre().toString());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            DefaultComboBoxModel ComboBoxHeater = new DefaultComboBoxModel(Fenetre_dic.keySet().toArray(new String[0]));
+            cbWindow.removeAllItems();
+            cbWindow.setModel(ComboBoxHeater);
+
+            cardLayout.show(mainPanel, "ProgramWindowPanel");
         });
         btnEtatAutomation.addActionListener(e -> cardLayout.show(mainPanel, "EtatAutomatisationPanel"));
         btnDeleteAutomation.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerAutomatisationPanel"));
@@ -1404,6 +1647,22 @@ public class Application {
             valueIDTypeChauffage = TypeChauffage_dic.get(selectedKeyTypeChauffage);
 
             System.out.println("Chauffage Séléctionné : " + selectedKeyTypeChauffage + ", ID associé : " + valueIDTypeChauffage);
+        });
+
+        cbLight.addActionListener(e ->  {
+            String selectedKeyLight = (String) cbLight.getSelectedItem();
+
+            valueIDLumiere = Lumiere_dic.get(selectedKeyLight);
+
+            System.out.println("Lumière Séléctionné : " + selectedKeyLight + ", ID associé : " + valueIDLumiere);
+        });
+
+        cbWindow.addActionListener(e ->  {
+            String selectedKeyWindow = (String) cbWindow.getSelectedItem();
+
+            valueIDFenetre = Fenetre_dic.get(selectedKeyWindow);
+
+            System.out.println("Fenêtre Séléctionné : " + selectedKeyWindow + ", ID associé : " + valueIDTypeChauffage);
         });
 
         btnSaveAutomation.addActionListener(e -> {

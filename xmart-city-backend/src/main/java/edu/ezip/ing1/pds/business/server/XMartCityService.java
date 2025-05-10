@@ -49,6 +49,44 @@ public class XMartCityService {
         INSERT_PROGRAM("INSERT INTO programmes (nom_programme,Pieces,ID_Para_Type_Chauffage, Temperature_Piece ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
 
+        //PROGRAM_LIGHT
+        SELECT_ALL_PROGRAM_LIGHT("SELECT \n" +
+                "    p.ID_Programme,\n" +
+                "    p.Nom_Programme,\n" +
+                "    p.Pieces,\n" +
+                "    pl.Nom AS Nom_Lumiere,\n" +
+                "    p.Temperature_Piece,\n" +
+                "    pjs.Nom AS Jour_Semaine,\n" +
+                "    p.Heure_Debut,\n" +
+                "    p.Heure_Fin\n" +
+                "FROM \n" +
+                "    Programmes_fenetres p\n" +
+                "JOIN \n" +
+                "    Para_Lumiere pl ON p.ID_Para_Lumiere = pl.ID_Para_Lumiere\n" +
+                "JOIN \n" +
+                "    Para_Jour_Semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
+        INSERT_PROGRAM_LIGHT("INSERT INTO programmes_lumiere (nom_programme,Pieces,ID_Para_Lumiere, Temperature_Piece ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
+        SELECT_NAME_PROGRAM_LIGHT("SELECT nom_programme FROM programmes"),
+
+        //PROGRAM_WINDOW
+        SELECT_ALL_PROGRAM_WINDOW("SELECT \n" +
+                "    p.ID_Programme,\n" +
+                "    p.Nom_Programme,\n" +
+                "    p.Pieces,\n" +
+                "    pf.Nom AS Nom_Fenetre,\n" +
+                "    p.Temperature_Piece,\n" +
+                "    pjs.Nom AS Jour_Semaine,\n" +
+                "    p.Heure_Debut,\n" +
+                "    p.Heure_Fin\n" +
+                "FROM \n" +
+                "    Programmes_fenetre p\n" +
+                "JOIN \n" +
+                "    Para_Fenetre pf ON p.ID_Para_Fenetre = pf.ID_Para_Fenetre\n" +
+                "JOIN \n" +
+                "    Para_Jour_Semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
+        INSERT_PROGRAM_WINDOW("INSERT INTO programmes_fenetre (nom_programme,Pieces,ID_Para_Fenetre, Temperature_Piece ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
+        SELECT_NAME_PROGRAM_WINDOW("SELECT nom_programme FROM programmes"),
+
         //CAPTEUR
         SELECT_ALL_CAPTEURS("SELECT * FROM capteurs"),
         INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)"),
@@ -67,6 +105,11 @@ public class XMartCityService {
         //NAME CHAUFFAGE
         SELECT_ALL_NAME_HEATER("SELECT * FROM para_type_chauffage ORDER BY ID_Para_type_chauffage ASC"),
 
+        //NAME LIGHT
+        SELECT_ALL_NAME_LIGHT("SELECT * FROM para_lumiere ORDER BY ID_Para_Lumiere ASC"),
+
+        //NAME WINDOW
+        SELECT_ALL_NAME_WINDOW("SELECT * FROM para_fenetre ORDER BY ID_Para_Fenetre ASC"),
 
         //FERMETURE
         ;
@@ -123,6 +166,26 @@ public class XMartCityService {
             case SELECT_NAME_PROGRAM:
                 response = SelectNameProgram(request, connection);
                 break;
+    //PROGRAM
+            case SELECT_ALL_PROGRAM_WINDOW:
+                response = SelectAllWindowProgram(request, connection);
+                break;
+            case INSERT_PROGRAM_WINDOW:
+                response = InsertWindowProgram(request, connection);
+                break;
+            case SELECT_NAME_PROGRAM_WINDOW:
+                response = SelectNameWindowProgram(request, connection);
+                break;
+    //PROGRAM
+            case SELECT_ALL_PROGRAM_LIGHT:
+                response = SelectAllLightProgram(request, connection);
+                break;
+            case INSERT_PROGRAM_LIGHT:
+                response = InsertLightProgram(request, connection);
+                break;
+            case SELECT_NAME_PROGRAM_LIGHT:
+                response = SelectNameLightProgram(request, connection);
+                break;
     //CAPTEUR
             case SELECT_ALL_CAPTEURS:
                 response = SelectAllCapteurs(request, connection);
@@ -153,9 +216,18 @@ public class XMartCityService {
             case SELECT_ALL_NAME_DAY:
                 response = SelectNameDay(request, connection);
                 break;
-    // NAME DAY
+    // NAME HEATER
             case SELECT_ALL_NAME_HEATER:
                 response = SelectNameHeater(request, connection);
+                break;
+    // NAME LIGHT
+            case SELECT_ALL_NAME_LIGHT:
+                response = SelectNameLight(request, connection);
+                break;
+    // NAME WINDOW
+            case SELECT_ALL_NAME_WINDOW:
+                response = SelectNameWindow(request, connection);
+                break;
     //PAR DEFAUT
             default:
                 break;
@@ -442,4 +514,137 @@ public class XMartCityService {
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation_para_type_chauffages));
     }
 
+//PROGRAM WINDOW
+
+    private Response SelectAllWindowProgram(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+    final ObjectMapper objectMapper = new ObjectMapper();
+    final Statement stmt = connection.createStatement();
+    final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_PROGRAM_WINDOW.query);
+    MaisonProgrammesFenetres maisonProgrammesFenetres = new MaisonProgrammesFenetres();
+    while (res.next()) {
+        MaisonProgrammeFenetre maisonProgrammeFenetre = new MaisonProgrammeFenetre();
+        maisonProgrammeFenetre.setNomProgramme(res.getString(2));
+        maisonProgrammeFenetre.setTypePiece(res.getString(3));
+        maisonProgrammeFenetre.setFenetre(res.getString(4));
+        maisonProgrammeFenetre.setJourSemaine(res.getString(6));
+        maisonProgrammeFenetre.setTemperature(Integer.parseInt(res.getString(5)));
+        maisonProgrammeFenetre.setHeureDebut(Integer.parseInt(res.getString(7)));
+        maisonProgrammeFenetre.setHeureFin(Integer.parseInt(res.getString(8)));
+        maisonProgrammesFenetres.add(maisonProgrammeFenetre);
+    }
+    System.out.println(maisonProgrammesFenetres);
+    return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammesFenetres));
+}
+
+    private Response InsertWindowProgram(final Request request, final Connection connection) throws SQLException, IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final MaisonProgrammeFenetre maisonProgrammeFenetre = objectMapper.readValue(request.getRequestBody(), MaisonProgrammeFenetre.class);
+        final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_PROGRAM_WINDOW.query);
+        stmt.setString(1, maisonProgrammeFenetre.getNomProgramme());
+        stmt.setString(2, maisonProgrammeFenetre.getTypePiece());
+        stmt.setInt(3, Integer.valueOf(maisonProgrammeFenetre.getFenetre()));
+        stmt.setInt(5, Integer.valueOf(maisonProgrammeFenetre.getJourSemaine()));
+        stmt.setInt(4,maisonProgrammeFenetre.getTemperature());
+        stmt.setInt(6,maisonProgrammeFenetre.getHeureDebut());
+        stmt.setInt(7,maisonProgrammeFenetre.getHeureFin());
+        stmt.executeUpdate();
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammeFenetre));
+    }
+
+    private Response SelectNameWindowProgram(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_NAME_PROGRAM.query);
+        MaisonProgrammes maisonProgrammes = new MaisonProgrammes();
+        while (res.next()) {
+            MaisonProgramme maisonProgramme = new MaisonProgramme();
+            maisonProgramme.setNomProgramme(res.getString(2));
+            maisonProgrammes.add(maisonProgramme);
+        }
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
+    }
+
+    private Response SelectNameWindow(final Request request, final Connection connection) throws SQLException, IOException     {
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_NAME_WINDOW.query);
+        MaisonAutomatisation_Para_Fenetres maisonAutomatisation_para_fenetres = new MaisonAutomatisation_Para_Fenetres();
+        while (res.next()) {
+            MaisonAutomatisation_Para_Fenetre maisonAutomatisation_para_fenetre = new MaisonAutomatisation_Para_Fenetre();
+            maisonAutomatisation_para_fenetre.setID_Para_Fenetre(Integer.parseInt(res.getString(1)));
+            maisonAutomatisation_para_fenetre.setNom(res.getString(2));
+            maisonAutomatisation_para_fenetres.add((maisonAutomatisation_para_fenetre));
+        }
+        System.out.println(maisonAutomatisation_para_fenetres);
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation_para_fenetres));
+    }
+
+//PROGRAM LIGHT
+
+    private Response SelectAllLightProgram(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_PROGRAM_LIGHT.query);
+        MaisonProgrammesLumieres maisonProgrammesLumieres = new MaisonProgrammesLumieres();
+        while (res.next()) {
+            MaisonProgrammeLumiere maisonProgrammeLumiere = new MaisonProgrammeLumiere();
+            maisonProgrammeLumiere.setNomProgramme(res.getString(2));
+            maisonProgrammeLumiere.setTypePiece(res.getString(3));
+            maisonProgrammeLumiere.setLumiere(res.getString(4));
+            maisonProgrammeLumiere.setJourSemaine(res.getString(6));
+            maisonProgrammeLumiere.setTemperature(Integer.parseInt(res.getString(5)));
+            maisonProgrammeLumiere.setHeureDebut(Integer.parseInt(res.getString(7)));
+            maisonProgrammeLumiere.setHeureFin(Integer.parseInt(res.getString(8)));
+            maisonProgrammesLumieres.add(maisonProgrammeLumiere);
+        }
+        System.out.println(maisonProgrammesLumieres);
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammesLumieres));
+    }
+
+    private Response InsertLightProgram(final Request request, final Connection connection) throws SQLException, IOException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final MaisonProgrammeLumiere maisonProgrammeLumiere = objectMapper.readValue(request.getRequestBody(), MaisonProgrammeLumiere.class);
+        final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_PROGRAM_LIGHT.query);
+        stmt.setString(1, maisonProgrammeLumiere.getNomProgramme());
+        stmt.setString(2, maisonProgrammeLumiere.getTypePiece());
+        stmt.setInt(3, Integer.valueOf(maisonProgrammeLumiere.getLumiere()));
+        stmt.setInt(5, Integer.valueOf(maisonProgrammeLumiere.getJourSemaine()));
+        stmt.setInt(4,maisonProgrammeLumiere.getTemperature());
+        stmt.setInt(6,maisonProgrammeLumiere.getHeureDebut());
+        stmt.setInt(7,maisonProgrammeLumiere.getHeureFin());
+        stmt.executeUpdate();
+
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammeLumiere));
+    }
+
+    private Response SelectNameLightProgram(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_NAME_PROGRAM.query);
+        MaisonProgrammes maisonProgrammes = new MaisonProgrammes();
+        while (res.next()) {
+            MaisonProgramme maisonProgramme = new MaisonProgramme();
+            maisonProgramme.setNomProgramme(res.getString(2));
+            maisonProgrammes.add(maisonProgramme);
+        }
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonProgrammes));
+    }
+
+    private Response SelectNameLight(final Request request, final Connection connection) throws SQLException, IOException     {
+
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_NAME_LIGHT.query);
+        MaisonAutomatisation_Para_Lumieres maisonAutomatisation_para_lumieres = new MaisonAutomatisation_Para_Lumieres();
+        while (res.next()) {
+            MaisonAutomatisation_Para_Lumiere maisonAutomatisation_para_lumiere = new MaisonAutomatisation_Para_Lumiere();
+            maisonAutomatisation_para_lumiere.setID_Para_Lumiere(Integer.parseInt(res.getString(1)));
+            maisonAutomatisation_para_lumiere.setNom(res.getString(2));
+            maisonAutomatisation_para_lumieres.add((maisonAutomatisation_para_lumiere));
+        }
+        System.out.println(maisonAutomatisation_para_lumieres);
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation_para_lumieres));
+    }
 }

@@ -80,7 +80,7 @@ public class MaisonAutomatisationParaFenetreService {
         }
     }
 
-    public MaisonAutomatisation_Para_Fenetres select_all_name_day() throws InterruptedException, IOException {
+    public MaisonAutomatisation_Para_Fenetres select_all_name_window() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final ObjectMapper objectMapper = new ObjectMapper();
