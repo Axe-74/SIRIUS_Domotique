@@ -32,7 +32,7 @@ public class MaisonProgrammeFenetreService {
         this.networkConfig = networkConfig;
     }
 
-    public void insertProgram(MaisonProgrammeFenetre maisonProgrammeFenetre, String requestOrder) throws InterruptedException, IOException {
+    public void insert_Window_Program(MaisonProgrammeFenetre maisonProgrammeFenetre, String requestOrder) throws InterruptedException, IOException {
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
 
 
@@ -66,7 +66,7 @@ public class MaisonProgrammeFenetreService {
         }
     }
 
-    public MaisonProgrammesFenetres select_all_program() throws InterruptedException, IOException {
+    public MaisonProgrammesFenetres select_all_Window_program() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final ObjectMapper objectMapper = new ObjectMapper();
@@ -93,7 +93,7 @@ public class MaisonProgrammeFenetreService {
         }
     }
 
-    public MaisonProgrammes select_name_program() throws InterruptedException, IOException {
+    public MaisonProgrammes select_name_Window_program() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final ObjectMapper objectMapper = new ObjectMapper();

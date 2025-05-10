@@ -55,17 +55,17 @@ public class XMartCityService {
                 "    p.Nom_Programme,\n" +
                 "    p.Pieces,\n" +
                 "    pl.Nom AS Nom_Lumiere,\n" +
-                "    p.Temperature_Piece,\n" +
+                "    p.Intensite_Lumiere,\n" +
                 "    pjs.Nom AS Jour_Semaine,\n" +
                 "    p.Heure_Debut,\n" +
                 "    p.Heure_Fin\n" +
                 "FROM \n" +
-                "    Programmes_fenetres p\n" +
+                "    Programmes_lumiere p\n" +
                 "JOIN \n" +
                 "    Para_Lumiere pl ON p.ID_Para_Lumiere = pl.ID_Para_Lumiere\n" +
                 "JOIN \n" +
                 "    Para_Jour_Semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
-        INSERT_PROGRAM_LIGHT("INSERT INTO programmes_lumiere (nom_programme,Pieces,ID_Para_Lumiere, Temperature_Piece ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
+        INSERT_PROGRAM_LIGHT("INSERT INTO programmes_lumiere (nom_programme,Pieces,ID_Para_Lumiere, Intensite_Lumiere ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM_LIGHT("SELECT nom_programme FROM programmes"),
 
         //PROGRAM_WINDOW
@@ -74,7 +74,7 @@ public class XMartCityService {
                 "    p.Nom_Programme,\n" +
                 "    p.Pieces,\n" +
                 "    pf.Nom AS Nom_Fenetre,\n" +
-                "    p.Temperature_Piece,\n" +
+                "    p.Ouverture_Fenetre,\n" +
                 "    pjs.Nom AS Jour_Semaine,\n" +
                 "    p.Heure_Debut,\n" +
                 "    p.Heure_Fin\n" +
@@ -84,7 +84,7 @@ public class XMartCityService {
                 "    Para_Fenetre pf ON p.ID_Para_Fenetre = pf.ID_Para_Fenetre\n" +
                 "JOIN \n" +
                 "    Para_Jour_Semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
-        INSERT_PROGRAM_WINDOW("INSERT INTO programmes_fenetre (nom_programme,Pieces,ID_Para_Fenetre, Temperature_Piece ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
+        INSERT_PROGRAM_WINDOW("INSERT INTO programmes_fenetre (nom_programme,Pieces,ID_Para_Fenetre, Ouverture_Fenetre ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM_WINDOW("SELECT nom_programme FROM programmes"),
 
         //CAPTEUR

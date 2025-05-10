@@ -20,6 +20,8 @@ import org.slf4j.LoggerFactory;
 public class Application {
     public JFrame frame;
     public ArrayList<MaisonProgrammes> programmes = new ArrayList<MaisonProgrammes>();
+    public ArrayList<MaisonProgrammesFenetres> programmesFenetres = new ArrayList<>();
+    public ArrayList<MaisonProgrammesLumieres> programmesLumieres = new ArrayList<>();
     public ArrayList<MaisonAutomatisations> automatisations = new ArrayList<MaisonAutomatisations>();
     public ArrayList<MaisonCapteurs> capteurs = new ArrayList<>(); {}
     public ArrayList<MaisonRooms> rooms = new ArrayList<>();
@@ -384,8 +386,8 @@ public class Application {
         JLabel lblLight = new JLabel("Lumière:");
         JComboBox<String> cbLight = new JComboBox<>();
 
-        JLabel lblLightTemperature = new JLabel("Température:");
-        JSpinner spLightTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));
+        JLabel lblLightIntensité = new JLabel("Intensité");
+        JSpinner spLightIntensité = new JSpinner(new SpinnerNumberModel(50, 10, 100, 1));
 
         JLabel lblLightJour = new JLabel("Jour de la semaine");
         JComboBox<String> cbLightJour = new JComboBox<>();
@@ -399,24 +401,24 @@ public class Application {
         JButton btnLightSaveProgram = new JButton("Enregistrer");
         JButton btnLightBackToMenu_Program = new JButton("Retour au menu");
 
-        ProgramPanel.add(lblProgramLightName);
-        ProgramPanel.add(txtProgramLightName);
-        ProgramPanel.add(lblLightPiece);
-        ProgramPanel.add(cbLightPiece);
-        ProgramPanel.add(lblLight);
-        ProgramPanel.add(cbLight);
-        ProgramPanel.add(lblLightTemperature);
-        ProgramPanel.add(spLightTemperature);
-        ProgramPanel.add(lblLightJour);
-        ProgramPanel.add(cbLightJour);
-        ProgramPanel.add(lblLightHeureDebut);
-        ProgramPanel.add(spLightHeureDebut);
-        ProgramPanel.add(lblLightHeureFin);
-        ProgramPanel.add(spLightHeureFin);
-        ProgramPanel.add(btnLightBackToMenu_Program);
-        ProgramPanel.add(btnLightSaveProgram);
+        ProgramLightPanel.add(lblProgramLightName);
+        ProgramLightPanel.add(txtProgramLightName);
+        ProgramLightPanel.add(lblLightPiece);
+        ProgramLightPanel.add(cbLightPiece);
+        ProgramLightPanel.add(lblLight);
+        ProgramLightPanel.add(cbLight);
+        ProgramLightPanel.add(lblLightIntensité);
+        ProgramLightPanel.add(spLightIntensité);
+        ProgramLightPanel.add(lblLightJour);
+        ProgramLightPanel.add(cbLightJour);
+        ProgramLightPanel.add(lblLightHeureDebut);
+        ProgramLightPanel.add(spLightHeureDebut);
+        ProgramLightPanel.add(lblLightHeureFin);
+        ProgramLightPanel.add(spLightHeureFin);
+        ProgramLightPanel.add(btnLightBackToMenu_Program);
+        ProgramLightPanel.add(btnLightSaveProgram);
 
-        mainPanel.add(ProgramPanel, "ProgramLightPanel");
+        mainPanel.add(ProgramLightPanel, "ProgramLightPanel");
 
 // Program Definition Panel
 
@@ -432,8 +434,8 @@ public class Application {
         JLabel lblWindow = new JLabel("Fenêtre:");
         JComboBox<String> cbWindow = new JComboBox<>();
 
-        JLabel lblWindowTemperature = new JLabel("Température:");
-        JSpinner spWindowTemperature = new JSpinner(new SpinnerNumberModel(20, 10, 30, 1));
+        JLabel lblWindowOuverture = new JLabel("Ouverture");
+        JSpinner spWindowOuverture = new JSpinner(new SpinnerNumberModel(33, 1, 90, 1));
 
         JLabel lbWindowlJour = new JLabel("Jour de la semaine");
         JComboBox<String> cbWindowJour = new JComboBox<>();
@@ -447,22 +449,22 @@ public class Application {
         JButton btnWindowSaveProgram = new JButton("Enregistrer");
         JButton btnWindowBackToMenu_Program = new JButton("Retour au menu");
 
-        ProgramPanel.add(lblProgramWindowName);
-        ProgramPanel.add(txtProgramWindowName);
-        ProgramPanel.add(lblWindowPiece);
-        ProgramPanel.add(cbWindowPiece);
-        ProgramPanel.add(lblWindow);
-        ProgramPanel.add(cbWindow);
-        ProgramPanel.add(lblWindowTemperature);
-        ProgramPanel.add(spWindowTemperature);
-        ProgramPanel.add(lbWindowlJour);
-        ProgramPanel.add(cbWindowJour);
-        ProgramPanel.add(lblWindowHeureDebut);
-        ProgramPanel.add(spWindowHeureDebut);
-        ProgramPanel.add(lblWindowHeureFin);
-        ProgramPanel.add(spWindowHeureFin);
-        ProgramPanel.add(btnWindowBackToMenu_Program);
-        ProgramPanel.add(btnWindowSaveProgram);
+        ProgramWindowPanel.add(lblProgramWindowName);
+        ProgramWindowPanel.add(txtProgramWindowName);
+        ProgramWindowPanel.add(lblWindowPiece);
+        ProgramWindowPanel.add(cbWindowPiece);
+        ProgramWindowPanel.add(lblWindow);
+        ProgramWindowPanel.add(cbWindow);
+        ProgramWindowPanel.add(lblWindowOuverture);
+        ProgramWindowPanel.add(spWindowOuverture);
+        ProgramWindowPanel.add(lbWindowlJour);
+        ProgramWindowPanel.add(cbWindowJour);
+        ProgramWindowPanel.add(lblWindowHeureDebut);
+        ProgramWindowPanel.add(spWindowHeureDebut);
+        ProgramWindowPanel.add(lblWindowHeureFin);
+        ProgramWindowPanel.add(spWindowHeureFin);
+        ProgramWindowPanel.add(btnWindowBackToMenu_Program);
+        ProgramWindowPanel.add(btnWindowSaveProgram);
 
         mainPanel.add(ProgramWindowPanel, "ProgramWindowPanel");
 
@@ -1000,8 +1002,8 @@ public class Application {
             }
 
             DefaultComboBoxModel ComboBoxDay = new DefaultComboBoxModel(JourSemaine_dic.keySet().toArray(new String[0]));
-            cbWindowPiece.removeAllItems();
-            cbWindowPiece.setModel(ComboBoxDay);
+            cbWindowJour.removeAllItems();
+            cbWindowJour.setModel(ComboBoxDay);
 
             try {
                 MaisonAutomatisationParaFenetreService maisonAutomatisationParaFenetreService = new MaisonAutomatisationParaFenetreService(networkConfig);
@@ -1633,12 +1635,130 @@ public class Application {
 
         });
 
+        btnWindowSaveProgram.addActionListener(e -> {
+            String nomProgramme = txtProgramWindowName.getText().trim();
+            String PieceSelection = (String) cbWindowPiece.getSelectedItem();
+            String ChauffageSelection = (String) cbWindow.getSelectedItem();
+            String JourSelection = (String) cbWindowJour.getSelectedItem();
+            Integer OuvertureSelection = (int) spWindowOuverture.getValue();
+            Integer HeureDebutSelection = (int) spWindowHeureDebut.getValue();
+            Integer HeureFinSelection = (int) spWindowHeureFin.getValue();
+            if (nomProgramme.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de programme.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (HeureDebutSelection >= HeureFinSelection) {
+                JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            MaisonProgrammeFenetre maisonProgrammeFenetre = new MaisonProgrammeFenetre(nomProgramme,PieceSelection,valueIDFenetre, valueIDJour,OuvertureSelection,HeureDebutSelection,HeureFinSelection);
+            int CountProgramNameEqual = 0;
+            try {
+                MaisonProgrammeFenetreService maisonProgrammeFenetreServiceFind = new MaisonProgrammeFenetreService(networkConfig);
+                MaisonProgrammesFenetres maisonProgrammeFenetresFind = maisonProgrammeFenetreServiceFind.select_all_Window_program();
+                programmesFenetres.clear();
+                programmesFenetres.add(maisonProgrammeFenetresFind);
+                for (MaisonProgrammesFenetres MaisonprogrammeFenetre : programmesFenetres)
+                    for (MaisonProgrammeFenetre programmeFenetre : MaisonprogrammeFenetre.getMaisonProgrammesFenetres()) {
+                        if (nomProgramme.equalsIgnoreCase(programmeFenetre.getNomProgramme())){
+                            CountProgramNameEqual = CountProgramNameEqual + 1;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountProgramNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                MaisonProgrammeFenetreService maisonProgrammeFenetreService =new MaisonProgrammeFenetreService(networkConfig);
+                maisonProgrammeFenetreService.insert_Window_Program(maisonProgrammeFenetre,"INSERT_PROGRAM_WINDOW");
+                JOptionPane.showMessageDialog(frame, "Programmes enregistré avec succès!");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
+
+        btnLightSaveProgram.addActionListener(e -> {
+            String nomProgramme = txtProgramLightName.getText().trim();
+            String PieceSelection = (String) cbLightPiece.getSelectedItem();
+            String ChauffageSelection = (String) cbLight.getSelectedItem();
+            String JourSelection = (String) cbLightJour.getSelectedItem();
+            Integer OuvertureSelection = (int) spLightIntensité.getValue();
+            Integer HeureDebutSelection = (int) spLightHeureDebut.getValue();
+            Integer HeureFinSelection = (int) spLightHeureFin.getValue();
+            if (nomProgramme.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de programme.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if (HeureDebutSelection >= HeureFinSelection) {
+                JOptionPane.showMessageDialog(frame, "L'heure de début doit être inférieure à l'heure de fin.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            MaisonProgrammeLumiere maisonProgrammeLumiere = new MaisonProgrammeLumiere(nomProgramme,PieceSelection,valueIDLumiere, valueIDJour,OuvertureSelection,HeureDebutSelection,HeureFinSelection);
+            int CountProgramNameEqual = 0;
+            try {
+                MaisonProgrammeLumiereService maisonProgrammeLumiereService = new MaisonProgrammeLumiereService(networkConfig);
+                MaisonProgrammesLumieres maisonProgrammeLumieresFind = maisonProgrammeLumiereService.select_all_Light_program();
+                programmesLumieres.clear();
+                programmesLumieres.add(maisonProgrammeLumieresFind);
+                for (MaisonProgrammesLumieres MaisonprogrammeLumiere : programmesLumieres)
+                    for (MaisonProgrammeLumiere programmeLumiere : MaisonprogrammeLumiere.getMaisonProgrammesLumieres()) {
+                        if (nomProgramme.equalsIgnoreCase(programmeLumiere.getNomProgramme())){
+                            CountProgramNameEqual = CountProgramNameEqual + 1;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountProgramNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+
+            try {
+                MaisonProgrammeLumiereService maisonProgrammeLumiereService =new MaisonProgrammeLumiereService(networkConfig);
+                maisonProgrammeLumiereService.insertLightProgram(maisonProgrammeLumiere,"INSERT_PROGRAM_LIGHT");
+                JOptionPane.showMessageDialog(frame, "Programmes enregistré avec succès!");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+        });
+
         cbJour.addActionListener(e ->  {
                 String selectedKeyDay = (String) cbJour.getSelectedItem();
 
                 valueIDJour = JourSemaine_dic.get(selectedKeyDay);
 
                 System.out.println("Jour sélectionné : " + selectedKeyDay + ", ID associé : " + valueIDJour);
+        });
+
+        cbWindowJour.addActionListener(e ->  {
+            String selectedKeyDay = (String) cbWindowJour.getSelectedItem();
+
+            valueIDJour = JourSemaine_dic.get(selectedKeyDay);
+
+            System.out.println("Jour sélectionné : " + selectedKeyDay + ", ID associé : " + valueIDJour);
+        });
+
+        cbLightJour.addActionListener(e ->  {
+            String selectedKeyDay = (String) cbLightJour.getSelectedItem();
+
+            valueIDJour = JourSemaine_dic.get(selectedKeyDay);
+
+            System.out.println("Jour sélectionné : " + selectedKeyDay + ", ID associé : " + valueIDJour);
         });
 
         cbChauffage.addActionListener(e ->  {
@@ -1662,7 +1782,7 @@ public class Application {
 
             valueIDFenetre = Fenetre_dic.get(selectedKeyWindow);
 
-            System.out.println("Fenêtre Séléctionné : " + selectedKeyWindow + ", ID associé : " + valueIDTypeChauffage);
+            System.out.println("Fenêtre Séléctionné : " + selectedKeyWindow + ", ID associé : " + valueIDFenetre);
         });
 
         btnSaveAutomation.addActionListener(e -> {
