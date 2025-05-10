@@ -88,10 +88,20 @@ public class XMartCityService {
         SELECT_NAME_PROGRAM_WINDOW("SELECT nom_programme FROM programmes"),
 
         //CAPTEUR
-        SELECT_ALL_CAPTEURS("SELECT * FROM capteurs"),
-        INSERT_CAPTEUR("INSERT INTO capteurs (nom_capteur, type_capteur, etat_capteur) VALUES (?, ?, ?)"),
+        SELECT_ALL_CAPTEURS("SELECT \n" +
+                "    c.ID_Capteur, \n" +
+                "    c.Nom_Capteur, \n" +
+                "    ptc.Nom AS Nom_Type_Capteur, \n" +
+                "    c.Etat_Capteur, \n" +
+                "    c.Pieces \n" +
+                "FROM \n" +
+                "   Capteurs c\n" +
+                "JOIN \n" +
+                "Para_Type_Capteur ptc ON c.ID_Para_Type_Capteur = ptc.ID_Para_Type_Capteur;"),
+        INSERT_CAPTEUR("INSERT INTO capteurs (Nom_Capteur, ID_Para_Type_Capteur, Etat_Capteur, Pieces) VALUES (?, ?, ?, ?)"),
         UPDATE_CAPTEUR("UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?"),
         DELETE_CAPTEUR("DELETE FROM capteurs WHERE nom_capteur = ?"),
+
 
         //ROOM
         SELECT_ALL_ROOMS("SELECT * FROM pieces"),
