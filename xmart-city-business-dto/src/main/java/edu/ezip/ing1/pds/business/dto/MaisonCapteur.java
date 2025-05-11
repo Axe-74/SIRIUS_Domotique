@@ -16,24 +16,26 @@ public class MaisonCapteur {
     private String pieceCapteur;
     private  String etat;
     private int idCapteur;
+    private float reglageCapteur;
 
     public MaisonCapteur() {
     }
     public final MaisonCapteur build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "id", "nom_capteur", "type_capteur", "etat_capteur", "piece_capteur");
+        setFieldsFromResulset(resultSet, "id", "nom_capteur", "type_capteur", "etat_capteur", "piece_capteur", "reglage_capteur");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
         return buildPreparedStatement(preparedStatement, nameCapteur, typeCapteur,etat, pieceCapteur);
     }
-    public MaisonCapteur(String nameCapteur, String typeCapteur, String pieceCapteur, String etat, int idCapteur) {
+    public MaisonCapteur(String nameCapteur, String typeCapteur, String pieceCapteur, String etat, int idCapteur, float reglageCapteur) {
         this.nameCapteur = nameCapteur;
         this.typeCapteur = typeCapteur;
         this.pieceCapteur = pieceCapteur;
         this.etat = etat;
         this.idCapteur = idCapteur;
+        this.reglageCapteur = reglageCapteur;
     }
     public String getName() {
         return nameCapteur;
@@ -53,6 +55,10 @@ public class MaisonCapteur {
 
     public int getIdCapteur() {
         return idCapteur;
+    }
+
+    public float getReglageCapteur() {
+        return reglageCapteur;
     }
 
     @JsonProperty("capteur_name")
@@ -80,6 +86,9 @@ public class MaisonCapteur {
         this.idCapteur = idCapteur;
     }
 
+    @JsonProperty("capteur_reglage")
+    public void setReglageCapteur(float reglageCapteur) {this.reglageCapteur = reglageCapteur;}
+
     private void setFieldsFromResulset(final ResultSet resultSet, final String ... fieldNames )
             throws NoSuchFieldException, SQLException, IllegalAccessException {
         for(final String fieldName : fieldNames ) {
@@ -105,6 +114,7 @@ public class MaisonCapteur {
                 ", etat='" + etat + '\'' +
                 ", piece='" + pieceCapteur + '\'' +
                 ", id='" + idCapteur + '\'' +
+                ", reglage=" + reglageCapteur +
                 '}';
     }
 

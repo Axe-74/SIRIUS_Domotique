@@ -77,7 +77,7 @@ public class MaisonCapteurService {
             final MaisonCapteur maisonCapteur2 = (MaisonCapteur) clientRequest2.getInfo();
             logger.debug("Thread {} complete : {} {} {} --> {}",
                     clientRequest2.getThreadName(),
-                    maisonCapteur2.getName(), maisonCapteur2.getTypeCapteur(), maisonCapteur2.getEtat(),
+                    maisonCapteur2.getName(), maisonCapteur2.getTypeCapteur(), maisonCapteur2.getEtat(), maisonCapteur2.getPieceCapteur(), maisonCapteur2.getReglageCapteur(),
                     clientRequest2.getResult());
         }
     }

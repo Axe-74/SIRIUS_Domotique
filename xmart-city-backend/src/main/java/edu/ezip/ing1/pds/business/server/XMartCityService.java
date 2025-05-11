@@ -93,10 +93,10 @@ public class XMartCityService {
                 "    c.Nom_Capteur, \n" +
                 "    ptc.Nom AS Nom_Type_Capteur, \n" +
                 "    c.Etat_Capteur, \n" +
-                "    c.Pieces \n" +
+                "    c.Pieces, \n" +
                 "    c.Reglage_Capteur \n" +
                 "FROM \n" +
-                "   capteurs c\n" +
+                "   capteurs c \n" +
                 "JOIN \n" +
                 "para_type_capteur ptc ON c.ID_Para_Type_Capteur = ptc.ID_Para_Type_Capteur;"),
         INSERT_CAPTEUR("INSERT INTO capteurs (Nom_Capteur, ID_Para_Type_Capteur, Etat_Capteur, Pieces, Reglage_Capteur) VALUES (?, ?, ?, ?, ?)"),
@@ -341,12 +341,14 @@ public class XMartCityService {
             capteur.setTypecapteur(res.getString(3));
             capteur.setEtat(res.getString(4));
             capteur.setPieceCapteur(res.getString(5));
+            capteur.setReglageCapteur(res.getInt(6));
             capteurs.add(capteur);
             System.out.println("id: " + capteur.getIdCapteur());
             System.out.println("name: " + capteur.getName());
             System.out.println("etat: " + capteur.getEtat());
             System.out.println("type: " + capteur.getTypeCapteur());
             System.out.println("piece: " + capteur.getPieceCapteur());
+            System.out.println("reglage: " + capteur.getReglageCapteur());
             System.out.println(capteur);
             System.out.println(capteurs);
         }
@@ -361,6 +363,7 @@ public class XMartCityService {
         stmt.setString(2, maisonCapteur.getTypeCapteur());
         stmt.setString(3, maisonCapteur.getEtat());
         stmt.setString(4, maisonCapteur.getPieceCapteur());
+        stmt.setFloat(5, maisonCapteur.getReglageCapteur());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));

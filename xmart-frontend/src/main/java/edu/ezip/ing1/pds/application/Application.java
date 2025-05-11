@@ -35,7 +35,7 @@ public class Application {
     public Map<String, String> Fenetre_dic = new HashMap<>();
     public String valueIDJour;
     public String valueIDTypeChauffage;
-    public String valueIDTypeCapteur;
+    public String valueIDTypeCapteur = "4";
     public String valueIDPiece;
     public String valueIDLumiere;
     public String valueIDFenetre;
@@ -502,6 +502,7 @@ public class Application {
         lblExplicationON.setHorizontalAlignment(SwingConstants.CENTER);
 
         JButton btnSaveCapteur = new JButton("Enregistrer");
+        JButton btnSuivantSaveCapteur = new JButton("Suivant");
         JButton btnBackToMenu_NewCapteur = new JButton("Retour au menu");
 
         NewCapteursPanel.add(lblNomCapteur);
@@ -515,11 +516,87 @@ public class Application {
         NewCapteursPanel.add(lblExplicationOFF);
         NewCapteursPanel.add(lblExplicationON);
         NewCapteursPanel.add(btnBackToMenu_NewCapteur);
-        NewCapteursPanel.add(btnSaveCapteur);
+        NewCapteursPanel.add(btnSuivantSaveCapteur);
 
         mainPanel.add(NewCapteursPanel, "NewCapteursPanel");
 
 
+//NewCapteur Température
+        JPanel CapteurTemp = new JPanel();
+        CapteurTemp.setLayout(new GridLayout(3, 2));
+
+        JLabel lblTypeSelectionneTemp = new JLabel("Type:");
+        JLabel lblFreqEchan = new JLabel("Fréquence d'échantillonnage (Hz):");
+
+        JLabel lblTemp = new JLabel("Température");
+        SpinnerNumberModel modelTemp = new SpinnerNumberModel(1.0, 0.5, 10.0, 0.5);
+        JSpinner spTemp = new JSpinner(modelTemp);
+        JSpinner.NumberEditor editorTemp = new JSpinner.NumberEditor(spTemp, "0.0"); //format personnalisé
+        spTemp.setEditor(editorTemp);
+
+        JButton btnEnregistrerTypeTemp = new JButton("Enregistrer");
+        JButton btnBackToMenu_TypeTemp = new JButton("Retour");
+
+        CapteurTemp.add(lblTypeSelectionneTemp);
+        CapteurTemp.add(lblFreqEchan);
+        CapteurTemp.add(lblTemp);
+        CapteurTemp.add(spTemp);
+        CapteurTemp.add(btnBackToMenu_TypeTemp);
+        CapteurTemp.add(btnEnregistrerTypeTemp);
+
+        mainPanel.add(CapteurTemp, "CapteurTemp");
+
+
+//NewCapteur Luminosité
+        JPanel CapteurLum = new JPanel();
+        CapteurLum.setLayout(new GridLayout(3, 2));
+
+        JLabel lblTypeSelectionneLum = new JLabel("Type:");
+        JLabel lblIntenMax = new JLabel("Intensité maximale (lux):");
+
+        JLabel lblLum = new JLabel("Luminosité");
+        SpinnerNumberModel modelLum = new SpinnerNumberModel(65000.0, 10000.0, 100000.0, 1000.0);
+        JSpinner spLum = new JSpinner(modelLum);
+        JSpinner.NumberEditor editorLum = new JSpinner.NumberEditor(spLum, "0");
+        spLum.setEditor(editorLum);
+
+        JButton btnEnregistrerTypeLum = new JButton("Enregistrer");
+        JButton btnBackToMenu_TypeLum = new JButton("Retour");
+
+        CapteurLum.add(lblTypeSelectionneLum);
+        CapteurLum.add(lblIntenMax);
+        CapteurLum.add(lblLum);
+        CapteurLum.add(spLum);
+        CapteurLum.add(btnBackToMenu_TypeLum);
+        CapteurLum.add(btnEnregistrerTypeLum);
+
+        mainPanel.add(CapteurLum, "CapteurLum");
+
+
+//NewCapteur Mouvement
+        JPanel CapteurMouv = new JPanel();
+        CapteurMouv.setLayout(new GridLayout(3, 2));
+
+        JLabel lblTypeSelectionneMouv = new JLabel("Type:");
+        JLabel lblPortee = new JLabel("Portée (mètres):");
+
+        JLabel lblMouv = new JLabel("Mouvement");
+        SpinnerNumberModel modelMouv = new SpinnerNumberModel(5.0, 3.0, 15.0, 0.5);
+        JSpinner spMouv = new JSpinner(modelMouv);
+        JSpinner.NumberEditor editorMouv = new JSpinner.NumberEditor(spMouv, "0.0");
+        spMouv.setEditor(editorMouv);
+
+        JButton btnEnregistrerTypeMouv = new JButton("Enregistrer");
+        JButton btnBackToMenu_TypeMouv = new JButton("Retour");
+
+        CapteurMouv.add(lblTypeSelectionneMouv);
+        CapteurMouv.add(lblPortee);
+        CapteurMouv.add(lblMouv);
+        CapteurMouv.add(spMouv);
+        CapteurMouv.add(btnBackToMenu_TypeMouv);
+        CapteurMouv.add(btnEnregistrerTypeMouv);
+
+        mainPanel.add(CapteurMouv, "CapteurMouv");
 
 // Nouvelle piece panel
         JPanel pnlRoom = new JPanel();
@@ -600,7 +677,7 @@ public class Application {
         voirCapteurPanel.setLayout(new BorderLayout());
 
         String[] columnNamesCapteurs = {
-                "Nom", "Type","Pièce","Etat"
+                "Nom", "Type","Pièce", "Réglage", "Etat"
         };
 
         DefaultTableModel tableModelCapteur = new DefaultTableModel(columnNamesCapteurs, 0);
@@ -1117,7 +1194,8 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-
+            String valueIDTypeCapteur = "4" ;
+            System.out.println(valueIDTypeCapteur);
             DefaultComboBoxModel ComboBoxType = new DefaultComboBoxModel(TypeCapteur_dic.keySet().toArray(new String[0]));
             cbTypeCapteur.removeAllItems();
             cbTypeCapteur.setModel(ComboBoxType);
@@ -1125,6 +1203,222 @@ public class Application {
         });
         btnChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "EtatCapteurPanel"));
         btnSupprimerCapteur.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerCapteurPanel"));
+
+        //Boutons Capteurs R3
+        btnBackToMenu_TypeLum.addActionListener(e -> {
+            cardLayout.show(mainPanel, "NewCapteursPanel");
+            float valeurReglage =  (float) spLum.getValue();
+            System.out.println("valeurReglage = " + valeurReglage);
+            }
+        );
+        btnBackToMenu_TypeTemp.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
+        btnBackToMenu_TypeMouv.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
+        btnSuivantSaveCapteur.addActionListener(e -> {
+            String nomCapteur = txtNomCapteur.getText().trim();
+            String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
+            String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
+            String etatSelect ;
+            float valeurReglage =  ((Number) spLum.getValue()).floatValue();
+            if (cbEtatCapteur.isSelected()) {
+                etatSelect = "ON";
+            } else {
+                etatSelect = "OFF";
+            }
+            if ("0".equals(valueIDTypeCapteur)){
+                JOptionPane.showMessageDialog(frame, "Veuillez sélectionner un type de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            };
+            if (nomCapteur.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            int CountAutomationNameEqual = 0;
+            try {
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs)
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        if (nomCapteur.equalsIgnoreCase(cap.getName())){
+                            CountAutomationNameEqual ++;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountAutomationNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            if ("1".equals(valueIDTypeCapteur)){
+                cardLayout.show(mainPanel, "CapteurLum");
+            };
+            if ("2".equals(valueIDTypeCapteur)){
+                cardLayout.show(mainPanel, "CapteurMouv");
+            };
+            if ("3".equals(valueIDTypeCapteur)){
+                cardLayout.show(mainPanel, "CapteurTemp");
+            };
+        });
+
+        btnEnregistrerTypeLum.addActionListener(e -> {
+            //Récupération des données
+            String nomCapteur = txtNomCapteur.getText().trim();
+            String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
+            String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
+            String etatSelect ;
+            float valeurReglage =  ((Number) spLum.getValue()).floatValue();
+            if (cbEtatCapteur.isSelected()) {
+                etatSelect = "ON";
+            } else {
+                etatSelect = "OFF";
+            }
+            //Validation des données
+            if (nomCapteur.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Insertion des données
+            int CountAutomationNameEqual = 0;
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,valueIDTypeCapteur,capteurPieceSelect, etatSelect, 0, valeurReglage);
+            try {
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs)
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        if (nomCapteur.equalsIgnoreCase(cap.getName())){
+                            CountAutomationNameEqual ++;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountAutomationNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                MaisonCapteurService maisonCapteurService =new MaisonCapteurService(networkConfig);
+                maisonCapteurService.insertCapteur(maisonCapteur);
+                JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
+                cardLayout.show(mainPanel, "CapteursPanel");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        btnEnregistrerTypeMouv.addActionListener(e -> {
+            //Récupération des données
+            String nomCapteur = txtNomCapteur.getText().trim();
+            String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
+            String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
+            String etatSelect ;
+            float valeurReglage =  ((Number) spMouv.getValue()).floatValue();
+            if (cbEtatCapteur.isSelected()) {
+                etatSelect = "ON";
+            } else {
+                etatSelect = "OFF";
+            }
+            //Validation des données
+            if (nomCapteur.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Insertion des données
+            int CountAutomationNameEqual = 0;
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,valueIDTypeCapteur,capteurPieceSelect, etatSelect, 0, valeurReglage);
+            try {
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs)
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        if (nomCapteur.equalsIgnoreCase(cap.getName())){
+                            CountAutomationNameEqual ++;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountAutomationNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                MaisonCapteurService maisonCapteurService =new MaisonCapteurService(networkConfig);
+                maisonCapteurService.insertCapteur(maisonCapteur);
+                JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
+                cardLayout.show(mainPanel, "CapteursPanel");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
+
+        btnEnregistrerTypeTemp.addActionListener(e -> {
+            //Récupération des données
+            String nomCapteur = txtNomCapteur.getText().trim();
+            String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
+            String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
+            String etatSelect ;
+            float valeurReglage =  ((Number) spTemp.getValue()).floatValue();
+            if (cbEtatCapteur.isSelected()) {
+                etatSelect = "ON";
+            } else {
+                etatSelect = "OFF";
+            }
+            //Validation des données
+            if (nomCapteur.isEmpty()) {
+                JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            // Insertion des données
+            int CountAutomationNameEqual = 0;
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,valueIDTypeCapteur,capteurPieceSelect, etatSelect, 0, valeurReglage);
+            try {
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteurFind);
+                for (MaisonCapteurs capt : capteurs)
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        if (nomCapteur.equalsIgnoreCase(cap.getName())){
+                            CountAutomationNameEqual ++;
+                        }
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if(CountAutomationNameEqual >= 1){
+                JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+            try {
+                MaisonCapteurService maisonCapteurService =new MaisonCapteurService(networkConfig);
+                maisonCapteurService.insertCapteur(maisonCapteur);
+                JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
+                cardLayout.show(mainPanel, "CapteursPanel");
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+        });
 
         //Retour Menu Rooms
         btnBackToMenuNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
@@ -1291,6 +1585,7 @@ public class Application {
                                 capt.getName(),
                                 capt.getTypeCapteur(),
                                 capt.getPieceCapteur(),
+                                capt.getReglageCapteur(),
                                 capt.getEtat()
                         };
                         System.out.println(capt.getPieceCapteur());
@@ -1966,6 +2261,7 @@ public class Application {
             String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
             String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
             String etatSelect ;
+            float valeurReglage = ((Number) spLum.getValue()).floatValue();
             if (cbEtatCapteur.isSelected()) {
                 etatSelect = "ON";
             } else {
@@ -1978,7 +2274,7 @@ public class Application {
             }
             // Insertion des données
             int CountAutomationNameEqual = 0;
-            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,valueIDTypeCapteur,capteurPieceSelect, etatSelect, 0);
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,valueIDTypeCapteur,capteurPieceSelect, etatSelect, 0, valeurReglage);
             try {
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
@@ -2058,6 +2354,7 @@ public class Application {
             }
 
         });
+
 
         //FIN
         cardLayout.show(mainPanel, "MenuPanel");
