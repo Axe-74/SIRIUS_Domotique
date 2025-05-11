@@ -121,6 +121,9 @@ public class XMartCityService {
         //NAME WINDOW
         SELECT_ALL_NAME_WINDOW("SELECT * FROM para_fenetre ORDER BY ID_Para_Fenetre ASC"),
 
+        //TYPE CAPTEUR
+        SELECT_ALL_TYPE_CAPTEUR("SELECT * FROM para_type_capteur ORDER BY ID_Para_Type_Capteur ASC"),
+
         //FERMETURE
         ;
 
@@ -238,6 +241,10 @@ public class XMartCityService {
             case SELECT_ALL_NAME_WINDOW:
                 response = SelectNameWindow(request, connection);
                 break;
+    //TYPE CAPTEUR
+            case SELECT_ALL_TYPE_CAPTEUR:
+                response = SelectNameTypeCapteur(request, connection);
+                break;
     //PAR DEFAUT
             default:
                 break;
@@ -332,11 +339,13 @@ public class XMartCityService {
             capteur.setName(res.getString(2));
             capteur.setTypecapteur(res.getString(3));
             capteur.setEtat(res.getString(4));
+            capteur.setPieceCapteur(res.getString(5));
             capteurs.add(capteur);
             System.out.println("id: " + capteur.getIdCapteur());
             System.out.println("name: " + capteur.getName());
             System.out.println("etat: " + capteur.getEtat());
             System.out.println("type: " + capteur.getTypeCapteur());
+            System.out.println("piece: " + capteur.getPieceCapteur());
             System.out.println(capteur);
             System.out.println(capteurs);
         }
@@ -350,6 +359,7 @@ public class XMartCityService {
         stmt.setString(1, maisonCapteur.getName());
         stmt.setString(2, maisonCapteur.getTypeCapteur());
         stmt.setString(3, maisonCapteur.getEtat());
+        stmt.setString(4, maisonCapteur.getPieceCapteur());
         stmt.executeUpdate();
 
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonCapteur));
@@ -657,4 +667,20 @@ public class XMartCityService {
         System.out.println(maisonAutomatisation_para_lumieres);
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonAutomatisation_para_lumieres));
     }
+
+    private Response SelectNameTypeCapteur(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_TYPE_CAPTEUR.query);
+        Capteur_Para_Types capteur_para_types = new Capteur_Para_Types();
+        while (res.next()) {
+            Capteur_Para_Type capteur_para_type = new Capteur_Para_Type();
+            capteur_para_type.setID_Para_TypeCapteur(Integer.parseInt(res.getString(1)));
+            capteur_para_type.setNom(res.getString(2));
+            capteur_para_types.add(capteur_para_type);
+        }
+    System.out.println(capteur_para_types);
+    return new Response(request.getRequestId(), objectMapper.writeValueAsString(capteur_para_types));
+    }
+
 }

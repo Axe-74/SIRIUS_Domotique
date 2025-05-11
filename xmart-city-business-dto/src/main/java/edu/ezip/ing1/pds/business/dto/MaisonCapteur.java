@@ -21,12 +21,12 @@ public class MaisonCapteur {
     }
     public final MaisonCapteur build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "id", "nom_capteur", "type_capteur", "etat_capteur");
+        setFieldsFromResulset(resultSet, "id", "nom_capteur", "type_capteur", "etat_capteur", "piece_capteur");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        return buildPreparedStatement(preparedStatement, nameCapteur, typeCapteur,etat);
+        return buildPreparedStatement(preparedStatement, nameCapteur, typeCapteur,etat, pieceCapteur);
     }
     public MaisonCapteur(String nameCapteur, String typeCapteur, String pieceCapteur, String etat, int idCapteur) {
         this.nameCapteur = nameCapteur;
@@ -60,7 +60,7 @@ public class MaisonCapteur {
         this.nameCapteur = nameCapteur;
     }
 
-    @JsonProperty("capteur_typecapteur")
+    @JsonProperty("capteur_type")
     public void setTypecapteur(String typeCapteur) {
         this.typeCapteur = typeCapteur;
     }
