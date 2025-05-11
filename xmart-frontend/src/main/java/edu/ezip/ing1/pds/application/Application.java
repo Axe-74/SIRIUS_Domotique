@@ -39,6 +39,8 @@ public class Application {
     public String valueIDFenetre;
     public ArrayList<String> TypeChauffage_cE = new ArrayList<>();
     public ArrayList<String> ProgrammeNoms_cE = new ArrayList<>();
+    public ArrayList<String> ProgrammeLumiereNoms_cE = new ArrayList<>();
+    public ArrayList<String> ProgrammeFenetreNoms_cE = new ArrayList<>();
     public ArrayList<String> roomsNoms = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Jour_Semaines> JourSemaine = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Type_Chauffages> TypeChauffage = new ArrayList<>();
@@ -557,7 +559,7 @@ public class Application {
         viewProgramsPanel.setLayout(new BorderLayout());
 
         String[] columnNames = {
-                "Nom", "Pièce", "Chauffage", "Jour", "Température", "Heure Début", "Heure Fin"
+                "Nom", "Pièce", "Chauffage/Fenetre/Lumière", "Jour", "Température/Ouverture/Intensité", "Heure Début", "Heure Fin"
         };
 
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
@@ -822,9 +824,46 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            DefaultComboBoxModel ComboBoxProgrammAutomation = new DefaultComboBoxModel(ProgrammeNoms_cE.toArray(new String[0]));
-            cbSensor_programme.removeAllItems();
-            cbSensor_programme.setModel(ComboBoxProgrammAutomation);
+//            DefaultComboBoxModel ComboBoxProgrammAutomation = new DefaultComboBoxModel(ProgrammeNoms_cE.toArray(new String[0]));
+//            cbSensor_programme.removeAllItems();
+//            cbSensor_programme.setModel(ComboBoxProgrammAutomation);
+
+            try {
+//                ProgrammeFenetreNoms_cE.clear();
+                MaisonProgrammeFenetreService maisonProgrammeFenetreService = new MaisonProgrammeFenetreService(networkConfig);
+                MaisonProgrammesFenetres maisonProgrammeFenetresFind = maisonProgrammeFenetreService.select_all_Window_program();
+                programmesFenetres.clear();
+                programmesFenetres.add(maisonProgrammeFenetresFind);
+                for (MaisonProgrammesFenetres maisonProgrammesFenetres : programmesFenetres) {
+                    for (MaisonProgrammeFenetre maisonProgrammesFenetre1 : maisonProgrammesFenetres.getMaisonProgrammesFenetres()) {
+                        ProgrammeNoms_cE.add(maisonProgrammesFenetre1.getNomProgramme());
+                    }
+                }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxProgrammLightAutomation = new DefaultComboBoxModel(ProgrammeFenetreNoms_cE.toArray(new String[0]));
+            cbSensor_programme.setModel(ComboBoxProgrammLightAutomation);
+
+            try {
+                ProgrammeLumiereNoms_cE.clear();
+                MaisonProgrammeLumiereService maisonProgrammeLumiereService = new MaisonProgrammeLumiereService(networkConfig);
+                MaisonProgrammesLumieres maisonProgrammesLumieres = maisonProgrammeLumiereService.select_all_Light_program();
+                programmesLumieres.clear();
+                programmesLumieres.add(maisonProgrammesLumieres);
+                for (MaisonProgrammesLumieres maisonProgrammeslumieres : programmesLumieres) {
+                    for (MaisonProgrammeLumiere maisonProgrammesLumiere1 : maisonProgrammeslumieres.getMaisonProgrammesLumieres())
+                        ProgrammeNoms_cE.add(maisonProgrammesLumiere1.getNomProgramme());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxProgrammWindowAutomation = new DefaultComboBoxModel(ProgrammeNoms_cE.toArray(new String[0]));
+            cbSensor_programme.setModel(ComboBoxProgrammWindowAutomation);
 
             cardLayout.show(mainPanel, "AutomationPanel");
         });
@@ -1081,7 +1120,6 @@ public class Application {
 
             tableModel.setRowCount(0); // ➤ vide l'ancien contenu
             if (programmes.isEmpty()) {
-                // Affiche une ligne vide ou un message dans une autre UI si besoin
                 tableModel.addRow(new Object[]{"Aucun programme", "", "", "", "", "", ""});
             } else {
                 for (MaisonProgrammes maisonProg : programmes) {
@@ -1099,7 +1137,61 @@ public class Application {
                     }
                 }
             }
-            cardLayout.show(mainPanel, "ViewProgramsPanel");
+            try {MaisonProgrammeLumiereService maisonProgrammeLumiereService = new MaisonProgrammeLumiereService(networkConfig);
+                MaisonProgrammesLumieres maisonProgrammesLumieres = maisonProgrammeLumiereService.select_all_Light_program();
+                programmesLumieres.clear();
+                programmesLumieres.add(maisonProgrammesLumieres);
+                System.out.println("Import réussi!");
+                System.out.println(programmesLumieres);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            for (MaisonProgrammesLumieres maisonProgrammesLumieres : programmesLumieres) {
+                for (MaisonProgrammeLumiere maisonProgrammesLumiere1 : maisonProgrammesLumieres.getMaisonProgrammesLumieres()) {
+                    Object[] row = {
+                            maisonProgrammesLumiere1.getNomProgramme(),
+                            maisonProgrammesLumiere1.getTypePiece(),
+                            maisonProgrammesLumiere1.getLumiere(),
+                            maisonProgrammesLumiere1.getJourSemaine(),
+                            maisonProgrammesLumiere1.getTemperature(),
+                            maisonProgrammesLumiere1.getHeureDebut(),
+                            maisonProgrammesLumiere1.getHeureFin()
+                    };
+                    tableModel.addRow(row);
+                    cardLayout.show(mainPanel, "ViewProgramsPanel");
+                }
+            }
+            try {MaisonProgrammeFenetreService maisonProgrammeFenetreService = new MaisonProgrammeFenetreService(networkConfig);
+                MaisonProgrammesFenetres maisonProgrammesFenetres = maisonProgrammeFenetreService.select_all_Window_program();
+                programmesFenetres.clear();
+                programmesFenetres.add(maisonProgrammesFenetres);
+                System.out.println("Import réussi!");
+                System.out.println(programmesLumieres);
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            for (MaisonProgrammesFenetres maisonProgrammesFenetres : programmesFenetres) {
+                for (MaisonProgrammeFenetre maisonProgrammesFenetre1 : maisonProgrammesFenetres.getMaisonProgrammesFenetres()) {
+                    Object[] row = {
+                            maisonProgrammesFenetre1.getNomProgramme(),
+                            maisonProgrammesFenetre1.getTypePiece(),
+                            maisonProgrammesFenetre1.getFenetre(),
+                            maisonProgrammesFenetre1.getJourSemaine(),
+                            maisonProgrammesFenetre1.getTemperature(),
+                            maisonProgrammesFenetre1.getHeureDebut(),
+                            maisonProgrammesFenetre1.getHeureFin()
+                    };
+                    tableModel.addRow(row);
+                    cardLayout.show(mainPanel, "ViewProgramsPanel");
+
+                }
+            }
         });
 
         btnViewAutomations.addActionListener(e -> {
