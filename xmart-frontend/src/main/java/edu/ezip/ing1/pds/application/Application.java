@@ -31,9 +31,11 @@ public class Application {
     public Map<String, String> Lumiere_dic = new HashMap<>();
     public Map<String, String> JourSemaine_dic = new HashMap<>();
     public Map<String, String> TypeChauffage_dic = new HashMap<>();
+    public Map<String, String> TypeCapteur_dic = new HashMap<>();
     public Map<String, String> Fenetre_dic = new HashMap<>();
     public String valueIDJour;
     public String valueIDTypeChauffage;
+    public String valueIDTypeCapteur;
     public String valueIDPiece;
     public String valueIDLumiere;
     public String valueIDFenetre;
@@ -44,6 +46,7 @@ public class Application {
     public ArrayList<String> roomsNoms = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Jour_Semaines> JourSemaine = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Type_Chauffages> TypeChauffage = new ArrayList<>();
+    public ArrayList<Capteur_Para_Types> capteur_types = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Lumieres> Lumiere = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Fenetres> Fenetre = new ArrayList<>();
     private final static String LoggingLabel = "Application";
@@ -472,7 +475,7 @@ public class Application {
 
 // NewCapteur Panel
         JPanel NewCapteursPanel = new JPanel();
-        NewCapteursPanel.setLayout(new GridLayout(5, 2));
+        NewCapteursPanel.setLayout(new GridLayout(6, 2));
 
         JLabel lblNomCapteur = new JLabel("Nom du capteur:");
         lblNomCapteur.setHorizontalAlignment(SwingConstants.CENTER);
@@ -480,15 +483,11 @@ public class Application {
 
         JLabel lblTypeCapteur = new JLabel("Type du capteur: ");
         lblTypeCapteur.setHorizontalAlignment(SwingConstants.CENTER);
-        JComboBox<String> cbTypeCapteur = new JComboBox<>(new String[]{
-                "TEMPERATURE", "LUMINOSITE", "MOUVEMENT"
-        });
+        JComboBox<String> cbTypeCapteur = new JComboBox<>();
 
         JLabel lblPieceCapteur = new JLabel("Pièce du capteur: ");
         lblPieceCapteur.setHorizontalAlignment(SwingConstants.CENTER);
-        JComboBox<String> cbPieceCapteur = new JComboBox<>(new String[]{
-                "PIECE1", "PIECE2", "PIECE3"
-        });
+        JComboBox<String> cbPieceCapteur = new JComboBox<>();
 
         JLabel lblEtatCapteur = new JLabel("Etat du capteur:");
         lblEtatCapteur.setHorizontalAlignment(SwingConstants.CENTER);
@@ -1082,7 +1081,48 @@ public class Application {
 
         //Boutons Capteurs
         btnVoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "voirCapteurPanel"));
-        btnNewCapteur.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
+        btnNewCapteur.addActionListener(e -> {
+            try {
+                roomsNoms.clear();
+                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+                rooms.clear();
+                rooms.add(maisonRoomFind);
+                for (MaisonRooms maisonRooms : rooms)
+                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+                        roomsNoms.add(maisonRoom.getName());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxRoom = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
+            cbPieceCapteur.removeAllItems();
+            cbPieceCapteur.setModel(ComboBoxRoom);
+
+            try {
+                CapteurParaTypeService capteurParaTypeService = new CapteurParaTypeService(networkConfig);
+                Capteur_Para_Types capteur_para_types = capteurParaTypeService.selectRequestOrder();
+                capteur_types.clear();
+                capteur_types.add(capteur_para_types);
+                System.out.println("Import réussi!");
+                System.out.println(capteur_types);
+                for (Capteur_Para_Types CapteurTypes : capteur_types)
+                    for (Capteur_Para_Type CapteurType : CapteurTypes.getCapteur_Para_Types()) {
+                        TypeCapteur_dic.put(CapteurType.getNom(),CapteurType.getID_Para_TypeCapteur().toString());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+
+            DefaultComboBoxModel ComboBoxType = new DefaultComboBoxModel(TypeCapteur_dic.keySet().toArray(new String[0]));
+            cbTypeCapteur.removeAllItems();
+            cbTypeCapteur.setModel(ComboBoxType);
+            cardLayout.show(mainPanel, "NewCapteursPanel");
+        });
         btnChangerEtat.addActionListener(e -> cardLayout.show(mainPanel, "EtatCapteurPanel"));
         btnSupprimerCapteur.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerCapteurPanel"));
 
@@ -1241,21 +1281,6 @@ public class Application {
                 throw new RuntimeException(ex);
             }
 
-//            StringBuilder sb_capteur= new StringBuilder();
-//            if (capteurs.isEmpty()) {
-//                sb_capteur.append("Aucun capteur enregistré.\n");
-//            } else {
-//                sb_capteur.append("Capteurs enregistrés :\n");
-//                for (MaisonCapteurs maisonCapteurs : capteurs)
-//                    for (MaisonCapteur cap : maisonCapteurs.getCapteurs()) {
-//                        sb_capteur.append("Nom : ").append(cap.getName()).append("\n")
-//                                .append("Type : ").append(cap.getTypeCapteur()).append("\n")
-//                                .append("Piece : ").append(cap.getPieceCapteur()).append("\n")
-//                                .append("Etat : ").append(cap.getEtat()).append("\n\n");
-//                    }
-//            }
-//            txtCapteurs.setText(sb_capteur.toString());
-
             tableModelCapteur.setRowCount(0); // vide l'ancien contenu
             if (capteurs.isEmpty()) {
                 tableModelCapteur.addRow(new Object[]{"Aucun capteur.", "", "", "", "", "", ""});
@@ -1268,6 +1293,7 @@ public class Application {
                                 capt.getPieceCapteur(),
                                 capt.getEtat()
                         };
+                        System.out.println(capt.getPieceCapteur());
                         tableModelCapteur.addRow(row);
                     }
                 }
@@ -1877,6 +1903,14 @@ public class Application {
             System.out.println("Fenêtre Séléctionné : " + selectedKeyWindow + ", ID associé : " + valueIDFenetre);
         });
 
+        cbTypeCapteur.addActionListener(e ->  {
+            String selectedKeyWindow = (String) cbTypeCapteur.getSelectedItem();
+
+            valueIDTypeCapteur = TypeCapteur_dic.get(selectedKeyWindow);
+
+            System.out.println("Type de capteur sélectionné : " + selectedKeyWindow + ", ID associé : " + valueIDTypeCapteur);
+        });
+
         btnSaveAutomation.addActionListener(e -> {
                     // Validation des données
                     String nomAutomation = txtAutomationName.getText().trim();
@@ -1944,7 +1978,7 @@ public class Application {
             }
             // Insertion des données
             int CountAutomationNameEqual = 0;
-            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,capteurTypeSelect,capteurPieceSelect, etatSelect, 0);
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,valueIDTypeCapteur,capteurPieceSelect, etatSelect, 0);
             try {
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();

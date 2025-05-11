@@ -21,7 +21,7 @@ public class CapteurParaTypeService {
     private final static String LoggingLabel = "FrontEnd - CapteurParaTypeService";
     private final static Logger logger = LoggerFactory.getLogger(LoggingLabel);
 
-    final String selectRequestOrder = "SELECT_ALL_NAME";
+    final String selectRequestOrder = "SELECT_ALL_TYPE_CAPTEUR";
 
     private final NetworkConfig networkConfig;
 
@@ -29,7 +29,7 @@ public class CapteurParaTypeService {
         this.networkConfig = networkConfig;
     }
 
-    public Capteur_Para_Types select_all_name() throws InterruptedException, IOException {
+    public Capteur_Para_Types selectRequestOrder() throws InterruptedException, IOException {
         int birthdate = 0;
         final Deque<ClientRequest> clientRequests = new ArrayDeque<ClientRequest>();
         final ObjectMapper objectMapper = new ObjectMapper();
