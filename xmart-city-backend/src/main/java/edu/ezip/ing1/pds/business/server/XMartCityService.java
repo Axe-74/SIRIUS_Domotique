@@ -41,12 +41,12 @@ public class XMartCityService {
                 "    p.Heure_Debut,\n" +
                 "    p.Heure_Fin\n" +
                 "FROM \n" +
-                "    Programmes p\n" +
+                "    programmes p\n" +
                 "JOIN \n" +
-                "    Para_Type_Chauffage ptc ON p.ID_Para_Type_Chauffage = ptc.ID_Para_Type_Chauffage\n" +
+                "    para_type_chauffage ptc ON p.ID_Para_Type_Chauffage = ptc.ID_Para_Type_Chauffage\n" +
                 "JOIN \n" +
-                "    Para_Jour_Semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
-        INSERT_PROGRAM("INSERT INTO programmes (nom_programme,Pieces,ID_Para_Type_Chauffage, Temperature_Piece ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
+                "    para_jour_semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
+        INSERT_PROGRAM("INSERT INTO programmes (Nom_programme,Pieces,ID_Para_Type_Chauffage, Temperature_Piece ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
 
         //PROGRAM_LIGHT
@@ -60,12 +60,12 @@ public class XMartCityService {
                 "    p.Heure_Debut,\n" +
                 "    p.Heure_Fin\n" +
                 "FROM \n" +
-                "    Programmes_lumiere p\n" +
+                "    programmes_lumiere p\n" +
                 "JOIN \n" +
-                "    Para_Lumiere pl ON p.ID_Para_Lumiere = pl.ID_Para_Lumiere\n" +
+                "    para_lumiere pl ON p.ID_Para_Lumiere = pl.ID_Para_Lumiere\n" +
                 "JOIN \n" +
-                "    Para_Jour_Semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
-        INSERT_PROGRAM_LIGHT("INSERT INTO programmes_lumiere (nom_programme,Pieces,ID_Para_Lumiere, Intensite_Lumiere ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
+                "    para_jour_semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
+        INSERT_PROGRAM_LIGHT("INSERT INTO programmes_lumiere (Nom_programme,Pieces,ID_Para_Lumiere, Intensite_Lumiere ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM_LIGHT("SELECT nom_programme FROM programmes"),
 
         //PROGRAM_WINDOW
@@ -79,12 +79,12 @@ public class XMartCityService {
                 "    p.Heure_Debut,\n" +
                 "    p.Heure_Fin\n" +
                 "FROM \n" +
-                "    Programmes_fenetre p\n" +
+                "    programmes_fenetre p\n" +
                 "JOIN \n" +
-                "    Para_Fenetre pf ON p.ID_Para_Fenetre = pf.ID_Para_Fenetre\n" +
+                "    para_fenetre pf ON p.ID_Para_Fenetre = pf.ID_Para_Fenetre\n" +
                 "JOIN \n" +
-                "    Para_Jour_Semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
-        INSERT_PROGRAM_WINDOW("INSERT INTO programmes_fenetre (nom_programme,Pieces,ID_Para_Fenetre, Ouverture_Fenetre ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
+                "    para_jour_semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
+        INSERT_PROGRAM_WINDOW("INSERT INTO programmes_fenetre (Nom_programme,Pieces,ID_Para_Fenetre, Ouverture_Fenetre ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM_WINDOW("SELECT nom_programme FROM programmes"),
 
         //CAPTEUR
@@ -94,11 +94,12 @@ public class XMartCityService {
                 "    ptc.Nom AS Nom_Type_Capteur, \n" +
                 "    c.Etat_Capteur, \n" +
                 "    c.Pieces \n" +
+                "    c.Reglage_Capteur \n" +
                 "FROM \n" +
-                "   Capteurs c\n" +
+                "   capteurs c\n" +
                 "JOIN \n" +
-                "Para_Type_Capteur ptc ON c.ID_Para_Type_Capteur = ptc.ID_Para_Type_Capteur;"),
-        INSERT_CAPTEUR("INSERT INTO capteurs (Nom_Capteur, ID_Para_Type_Capteur, Etat_Capteur, Pieces) VALUES (?, ?, ?, ?)"),
+                "para_type_capteur ptc ON c.ID_Para_Type_Capteur = ptc.ID_Para_Type_Capteur;"),
+        INSERT_CAPTEUR("INSERT INTO capteurs (Nom_Capteur, ID_Para_Type_Capteur, Etat_Capteur, Pieces, Reglage_Capteur) VALUES (?, ?, ?, ?, ?)"),
         UPDATE_CAPTEUR("UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?"),
         DELETE_CAPTEUR("DELETE FROM capteurs WHERE nom_capteur = ?"),
 
