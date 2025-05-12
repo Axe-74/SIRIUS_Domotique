@@ -21,7 +21,7 @@ public class InsertRoomsClientRequest extends ClientRequest<MaisonRoom, String> 
     public String readResult(String body) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> roomIdMap = mapper.readValue(body, Map.class);
-        final String result  = roomIdMap.get("room_id").toString();
+        final String result  = roomIdMap.get("id").toString();
         return result;
     }
 }
