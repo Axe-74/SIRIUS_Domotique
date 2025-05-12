@@ -947,24 +947,24 @@ public class Application {
             cardLayout.show(mainPanel, "AutomationPanel");
         });
         btnProgram.addActionListener(e -> {
-            try {
-                roomsNoms.clear();
-                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
-                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
-                rooms.clear();
-                rooms.add(maisonRoomFind);
-                for (MaisonRooms maisonRooms : rooms)
-                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
-                        roomsNoms.add(maisonRoom.getName());
-                    }
-            } catch (InterruptedException ex) {
-                throw new RuntimeException(ex);
-            } catch (IOException ex) {
-                throw new RuntimeException(ex);
-            }
-            DefaultComboBoxModel ComboBoxRoom = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
-            cbPiece.removeAllItems();
-            cbPiece.setModel(ComboBoxRoom);
+//            try {
+//                roomsNoms.clear();
+//                MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
+//                MaisonRooms maisonRoomFind = maisonRoomServiceFind.selectRooms();
+//                rooms.clear();
+//                rooms.add(maisonRoomFind);
+//                for (MaisonRooms maisonRooms : rooms)
+//                    for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
+//                        roomsNoms.add(maisonRoom.getName());
+//                    }
+//            } catch (InterruptedException ex) {
+//                throw new RuntimeException(ex);
+//            } catch (IOException ex) {
+//                throw new RuntimeException(ex);
+//            }
+//            DefaultComboBoxModel ComboBoxRoom = new DefaultComboBoxModel(roomsNoms.toArray(new String[0]));
+//            cbPiece.removeAllItems();
+//            cbPiece.setModel(ComboBoxRoom);
 
             try {
                 MaisonAutomatisationParaJourSemaineService maisonAutomatisationParaJourSemaineService = new MaisonAutomatisationParaJourSemaineService(networkConfig);

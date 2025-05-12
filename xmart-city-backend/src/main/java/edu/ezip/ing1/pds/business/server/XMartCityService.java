@@ -437,9 +437,9 @@ public class XMartCityService {
         while (res.next()) {
             MaisonRoom maisonRoom = new MaisonRoom();
             maisonRoom.setName(res.getString(2));
-            maisonRoom.setType(res.getString(1));
-            maisonRoom.setSurface(Integer.parseInt(res.getString(3)));
-            maisonRoom.setId(Integer.parseInt(res.getString(4)));
+            maisonRoom.setType(res.getString(3));
+            maisonRoom.setSurface(Integer.parseInt(res.getString(4)));
+            maisonRoom.setId(Integer.parseInt(res.getString(1)));
             maisonRooms.add(maisonRoom);
             System.out.println(maisonRooms);
         }
