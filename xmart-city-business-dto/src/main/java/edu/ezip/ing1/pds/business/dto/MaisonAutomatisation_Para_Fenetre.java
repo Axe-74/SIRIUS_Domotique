@@ -44,7 +44,7 @@ public class MaisonAutomatisation_Para_Fenetre {
         this.Nom = Nom;
     }
 
-    @JsonProperty("MaisonAutomatisation_Para_Jour_Semaine_ID_Para_Lumiere")
+    @JsonProperty("MaisonAutomatisation_Para_Jour_Semaine_ID_Para_Fenetre")
     public void setID_Para_Fenetre(int ID_Para_Fenetre) {
         this.ID_Para_Fenetre = ID_Para_Fenetre;
     }

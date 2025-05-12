@@ -24,7 +24,7 @@ public class InsertProgramsLumieresClientRequest extends ClientRequest<MaisonPro
     public String readResult(String body) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> programLumiereIdMap = mapper.readValue(body, Map.class);
-        final String result  = programLumiereIdMap.get("program_id").toString();
+        final String result  = programLumiereIdMap.get("Maison_Programme_id").toString();
         return result;
     }
 }

@@ -22,7 +22,7 @@ public class InsertParaFenetreClientRequest extends ClientRequest<MaisonAutomati
     public String readResult(String body) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> automationparafenetreIdMap = mapper.readValue(body, Map.class);
-        final String result  = automationparafenetreIdMap.get("automationparafenetre_id").toString();
+        final String result  = automationparafenetreIdMap.get("MaisonAutomatisation_Para_Jour_Semaine_ID_Para_Fenetre").toString();
         return result;
     }
 }

@@ -20,7 +20,7 @@ public class InsertParaLumiereClientRequest extends ClientRequest<MaisonAutomati
     public String readResult(String body) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> automationparalumiereIdMap = mapper.readValue(body, Map.class);
-        final String result  = automationparalumiereIdMap.get("automationparalumiere_id").toString();
+        final String result  = automationparalumiereIdMap.get("MaisonAutomatisation_Para_Jour_Semaine_ID_Para_Lumiere").toString();
         return result;
     }
 }

@@ -21,7 +21,7 @@ public class InsertParaJourSemaineClientRequest extends ClientRequest<MaisonAuto
     public String readResult(String body) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> automationparajoursemaineIdMap = mapper.readValue(body, Map.class);
-        final String result  = automationparajoursemaineIdMap.get("automationparajoursemaine_id").toString();
+        final String result  = automationparajoursemaineIdMap.get("MaisonAutomatisation_Para_Jour_Semaine_ID_Para_Jour_Semaine").toString();
         return result;
     }
 }

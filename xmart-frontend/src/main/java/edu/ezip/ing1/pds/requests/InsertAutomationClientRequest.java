@@ -21,7 +21,7 @@ public class InsertAutomationClientRequest extends ClientRequest<MaisonAutomatis
     public String readResult(String body) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> automationIdMap = mapper.readValue(body, Map.class);
-        final String result  = automationIdMap.get("automation_id").toString();
-        return "yo";
+        final String result  = automationIdMap.get("Maison_Automatisation_id").toString();
+        return result;
     }
 }

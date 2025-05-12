@@ -22,7 +22,7 @@ public class InsertProgramClientRequest extends ClientRequest<MaisonProgramme, S
     public String readResult(String body) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> programIdMap = mapper.readValue(body, Map.class);
-        final String result  = programIdMap.get("program_id").toString();
+        final String result  = programIdMap.get("Maison_Programme_id").toString();
         return result;
     }
 }

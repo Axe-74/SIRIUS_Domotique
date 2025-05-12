@@ -24,7 +24,7 @@ public class InsertProgramsFenetreClientRequest extends ClientRequest<MaisonProg
     public String readResult(String body) throws IOException {
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> programFenetreIdMap = mapper.readValue(body, Map.class);
-        final String result  = programFenetreIdMap.get("program_id").toString();
+        final String result  = programFenetreIdMap.get("Maison_Programme_id").toString();
         return result;
     }
 }
