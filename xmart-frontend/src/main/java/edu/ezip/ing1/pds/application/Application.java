@@ -34,12 +34,12 @@ public class Application {
     public Map<String, String> TypeCapteur_dic = new HashMap<>();
     public Map<String, String> TypeRoom_dic = new HashMap<>();
     public Map<String, String> Fenetre_dic = new HashMap<>();
-    public String valueIDJour;
+    public String valueIDJour= "1";
     public String valueIDTypeChauffage;
     public String valueIDTypeCapteur = "4";
     public String valueIDTypeRoom;
-    public String valueIDLumiere;
-    public String valueIDFenetre;
+    public String valueIDLumiere = "1";
+    public String valueIDFenetre= "1";
     public ArrayList<String> TypeChauffage_cE = new ArrayList<>();
     public ArrayList<String> ProgrammeNoms_cE = new ArrayList<>();
     public ArrayList<String> ProgrammeLumiereNoms_cE = new ArrayList<>();
@@ -355,7 +355,7 @@ public class Application {
         JSpinner spHeureDebut = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
 
         JLabel lblHeureFin = new JLabel("Heure de fin:");
-        JSpinner spHeureFin = new JSpinner(new SpinnerNumberModel(0, 0, 24, 1));
+        JSpinner spHeureFin = new JSpinner(new SpinnerNumberModel(1, 0, 24, 1));
 
         JButton btnSaveProgram = new JButton("Enregistrer");
         JButton btnBackToMenu_Program = new JButton("Retour au menu");
@@ -403,7 +403,7 @@ public class Application {
         JSpinner spLightHeureDebut = new JSpinner(new SpinnerNumberModel(0, 0, 23, 1));
 
         JLabel lblLightHeureFin = new JLabel("Heure de fin:");
-        JSpinner spLightHeureFin = new JSpinner(new SpinnerNumberModel(0, 0, 24, 1));
+        JSpinner spLightHeureFin = new JSpinner(new SpinnerNumberModel(1, 0, 24, 1));
 
         JButton btnLightSaveProgram = new JButton("Enregistrer");
         JButton btnLightBackToMenu_Program = new JButton("Retour au menu");
