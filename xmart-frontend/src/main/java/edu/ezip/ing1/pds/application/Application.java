@@ -38,6 +38,7 @@ public class Application {
     public String valueIDTypeChauffage= "1";
     public String valueIDTypeCapteur = "4";
     public String valueIDTypeRoom;
+    public String valueIDTypeRoom2;
     public String valueIDLumiere = "1";
     public String valueIDFenetre= "1";
     public ArrayList<String> TypeChauffage_cE = new ArrayList<>();
@@ -393,8 +394,8 @@ public class Application {
         JLabel lblLight = new JLabel("Lumière:");
         JComboBox<String> cbLight = new JComboBox<>();
 
-        JLabel lblLightIntensité = new JLabel("Intensité");
-        JSpinner spLightIntensité = new JSpinner(new SpinnerNumberModel(50, 10, 100, 1));
+        JLabel lblLightIntensite = new JLabel("Intensité");
+        JSpinner spLightIntensite = new JSpinner(new SpinnerNumberModel(50, 10, 100, 1));
 
         JLabel lblLightJour = new JLabel("Jour de la semaine");
         JComboBox<String> cbLightJour = new JComboBox<>();
@@ -414,8 +415,8 @@ public class Application {
         ProgramLightPanel.add(cbLightPiece);
         ProgramLightPanel.add(lblLight);
         ProgramLightPanel.add(cbLight);
-        ProgramLightPanel.add(lblLightIntensité);
-        ProgramLightPanel.add(spLightIntensité);
+        ProgramLightPanel.add(lblLightIntensite);
+        ProgramLightPanel.add(spLightIntensite);
         ProgramLightPanel.add(lblLightJour);
         ProgramLightPanel.add(cbLightJour);
         ProgramLightPanel.add(lblLightHeureDebut);
@@ -784,9 +785,10 @@ public class Application {
         JTextField txtNameRoom2 = new JTextField();
 
         JLabel lblTypeRoom2 = new JLabel("Type de pièce : ");
-        JComboBox<String> cbTypeRoom2 = new JComboBox<>(new String[]{
-                "Entree", "Salon", "Cuisine", "Salle_de_bain", "Toilettes", "Chambre", "Autre"
-        });
+//        JComboBox<String> cbTypeRoom2 = new JComboBox<>(new String[]{
+//                "Entree", "Salon", "Cuisine", "Salle_de_bain", "Toilettes", "Chambre", "Autre"
+//        });
+        JComboBox<String> cbTypeRoom2 = new JComboBox<>();
 
         JLabel lblSurfaceRoom2 = new JLabel("Surface de la pièce (en m²) :");
         JSpinner spSurfaceRoom2 = new JSpinner(new SpinnerNumberModel(1, 1, 200, 1));
@@ -1455,8 +1457,30 @@ public class Application {
             cbTypeRoom.setModel(ComboBoxTypeRoom);
             cardLayout.show(mainPanel, "RoomPanel");
         });
+
         btnModifierRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomDefiniePanel"));
-        btnChoisirRoom.addActionListener(e -> cardLayout.show(mainPanel, "ModifierRoomPanel"));
+        btnChoisirRoom.addActionListener(e -> {
+            try {
+                RoomParaTypeService roomParaTypeService = new RoomParaTypeService(networkConfig);
+                Room_Para_Types room_para_types = roomParaTypeService.selectRequestOrder();
+                room_types.clear();
+                room_types.add(room_para_types);
+                System.out.println("Import réussi!");
+                System.out.println(room_types);
+                for (Room_Para_Types RoomTypes : room_types)
+                    for (Room_Para_Type RoomType : RoomTypes.getRoom_Para_Types()) {
+                        TypeRoom_dic.put(RoomType.getNom(),RoomType.getID_Para_TypeRoom().toString());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxTypeRoom = new DefaultComboBoxModel(TypeRoom_dic.keySet().toArray(new String[0]));
+            cbTypeRoom2.removeAllItems();
+            cbTypeRoom2.setModel(ComboBoxTypeRoom);
+            cardLayout.show(mainPanel, "ModifierRoomPanel");
+        });
         btnSupprimerRoom.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerRoomPanel"));
 
 
@@ -2128,7 +2152,7 @@ public class Application {
             String PieceSelection = (String) cbLightPiece.getSelectedItem();
             String ChauffageSelection = (String) cbLight.getSelectedItem();
             String JourSelection = (String) cbLightJour.getSelectedItem();
-            Integer OuvertureSelection = (int) spLightIntensité.getValue();
+            Integer OuvertureSelection = (int) spLightIntensite.getValue();
             Integer HeureDebutSelection = (int) spLightHeureDebut.getValue();
             Integer HeureFinSelection = (int) spLightHeureFin.getValue();
             if (nomProgramme.isEmpty()) {
@@ -2236,6 +2260,14 @@ public class Application {
             valueIDTypeRoom = TypeRoom_dic.get(selectedKeyTypeRoom);
 
             System.out.println("Type de pièce sélectionné : " + selectedKeyTypeRoom + ", ID associé : " + valueIDTypeRoom);
+        });
+
+        cbTypeRoom2.addActionListener(e ->  {
+            String selectedKeyTypeRoom2 = (String) cbTypeRoom2.getSelectedItem();
+
+            valueIDTypeRoom2 = TypeRoom_dic.get(selectedKeyTypeRoom2);
+
+            System.out.println("Type de pièce sélectionné : " + selectedKeyTypeRoom2 + ", ID associé : " + valueIDTypeRoom2);
         });
 
         btnSaveAutomation.addActionListener(e -> {
