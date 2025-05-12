@@ -32,11 +32,12 @@ public class Application {
     public Map<String, String> JourSemaine_dic = new HashMap<>();
     public Map<String, String> TypeChauffage_dic = new HashMap<>();
     public Map<String, String> TypeCapteur_dic = new HashMap<>();
+    public Map<String, String> TypeRoom_dic = new HashMap<>();
     public Map<String, String> Fenetre_dic = new HashMap<>();
     public String valueIDJour;
     public String valueIDTypeChauffage;
     public String valueIDTypeCapteur = "4";
-    public String valueIDPiece;
+    public String valueIDTypeRoom;
     public String valueIDLumiere;
     public String valueIDFenetre;
     public ArrayList<String> TypeChauffage_cE = new ArrayList<>();
@@ -47,6 +48,7 @@ public class Application {
     public ArrayList<MaisonAutomatisation_Para_Jour_Semaines> JourSemaine = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Type_Chauffages> TypeChauffage = new ArrayList<>();
     public ArrayList<Capteur_Para_Types> capteur_types = new ArrayList<>();
+    public ArrayList<Room_Para_Types> room_types = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Lumieres> Lumiere = new ArrayList<>();
     public ArrayList<MaisonAutomatisation_Para_Fenetres> Fenetre = new ArrayList<>();
     private final static String LoggingLabel = "Application";
@@ -606,9 +608,10 @@ public class Application {
         JTextField txtNameRoom = new JTextField();
 
         JLabel lblTypeRoom = new JLabel("Type de pièce : ");
-        JComboBox<String> cbTypeRoom = new JComboBox<>(new String[]{
-                "Entree", "Salon", "Cuisine", "Salle_de_bain", "Toilettes", "Chambre", "Autre"
-        });
+//        JComboBox<String> cbTypeRoom = new JComboBox<>(new String[]{
+//                "Entree", "Salon", "Cuisine", "Salle_de_bain", "Toilettes", "Chambre", "Autre"
+//        });
+        JComboBox<String> cbTypeRoom = new JComboBox<>();
 
         JLabel lblSurfaceRoom = new JLabel("Surface de la pièce (en m²) :");
         JSpinner spSurfaceRoom = new JSpinner(new SpinnerNumberModel(0, 0, 200, 1));
@@ -1430,7 +1433,28 @@ public class Application {
         //Boutons Rooms
         btnViewRoom.addActionListener(e -> cardLayout.show(mainPanel, "voirRoomPanel"));
         btnHouseManagement.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
-        btnNewRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomPanel"));
+        btnNewRoom.addActionListener(e -> {
+            try {
+                RoomParaTypeService roomParaTypeService = new RoomParaTypeService(networkConfig);
+                Room_Para_Types room_para_types = roomParaTypeService.selectRequestOrder();
+                room_types.clear();
+                room_types.add(room_para_types);
+                System.out.println("Import réussi!");
+                System.out.println(room_types);
+                for (Room_Para_Types RoomTypes : room_types)
+                    for (Room_Para_Type RoomType : RoomTypes.getRoom_Para_Types()) {
+                        TypeRoom_dic.put(RoomType.getNom(),RoomType.getID_Para_TypeRoom().toString());
+                    }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            DefaultComboBoxModel ComboBoxTypeRoom = new DefaultComboBoxModel(TypeRoom_dic.keySet().toArray(new String[0]));
+            cbTypeRoom.removeAllItems();
+            cbTypeRoom.setModel(ComboBoxTypeRoom);
+            cardLayout.show(mainPanel, "RoomPanel");
+        });
         btnModifierRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomDefiniePanel"));
         btnChoisirRoom.addActionListener(e -> cardLayout.show(mainPanel, "ModifierRoomPanel"));
         btnSupprimerRoom.addActionListener(e -> cardLayout.show(mainPanel, "SupprimerRoomPanel"));
@@ -2206,6 +2230,14 @@ public class Application {
             System.out.println("Type de capteur sélectionné : " + selectedKeyWindow + ", ID associé : " + valueIDTypeCapteur);
         });
 
+        cbTypeRoom.addActionListener(e ->  {
+            String selectedKeyTypeRoom = (String) cbTypeRoom.getSelectedItem();
+
+            valueIDTypeRoom = TypeRoom_dic.get(selectedKeyTypeRoom);
+
+            System.out.println("Type de pièce sélectionné : " + selectedKeyTypeRoom + ", ID associé : " + valueIDTypeRoom);
+        });
+
         btnSaveAutomation.addActionListener(e -> {
                     // Validation des données
                     String nomAutomation = txtAutomationName.getText().trim();
@@ -2319,7 +2351,8 @@ public class Application {
                 JOptionPane.showMessageDialog(frame, "La surface de la pièce doit être srictement supérieur à 0.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            MaisonRoom maisonRoom = new MaisonRoom(nameRoom,typeRoom,surfaceRoom,0);
+            System.out.println(valueIDTypeRoom);
+            MaisonRoom maisonRoom = new MaisonRoom(nameRoom,valueIDTypeRoom,surfaceRoom,0);
             int CountRoomNameEqual = 0;
             try {
                 MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
