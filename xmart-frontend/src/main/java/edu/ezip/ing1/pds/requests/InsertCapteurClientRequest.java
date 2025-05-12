@@ -23,7 +23,7 @@ public class InsertCapteurClientRequest extends ClientRequest<MaisonCapteur, Str
         System.out.println("Réponse JSON du serveur : " + body);
         final ObjectMapper mapper = new ObjectMapper();
         final Map<String, Integer> capteurIdMap = mapper.readValue(body, Map.class);
-        final String result  = capteurIdMap.get("capteru_id").toString();
+        final String result  = capteurIdMap.get("capteur_id").toString();
         return result;
     }
 }
