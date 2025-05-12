@@ -44,7 +44,7 @@ public class Room_Para_Type {
         this.Nom = Nom;
     }
 
-    @JsonProperty("Capteur_Para_Room_ID")
+    @JsonProperty("Room_Para_Room_ID")
     public void setID_Para_TypeRoom(int ID_Para_TypeRoom) {
         this.ID_Para_TypeRoom = ID_Para_TypeRoom;
     }
