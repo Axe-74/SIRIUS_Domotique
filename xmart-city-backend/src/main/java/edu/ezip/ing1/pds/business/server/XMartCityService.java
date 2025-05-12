@@ -115,10 +115,11 @@ public class XMartCityService {
                 "JOIN \n" +
                 "    para_type_piece ptp ON p.ID_Para_Type_Piece = ptp.ID_Para_Type_Piece;"),
         INSERT_ROOM("INSERT into pieces (Nom_Piece, ID_Para_Type_Piece, Piece_Surface) VALUES (?, ?, ?)"),
-        UPDATE_ROOM("UPDATE pieces \n" +
+        UPDATE_ROOM("UPDATE pieces\n" +
                 "SET Nom_Piece = ?, \n" +
-                "Para_Type_Piece = (SELECT ID_Para_Type_Piece FROM para_type_piece WHERE Nom = ?), \n" +
-                "Piece_Surface = ? WHERE ID_Piece = ?"),
+                "    ID_Para_Type_Piece = (SELECT ID_Para_Type_Piece FROM para_type_piece WHERE Nom = ?), \n" +
+                "    Piece_Surface = ?\n" +
+                "WHERE ID_Piece = ?;"),
         DELETE_ROOM("DELETE FROM pieces WHERE Nom_Piece = ?"),
 
         //NAME DAY
