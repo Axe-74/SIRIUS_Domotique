@@ -105,10 +105,21 @@ public class XMartCityService {
 
 
         //ROOM
-        SELECT_ALL_ROOMS("SELECT * FROM pieces"),
-        INSERT_ROOM("INSERT into rooms (nom_room, type_room, room_surface) VALUES (?, ?, ?)"),
-        UPDATE_ROOM("UPDATE rooms SET nom_room = ?, type_room = ?, room_surface = ? WHERE id = ?"),
-        DELETE_ROOM("DELETE FROM rooms WHERE nom_room = ?"),
+        SELECT_ALL_ROOMS("SELECT \n" +
+                "    p.ID_Piece,\n" +
+                "    p.Nom_Piece,\n" +
+                "    ptp.Nom AS Type_Piece,\n" +
+                "    p.Piece_Surface\n" +
+                "FROM \n" +
+                "    pieces p\n" +
+                "JOIN \n" +
+                "    para_type_piece ptp ON p.ID_Para_Type_Piece = ptp.ID_Para_Type_Piece;"),
+        INSERT_ROOM("INSERT into pieces (Nom_Piece, ID_Para_Type_Piece, Piece_Surface) VALUES (?, ?, ?)"),
+        UPDATE_ROOM("UPDATE pieces \n" +
+                "SET Nom_Piece = ?, \n" +
+                "Para_Type_Piece = (SELECT ID_Para_Type_Piece FROM para_type_piece WHERE Nom = ?), \n" +
+                "Piece_Surface = ? WHERE ID_Piece = ?"),
+        DELETE_ROOM("DELETE FROM pieces WHERE Nom_Piece = ?"),
 
         //NAME DAY
         SELECT_ALL_NAME_DAY("SELECT * FROM para_jour_semaine ORDER BY ID_Para_Jour_Semaine ASC"),
@@ -124,6 +135,9 @@ public class XMartCityService {
 
         //TYPE CAPTEUR
         SELECT_ALL_TYPE_CAPTEUR("SELECT * FROM para_type_capteur ORDER BY ID_Para_Type_Capteur ASC"),
+
+        //TYPE PIECE
+        SELECT_ALL_TYPE_ROOM("SELECT * FROM para_type_piece ORDER BY ID_Para_Type_Piece ASC"),
 
         //FERMETURE
         ;
@@ -245,6 +259,10 @@ public class XMartCityService {
     //TYPE CAPTEUR
             case SELECT_ALL_TYPE_CAPTEUR:
                 response = SelectNameTypeCapteur(request, connection);
+                break;
+    //TYPE PIECE
+            case SELECT_ALL_TYPE_ROOM:
+                response = SelectNameTypeRoom(request, connection) ;
                 break;
     //PAR DEFAUT
             default:
@@ -404,7 +422,7 @@ public class XMartCityService {
         final MaisonRoom maisonRoom = objectMapper.readValue(request.getRequestBody(), MaisonRoom.class);
         final PreparedStatement stmt = connection.prepareStatement(Queries.INSERT_ROOM.query);
         stmt.setString(1, maisonRoom.getName());
-        stmt.setString(2, maisonRoom.getType());
+        stmt.setInt(2, Integer.valueOf(maisonRoom.getType()));
         stmt.setInt(3,maisonRoom.getSurface());
         stmt.executeUpdate();
 
@@ -423,6 +441,7 @@ public class XMartCityService {
             maisonRoom.setSurface(Integer.parseInt(res.getString(3)));
             maisonRoom.setId(Integer.parseInt(res.getString(4)));
             maisonRooms.add(maisonRoom);
+            System.out.println(maisonRooms);
         }
         return new Response(request.getRequestId(), objectMapper.writeValueAsString(maisonRooms));
     }
@@ -685,6 +704,21 @@ public class XMartCityService {
         }
     System.out.println(capteur_para_types);
     return new Response(request.getRequestId(), objectMapper.writeValueAsString(capteur_para_types));
+    }
+
+    private Response SelectNameTypeRoom(final Request request, final Connection connection) throws SQLException, JsonProcessingException {
+        final ObjectMapper objectMapper = new ObjectMapper();
+        final Statement stmt = connection.createStatement();
+        final ResultSet res = stmt.executeQuery(Queries.SELECT_ALL_TYPE_ROOM.query);
+        Room_Para_Types room_para_types = new Room_Para_Types();
+        while (res.next()) {
+            Room_Para_Type room_para_type = new Room_Para_Type();
+            room_para_type.setID_Para_TypeRoom(Integer.parseInt(res.getString(1)));
+            room_para_type.setNom(res.getString(2));
+            room_para_types.add(room_para_type);
+        }
+        System.out.println(room_para_types);
+        return new Response(request.getRequestId(), objectMapper.writeValueAsString(room_para_types));
     }
 
 }
