@@ -12,6 +12,7 @@ import java.sql.SQLException;
 public class MaisonRoom {
     private  String name;
     private  String type;
+    private  String capteur;
     private  int surface;
     private  int id;
 
@@ -20,16 +21,17 @@ public class MaisonRoom {
     }
     public final MaisonRoom build(final ResultSet resultSet)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        setFieldsFromResulset(resultSet, "id", "name_room", "type_room", "room_surface");
+        setFieldsFromResulset(resultSet, "id", "name_room", "type_room", "room_surface", "capteur");
         return this;
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        return buildPreparedStatement(preparedStatement, name, type, String.valueOf(surface));
+        return buildPreparedStatement(preparedStatement, name, type, capteur, String.valueOf(surface));
     }
     public MaisonRoom(String name, String type, int surface, int id) {
         this.name = name;
         this.type = type;
+        this.capteur = capteur;
         this.surface = surface;
         this.id = id;
     }
@@ -40,6 +42,10 @@ public class MaisonRoom {
 
     public String getType() {
         return type;
+    }
+
+    public String getCapteur() {
+        return capteur;
     }
 
     public int getSurface() {
@@ -58,6 +64,11 @@ public class MaisonRoom {
     @JsonProperty("room_type")
     public void setType(String type) {
         this.type = type;
+    }
+
+    @JsonProperty("capteur")
+    public void setCapteur(String capteur) {
+        this.capteur = capteur;
     }
 
     @JsonProperty("room_surface")
@@ -92,6 +103,7 @@ public class MaisonRoom {
         return "Room{" +
                 "name='" + name + '\'' +
                 ", type='" + type + '\'' +
+                ", capteur='" + capteur + '\'' +
                 ", surface='" + surface + '\'' +
                 ", id=" + id +  '\'' +
                 '}';

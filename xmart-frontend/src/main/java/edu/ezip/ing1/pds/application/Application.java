@@ -1205,6 +1205,8 @@ public class Application {
             cbPieceCapteur.removeAllItems();
             cbPieceCapteur.setModel(ComboBoxRoom);
 
+            System.out.println("roomsNoms : " + roomsNoms);
+
             try {
                 CapteurParaTypeService capteurParaTypeService = new CapteurParaTypeService(networkConfig);
                 Capteur_Para_Types capteur_para_types = capteurParaTypeService.selectRequestOrder();
@@ -1684,16 +1686,21 @@ public class Application {
             if (rooms.isEmpty()) {
                 tableModelRoom.addRow(new Object[]{"Aucune pièce.", "", "", "", "", "", ""});
             } else {
+                Set<String> roomDoublon = new HashSet<>();
                 for (MaisonRooms maisonroom : rooms) {
                     for (MaisonRoom room : maisonroom.getMaisonRooms()) {
-                        Object[] row = {
-                                room.getName(),
-                                room.getType(),
-                                room.getSurface(),
-//                                room.getCapteurPiece(),
-                        };
+                        String roomNameDoublon = room.getName();
+                        if (!roomDoublon.contains(roomNameDoublon)) {
+                            roomDoublon.add(roomNameDoublon);
+                            Object[] row = {
+                                    room.getName(),
+                                    room.getType(),
+                                    room.getSurface(),
+                                    room.getCapteur(),
+                            };
 //                        System.out.println(room.getCapteurPiece());
-                        tableModelRoom.addRow(row);
+                            tableModelRoom.addRow(row);
+                        } else { continue; }
                     }
                 }
             }

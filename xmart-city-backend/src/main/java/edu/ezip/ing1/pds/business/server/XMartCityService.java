@@ -109,11 +109,14 @@ public class XMartCityService {
                 "    p.ID_Piece,\n" +
                 "    p.Nom_Piece,\n" +
                 "    ptp.Nom AS Type_Piece,\n" +
-                "    p.Piece_Surface\n" +
+                "    p.Piece_Surface, \n" +
+                "    c.Nom_Capteur\n " +
                 "FROM \n" +
                 "    pieces p\n" +
                 "JOIN \n" +
-                "    para_type_piece ptp ON p.ID_Para_Type_Piece = ptp.ID_Para_Type_Piece;"),
+                "    para_type_piece ptp ON p.ID_Para_Type_Piece = ptp.ID_Para_Type_Piece \n" +
+                "LEFT JOIN \n" +
+                "    capteurs c ON p.Nom_Piece = c.Pieces;"),
         INSERT_ROOM("INSERT into pieces (Nom_Piece, ID_Para_Type_Piece, Piece_Surface) VALUES (?, ?, ?)"),
         UPDATE_ROOM("UPDATE pieces\n" +
                 "SET Nom_Piece = ?, \n" +
@@ -441,6 +444,7 @@ public class XMartCityService {
             maisonRoom.setType(res.getString(3));
             maisonRoom.setSurface(Integer.parseInt(res.getString(4)));
             maisonRoom.setId(Integer.parseInt(res.getString(1)));
+            maisonRoom.setCapteur(res.getString(5));
             maisonRooms.add(maisonRoom);
             System.out.println(maisonRooms);
         }
