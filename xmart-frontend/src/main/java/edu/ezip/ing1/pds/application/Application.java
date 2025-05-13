@@ -718,11 +718,33 @@ public class Application {
         JPanel voirRoomPanel = new JPanel();
         voirRoomPanel.setLayout(new BorderLayout());
 
-        JTextArea txtRooms = new JTextArea();
-        txtRooms.setEditable(false);
+        String[] columnNamesRooms = {
+                "Nom", "Type","Surface", "Capteurs"
+        };
 
-        JScrollPane scrollPane_rooms = new JScrollPane(txtRooms);
-        JButton btnBackToMenu_VoirRooms = new JButton("Retour au menu");
+        DefaultTableModel tableModelRoom = new DefaultTableModel(columnNamesRooms, 0);
+        JTable tableRoom = new JTable(tableModelRoom);
+
+        tableRoom.setFont(new Font("SansSerif", Font.PLAIN, 14));
+        tableRoom.setRowHeight(24);
+        tableRoom.setGridColor(Color.LIGHT_GRAY);
+        tableRoom.setSelectionBackground(new Color(200, 230, 255));
+        tableRoom.setSelectionForeground(Color.BLACK);
+        tableRoom.setBackground(Color.WHITE);
+        tableRoom.setForeground(Color.DARK_GRAY);
+
+        JTableHeader headerRoom = tableRoom.getTableHeader();
+        headerRoom.setFont(new Font("SansSerif", Font.BOLD, 15));
+        headerRoom.setBackground(new Color(240, 240, 240));
+
+        DefaultTableCellRenderer centerRendererRoom = new DefaultTableCellRenderer();
+        centerRendererRoom.setHorizontalAlignment(JLabel.CENTER);
+        for (int i = 0; i < tableRoom.getColumnCount(); i++) {
+            tableRoom.getColumnModel().getColumn(i).setCellRenderer(centerRendererRoom);
+        }
+
+        JScrollPane scrollPane_rooms = new JScrollPane(tableRoom);
+        JButton btnBackToMenu_VoirRooms = new JButton("Retour");
 
         voirRoomPanel.add(scrollPane_rooms, BorderLayout.CENTER);
         voirRoomPanel.add(btnBackToMenu_VoirRooms, BorderLayout.SOUTH);
@@ -1658,19 +1680,23 @@ public class Application {
                 throw new RuntimeException(ex);
             }
 
-            StringBuilder sb_room= new StringBuilder();
+            tableModelRoom.setRowCount(0);
             if (rooms.isEmpty()) {
-                sb_room.append("Aucune pièce enregistré.\n");
+                tableModelRoom.addRow(new Object[]{"Aucune pièce.", "", "", "", "", "", ""});
             } else {
-                sb_room.append("pièce enregistrés :\n");
-                for (MaisonRooms maisonRooms : rooms)
-                    for (MaisonRoom room : maisonRooms.getMaisonRooms()) {
-                        sb_room.append("Nom : ").append(room.getName()).append("\n")
-                                .append("Type : ").append(room.getType()).append("\n")
-                                .append("Surface : ").append(room.getSurface()).append("\n\n");
+                for (MaisonRooms maisonroom : rooms) {
+                    for (MaisonRoom room : maisonroom.getMaisonRooms()) {
+                        Object[] row = {
+                                room.getName(),
+                                room.getType(),
+                                room.getSurface(),
+//                                room.getCapteurPiece(),
+                        };
+//                        System.out.println(room.getCapteurPiece());
+                        tableModelRoom.addRow(row);
                     }
+                }
             }
-            txtRooms.setText(sb_room.toString());
             cardLayout.show(mainPanel, "voirRoomPanel");
         });
 
