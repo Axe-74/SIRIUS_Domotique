@@ -3,20 +3,20 @@ package edu.ezip.ing1.pds.business.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MaisonCapteurs {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("capteurs")
-    private Set<MaisonCapteur> capteurs = new LinkedHashSet<MaisonCapteur>();
+    private List<MaisonCapteur> capteurs = new ArrayList<MaisonCapteur>();
 
-    public Set<MaisonCapteur> getCapteurs() {
+    public List<MaisonCapteur> getCapteurs() {
         return capteurs;
     }
 
-    public void setCapteurs(Set<MaisonCapteur> capteurs) {
+    public void setCapteurs(List<MaisonCapteur> capteurs) {
         this.capteurs = capteurs;
     }
 

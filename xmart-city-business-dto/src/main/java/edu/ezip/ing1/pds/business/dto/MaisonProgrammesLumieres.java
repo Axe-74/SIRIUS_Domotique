@@ -3,25 +3,25 @@ package edu.ezip.ing1.pds.business.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MaisonProgrammesLumieres {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("MaisonProgrammesLumieres")
-    private Set<MaisonProgrammeLumiere> maisonprogrammeLumieres = new LinkedHashSet<MaisonProgrammeLumiere>();
+    private List<MaisonProgrammeLumiere> maisonprogrammeLumieres = new ArrayList<>();
 
-    public Set<MaisonProgrammeLumiere> getMaisonProgrammesLumieres() {
+    public List<MaisonProgrammeLumiere> getMaisonProgrammesLumieres() {
         return maisonprogrammeLumieres;
     }
 
-    public void setMaisonProgrammeLumiere(Set<MaisonProgrammeLumiere> maisonProgrammeLumiere) {
+    public void setMaisonProgrammeLumiere(List<MaisonProgrammeLumiere> maisonProgrammeLumiere) {
         this.maisonprogrammeLumieres = maisonProgrammeLumiere;
     }
 
-    public final MaisonProgrammesLumieres add (final MaisonProgrammeLumiere maison_ProgrammeLumiere) {
-        maisonprogrammeLumieres.add(maison_ProgrammeLumiere);
+    public final MaisonProgrammesLumieres add(final MaisonProgrammeLumiere maisonProgrammeLumiere) {
+        maisonprogrammeLumieres.add(maisonProgrammeLumiere);
         return this;
     }
 
@@ -32,4 +32,3 @@ public class MaisonProgrammesLumieres {
                 '}';
     }
 }
-
