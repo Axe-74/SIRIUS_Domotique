@@ -250,7 +250,12 @@ public class Application {
         };
 
         DefaultTableModel tableModelAutomation = new DefaultTableModel(columnNamesAutomation, 0);
-        JTable tableAutomation = new JTable(tableModelAutomation);
+        JTable tableAutomation = new JTable(tableModelAutomation){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tableAutomation.setFont(new Font("SansSerif", Font.PLAIN, 14));
         tableAutomation.setRowHeight(24);
@@ -643,7 +648,12 @@ public class Application {
         };
 
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        JTable table = new JTable(tableModel);
+        JTable table = new JTable(tableModel){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         table.setFont(new Font("SansSerif", Font.PLAIN, 14));
         table.setRowHeight(24);
@@ -685,7 +695,12 @@ public class Application {
         };
 
         DefaultTableModel tableModelCapteur = new DefaultTableModel(columnNamesCapteurs, 0);
-        JTable tableCapteur = new JTable(tableModelCapteur);
+        JTable tableCapteur = new JTable(tableModelCapteur){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tableCapteur.setFont(new Font("SansSerif", Font.PLAIN, 14));
         tableCapteur.setRowHeight(24);
@@ -723,7 +738,12 @@ public class Application {
         };
 
         DefaultTableModel tableModelRoom = new DefaultTableModel(columnNamesRooms, 0);
-        JTable tableRoom = new JTable(tableModelRoom);
+        JTable tableRoom = new JTable(tableModelRoom){
+            @Override
+            public boolean isCellEditable(int row, int column) {
+                return false;
+            }
+        };
 
         tableRoom.setFont(new Font("SansSerif", Font.PLAIN, 14));
         tableRoom.setRowHeight(24);
@@ -1186,6 +1206,7 @@ public class Application {
         //Boutons Capteurs
         btnVoirCapteurs.addActionListener(e -> cardLayout.show(mainPanel, "voirCapteurPanel"));
         btnNewCapteur.addActionListener(e -> {
+            txtNomCapteur.setText("");
             try {
                 roomsNoms.clear();
                 MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
@@ -1243,6 +1264,9 @@ public class Application {
         btnBackToMenu_TypeTemp.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
         btnBackToMenu_TypeMouv.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
         btnSuivantSaveCapteur.addActionListener(e -> {
+            spTemp.setValue(1.0);
+            spLum.setValue(65000.0);
+            spMouv.setValue(5.0);
             String nomCapteur = txtNomCapteur.getText().trim();
             String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
             String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
@@ -1253,10 +1277,6 @@ public class Application {
             } else {
                 etatSelect = "OFF";
             }
-            if ("0".equals(valueIDTypeCapteur)){
-                JOptionPane.showMessageDialog(frame, "Veuillez sélectionner un type de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
-                return;
-            };
             if (nomCapteur.isEmpty()) {
                 JOptionPane.showMessageDialog(frame, "Veuillez saisir un nom de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
@@ -1284,13 +1304,14 @@ public class Application {
             }
             if ("1".equals(valueIDTypeCapteur)){
                 cardLayout.show(mainPanel, "CapteurLum");
-            };
-            if ("2".equals(valueIDTypeCapteur)){
+            } else if ("2".equals(valueIDTypeCapteur)){
                 cardLayout.show(mainPanel, "CapteurMouv");
-            };
-            if ("3".equals(valueIDTypeCapteur)){
+            } else if ("3".equals(valueIDTypeCapteur)){
                 cardLayout.show(mainPanel, "CapteurTemp");
-            };
+            } else {
+                JOptionPane.showMessageDialog(frame, "Veuillez sélectionner un type de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
+                return;
+            };;
         });
 
         btnEnregistrerTypeLum.addActionListener(e -> {
@@ -1460,6 +1481,7 @@ public class Application {
         btnViewRoom.addActionListener(e -> cardLayout.show(mainPanel, "voirRoomPanel"));
         btnHouseManagement.addActionListener(e -> cardLayout.show(mainPanel, "HouseManagementPanel"));
         btnNewRoom.addActionListener(e -> {
+            txtNameRoom.setText("");
             try {
                 RoomParaTypeService roomParaTypeService = new RoomParaTypeService(networkConfig);
                 Room_Para_Types room_para_types = roomParaTypeService.selectRequestOrder();
@@ -1484,6 +1506,7 @@ public class Application {
 
         btnModifierRoom.addActionListener(e -> cardLayout.show(mainPanel, "RoomDefiniePanel"));
         btnChoisirRoom.addActionListener(e -> {
+            txtNameRoom2.setText("");
             try {
                 RoomParaTypeService roomParaTypeService = new RoomParaTypeService(networkConfig);
                 Room_Para_Types room_para_types = roomParaTypeService.selectRequestOrder();
