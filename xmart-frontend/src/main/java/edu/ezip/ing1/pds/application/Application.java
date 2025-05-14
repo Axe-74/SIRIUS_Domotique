@@ -178,7 +178,6 @@ public class Application {
         JComboBox<String> cbSensor_activation = new JComboBox<>();
 
 
-
 //        JComboBox<String> cbSensor_activation = new JComboBox<>(new String[]{
 //                "Capteur 1", "Capteur 2", "Capteur 3", "Capteur 4", "Capteur 5"
 //        });
@@ -215,13 +214,12 @@ public class Application {
         mainPanel.add(AutomationPanel, "AutomationPanel");
 
 
-
 //Etat Automatisation panel
         JPanel EtatAutomatisationPanel = new JPanel();
         EtatAutomatisationPanel.setLayout(new GridLayout(3, 2));
 
         JLabel lblChoixAutomatisation = new JLabel("Automatisation:");
-        JLabel lblEtatAutomatisation_EtatAutomatisation= new JLabel("Etat:");
+        JLabel lblEtatAutomatisation_EtatAutomatisation = new JLabel("Etat:");
 
         JComboBox<String> cbAutomatisationsExistantes = new JComboBox<>(new String[]{
         });
@@ -242,18 +240,17 @@ public class Application {
         mainPanel.add(EtatAutomatisationPanel, "EtatAutomatisationPanel");
 
 
-
 //View Automation panel
 
         JPanel viewAutomationPanel = new JPanel();
         viewAutomationPanel.setLayout(new BorderLayout());
 
         String[] columnNamesAutomation = {
-                "Nom", "Programme exécuté ","Capteur écouté","Etat"
+                "Nom", "Programme exécuté ", "Capteur écouté", "Etat"
         };
 
         DefaultTableModel tableModelAutomation = new DefaultTableModel(columnNamesAutomation, 0);
-        JTable tableAutomation = new JTable(tableModelAutomation){
+        JTable tableAutomation = new JTable(tableModelAutomation) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -278,7 +275,7 @@ public class Application {
             tableAutomation.getColumnModel().getColumn(i).setCellRenderer(centerRendererAutomation);
         }
         JScrollPane scrollPaneAutomation = new JScrollPane(tableAutomation);
-        
+
         viewAutomationPanel.add(scrollPaneAutomation, BorderLayout.CENTER);
 
         JButton btnBackToMenuAutomationProgramm = new JButton("Retour au menu");
@@ -326,7 +323,7 @@ public class Application {
 
 // All Program panel
         JPanel AllProgramPanel = new JPanel();
-        AllProgramPanel.setLayout(new GridLayout(4,1));
+        AllProgramPanel.setLayout(new GridLayout(4, 1));
 
         JButton btnProgram = new JButton("Programmer un chauffage");
         JButton btnProgramLight = new JButton("Programmer une lumière");
@@ -640,9 +637,8 @@ public class Application {
         mainPanel.add(pnlRoom, "RoomPanel");
 
 
-
 //View Programm panel
-        
+
         JPanel viewProgramsPanel = new JPanel();
         viewProgramsPanel.setLayout(new BorderLayout());
 
@@ -651,7 +647,7 @@ public class Application {
         };
 
         DefaultTableModel tableModel = new DefaultTableModel(columnNames, 0);
-        JTable table = new JTable(tableModel){
+        JTable table = new JTable(tableModel) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -678,7 +674,6 @@ public class Application {
         JScrollPane scrollPane = new JScrollPane(table);
 
 
-
         viewProgramsPanel.add(scrollPane, BorderLayout.CENTER);
 
         JButton btnBackToMenuViewProgramm = new JButton("Retour au menu");
@@ -687,18 +682,16 @@ public class Application {
         mainPanel.add(viewProgramsPanel, "ViewProgramsPanel");
 
 
-
-
 // Voir Capteurs
         JPanel voirCapteurPanel = new JPanel();
         voirCapteurPanel.setLayout(new BorderLayout());
 
         String[] columnNamesCapteurs = {
-                "Nom", "Type","Pièce", "Réglage", "Etat"
+                "Nom", "Type", "Pièce", "Réglage", "Etat"
         };
 
         DefaultTableModel tableModelCapteur = new DefaultTableModel(columnNamesCapteurs, 0);
-        JTable tableCapteur = new JTable(tableModelCapteur){
+        JTable tableCapteur = new JTable(tableModelCapteur) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -737,11 +730,11 @@ public class Application {
         voirRoomPanel.setLayout(new BorderLayout());
 
         String[] columnNamesRooms = {
-                "Nom", "Type","Surface", "Capteurs"
+                "Nom", "Type", "Surface", "Capteurs"
         };
 
         DefaultTableModel tableModelRoom = new DefaultTableModel(columnNamesRooms, 0);
-        JTable tableRoom = new JTable(tableModelRoom){
+        JTable tableRoom = new JTable(tableModelRoom) {
             @Override
             public boolean isCellEditable(int row, int column) {
                 return false;
@@ -775,7 +768,6 @@ public class Application {
         mainPanel.add(voirRoomPanel, "voirRoomPanel");
 
 
-
 // Changer Etat Capteur
         JPanel EtatCapteurPanel = new JPanel();
         EtatCapteurPanel.setLayout(new GridLayout(3, 2));
@@ -800,7 +792,6 @@ public class Application {
         EtatCapteurPanel.add(btnEnregistrerEtatCapteur);
 
         mainPanel.add(EtatCapteurPanel, "EtatCapteurPanel");
-
 
 
 // Choix de la pièce à modifier
@@ -851,7 +842,6 @@ public class Application {
         pnlRoom2.add(btnSaveModifRoom);
 
         mainPanel.add(pnlRoom2, "ModifierRoomPanel");
-
 
 
 //Capteur Supprimer Panel
@@ -911,7 +901,7 @@ public class Application {
         btnAutomations_and_programs.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_ChangerEtatAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
         btnBackToMenu_SupprimerAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
-        btnBackToMenu_SimulerAutomatisation.addActionListener(e -> cardLayout.show(mainPanel,"Automations_and_ProgramsPanel"));
+        btnBackToMenu_SimulerAutomatisation.addActionListener(e -> cardLayout.show(mainPanel, "Automations_and_ProgramsPanel"));
 
 
         //Boutons Automatisations et Programmes
@@ -983,7 +973,7 @@ public class Application {
                 for (MaisonProgrammesLumieres maisonProgrammeslumieres : programmesLumieres) {
                     for (MaisonProgrammeLumiere maisonProgrammesLumiere1 : maisonProgrammeslumieres.getMaisonProgrammesLumieres())
                         ProgrammeNoms_cE.add(maisonProgrammesLumiere1.getNomProgramme());
-                    }
+                }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             } catch (IOException ex) {
@@ -1048,7 +1038,7 @@ public class Application {
                 for (MaisonAutomatisation_Para_Type_Chauffages ChauffageSe : TypeChauffage)
                     for (MaisonAutomatisation_Para_Type_Chauffage Chauffage : ChauffageSe.getMaisonAutomatisation_para_type_chauffages()) {
 //                        TypeChauffage_cE.add(Chauffage.getNom());
-                        TypeChauffage_dic.put(Chauffage.getNom(),Chauffage.getID_Para_Jour_Chauffage().toString());
+                        TypeChauffage_dic.put(Chauffage.getNom(), Chauffage.getID_Para_Jour_Chauffage().toString());
                     }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -1116,7 +1106,7 @@ public class Application {
                 for (MaisonAutomatisation_Para_Lumieres LumiereSe : Lumiere)
                     for (MaisonAutomatisation_Para_Lumiere Lumiere : LumiereSe.getMaisonAutomatisation_para_lumieres()) {
 //                        TypeChauffage_cE.add(Chauffage.getNom());
-                        Lumiere_dic.put(Lumiere.getNom(),Lumiere.getID_Para_Lumiere().toString());
+                        Lumiere_dic.put(Lumiere.getNom(), Lumiere.getID_Para_Lumiere().toString());
                     }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -1184,7 +1174,7 @@ public class Application {
                 for (MaisonAutomatisation_Para_Fenetres FentereSe : Fenetre)
                     for (MaisonAutomatisation_Para_Fenetre Fenetre : FentereSe.getMaisonAutomatisation_para_fenetres()) {
 //                        TypeChauffage_cE.add(Chauffage.getNom());
-                        Fenetre_dic.put(Fenetre.getNom(),Fenetre.getID_Para_Fenetre().toString());
+                        Fenetre_dic.put(Fenetre.getNom(), Fenetre.getID_Para_Fenetre().toString());
                     }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -1244,14 +1234,14 @@ public class Application {
                 System.out.println(capteur_types);
                 for (Capteur_Para_Types CapteurTypes : capteur_types)
                     for (Capteur_Para_Type CapteurType : CapteurTypes.getCapteur_Para_Types()) {
-                        TypeCapteur_dic.put(CapteurType.getNom(),CapteurType.getID_Para_TypeCapteur().toString());
+                        TypeCapteur_dic.put(CapteurType.getNom(), CapteurType.getID_Para_TypeCapteur().toString());
                     }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            String valueIDTypeCapteur = "4" ;
+            String valueIDTypeCapteur = "4";
             System.out.println(valueIDTypeCapteur);
             DefaultComboBoxModel ComboBoxType = new DefaultComboBoxModel(TypeCapteur_dic.keySet().toArray(new String[0]));
             cbTypeCapteur.removeAllItems();
@@ -1263,10 +1253,10 @@ public class Application {
 
         //Boutons Capteurs R3
         btnBackToMenu_TypeLum.addActionListener(e -> {
-            cardLayout.show(mainPanel, "NewCapteursPanel");
-            float valeurReglage =  (float) spLum.getValue();
-            System.out.println("valeurReglage = " + valeurReglage);
-            }
+                    cardLayout.show(mainPanel, "NewCapteursPanel");
+                    float valeurReglage = (float) spLum.getValue();
+                    System.out.println("valeurReglage = " + valeurReglage);
+                }
         );
         btnBackToMenu_TypeTemp.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
         btnBackToMenu_TypeMouv.addActionListener(e -> cardLayout.show(mainPanel, "NewCapteursPanel"));
@@ -1277,8 +1267,8 @@ public class Application {
             String nomCapteur = txtNomCapteur.getText().trim();
             String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
             String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
-            String etatSelect ;
-            float valeurReglage =  ((Number) spLum.getValue()).floatValue();
+            String etatSelect;
+            float valeurReglage = ((Number) spLum.getValue()).floatValue();
             if (cbEtatCapteur.isSelected()) {
                 etatSelect = "ON";
             } else {
@@ -1296,8 +1286,8 @@ public class Application {
                 capteurs.add(maisonCapteurFind);
                 for (MaisonCapteurs capt : capteurs)
                     for (MaisonCapteur cap : capt.getCapteurs()) {
-                        if (nomCapteur.equalsIgnoreCase(cap.getName())){
-                            CountAutomationNameEqual ++;
+                        if (nomCapteur.equalsIgnoreCase(cap.getName())) {
+                            CountAutomationNameEqual++;
                         }
                     }
             } catch (InterruptedException ex) {
@@ -1305,20 +1295,22 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            if(CountAutomationNameEqual >= 1){
+            if (CountAutomationNameEqual >= 1) {
                 JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
-            if ("1".equals(valueIDTypeCapteur)){
+            if ("1".equals(valueIDTypeCapteur)) {
                 cardLayout.show(mainPanel, "CapteurLum");
-            } else if ("2".equals(valueIDTypeCapteur)){
+            } else if ("2".equals(valueIDTypeCapteur)) {
                 cardLayout.show(mainPanel, "CapteurMouv");
-            } else if ("3".equals(valueIDTypeCapteur)){
+            } else if ("3".equals(valueIDTypeCapteur)) {
                 cardLayout.show(mainPanel, "CapteurTemp");
             } else {
                 JOptionPane.showMessageDialog(frame, "Veuillez sélectionner un type de capteur.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
-            };;
+            }
+            ;
+            ;
         });
 
         btnEnregistrerTypeLum.addActionListener(e -> {
@@ -1326,8 +1318,8 @@ public class Application {
             String nomCapteur = txtNomCapteur.getText().trim();
             String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
             String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
-            String etatSelect ;
-            float valeurReglage =  ((Number) spLum.getValue()).floatValue();
+            String etatSelect;
+            float valeurReglage = ((Number) spLum.getValue()).floatValue();
             if (cbEtatCapteur.isSelected()) {
                 etatSelect = "ON";
             } else {
@@ -1340,7 +1332,7 @@ public class Application {
             }
             // Insertion des données
             int CountAutomationNameEqual = 0;
-            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,valueIDTypeCapteur,capteurPieceSelect, etatSelect, 0, valeurReglage);
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur, valueIDTypeCapteur, capteurPieceSelect, etatSelect, 0, valeurReglage);
             try {
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
@@ -1348,8 +1340,8 @@ public class Application {
                 capteurs.add(maisonCapteurFind);
                 for (MaisonCapteurs capt : capteurs)
                     for (MaisonCapteur cap : capt.getCapteurs()) {
-                        if (nomCapteur.equalsIgnoreCase(cap.getName())){
-                            CountAutomationNameEqual ++;
+                        if (nomCapteur.equalsIgnoreCase(cap.getName())) {
+                            CountAutomationNameEqual++;
                         }
                     }
             } catch (InterruptedException ex) {
@@ -1357,12 +1349,12 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            if(CountAutomationNameEqual >= 1){
+            if (CountAutomationNameEqual >= 1) {
                 JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             try {
-                MaisonCapteurService maisonCapteurService =new MaisonCapteurService(networkConfig);
+                MaisonCapteurService maisonCapteurService = new MaisonCapteurService(networkConfig);
                 maisonCapteurService.insertCapteur(maisonCapteur);
                 JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
                 cardLayout.show(mainPanel, "CapteursPanel");
@@ -1378,8 +1370,8 @@ public class Application {
             String nomCapteur = txtNomCapteur.getText().trim();
             String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
             String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
-            String etatSelect ;
-            float valeurReglage =  ((Number) spMouv.getValue()).floatValue();
+            String etatSelect;
+            float valeurReglage = ((Number) spMouv.getValue()).floatValue();
             if (cbEtatCapteur.isSelected()) {
                 etatSelect = "ON";
             } else {
@@ -1392,7 +1384,7 @@ public class Application {
             }
             // Insertion des données
             int CountAutomationNameEqual = 0;
-            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,valueIDTypeCapteur,capteurPieceSelect, etatSelect, 0, valeurReglage);
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur, valueIDTypeCapteur, capteurPieceSelect, etatSelect, 0, valeurReglage);
             try {
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
@@ -1400,8 +1392,8 @@ public class Application {
                 capteurs.add(maisonCapteurFind);
                 for (MaisonCapteurs capt : capteurs)
                     for (MaisonCapteur cap : capt.getCapteurs()) {
-                        if (nomCapteur.equalsIgnoreCase(cap.getName())){
-                            CountAutomationNameEqual ++;
+                        if (nomCapteur.equalsIgnoreCase(cap.getName())) {
+                            CountAutomationNameEqual++;
                         }
                     }
             } catch (InterruptedException ex) {
@@ -1409,12 +1401,12 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            if(CountAutomationNameEqual >= 1){
+            if (CountAutomationNameEqual >= 1) {
                 JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             try {
-                MaisonCapteurService maisonCapteurService =new MaisonCapteurService(networkConfig);
+                MaisonCapteurService maisonCapteurService = new MaisonCapteurService(networkConfig);
                 maisonCapteurService.insertCapteur(maisonCapteur);
                 JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
                 cardLayout.show(mainPanel, "CapteursPanel");
@@ -1430,8 +1422,8 @@ public class Application {
             String nomCapteur = txtNomCapteur.getText().trim();
             String capteurTypeSelect = (String) cbTypeCapteur.getSelectedItem();
             String capteurPieceSelect = (String) cbPieceCapteur.getSelectedItem();
-            String etatSelect ;
-            float valeurReglage =  ((Number) spTemp.getValue()).floatValue();
+            String etatSelect;
+            float valeurReglage = ((Number) spTemp.getValue()).floatValue();
             if (cbEtatCapteur.isSelected()) {
                 etatSelect = "ON";
             } else {
@@ -1444,7 +1436,7 @@ public class Application {
             }
             // Insertion des données
             int CountAutomationNameEqual = 0;
-            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur,valueIDTypeCapteur,capteurPieceSelect, etatSelect, 0, valeurReglage);
+            MaisonCapteur maisonCapteur = new MaisonCapteur(nomCapteur, valueIDTypeCapteur, capteurPieceSelect, etatSelect, 0, valeurReglage);
             try {
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
@@ -1452,8 +1444,8 @@ public class Application {
                 capteurs.add(maisonCapteurFind);
                 for (MaisonCapteurs capt : capteurs)
                     for (MaisonCapteur cap : capt.getCapteurs()) {
-                        if (nomCapteur.equalsIgnoreCase(cap.getName())){
-                            CountAutomationNameEqual ++;
+                        if (nomCapteur.equalsIgnoreCase(cap.getName())) {
+                            CountAutomationNameEqual++;
                         }
                     }
             } catch (InterruptedException ex) {
@@ -1461,12 +1453,12 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-            if(CountAutomationNameEqual >= 1){
+            if (CountAutomationNameEqual >= 1) {
                 JOptionPane.showMessageDialog(frame, "Nom déjà pris,en prendre un autre.", "Erreur", JOptionPane.ERROR_MESSAGE);
                 return;
             }
             try {
-                MaisonCapteurService maisonCapteurService =new MaisonCapteurService(networkConfig);
+                MaisonCapteurService maisonCapteurService = new MaisonCapteurService(networkConfig);
                 maisonCapteurService.insertCapteur(maisonCapteur);
                 JOptionPane.showMessageDialog(frame, "Capteur enregistré avec succès!");
                 cardLayout.show(mainPanel, "CapteursPanel");
@@ -1498,7 +1490,7 @@ public class Application {
                 System.out.println(room_types);
                 for (Room_Para_Types RoomTypes : room_types)
                     for (Room_Para_Type RoomType : RoomTypes.getRoom_Para_Types()) {
-                        TypeRoom_dic.put(RoomType.getNom(),RoomType.getID_Para_TypeRoom().toString());
+                        TypeRoom_dic.put(RoomType.getNom(), RoomType.getID_Para_TypeRoom().toString());
                     }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -1523,7 +1515,7 @@ public class Application {
                 System.out.println(room_types);
                 for (Room_Para_Types RoomTypes : room_types)
                     for (Room_Para_Type RoomType : RoomTypes.getRoom_Para_Types()) {
-                        TypeRoom_dic.put(RoomType.getNom(),RoomType.getID_Para_TypeRoom().toString());
+                        TypeRoom_dic.put(RoomType.getNom(), RoomType.getID_Para_TypeRoom().toString());
                     }
             } catch (InterruptedException ex) {
                 throw new RuntimeException(ex);
@@ -1542,7 +1534,8 @@ public class Application {
 
         //Boutons Affichage
         btnViewPrograms.addActionListener(e -> {
-            try {MaisonProgrammeService maisonProgrammeService = new MaisonProgrammeService(networkConfig);
+            try {
+                MaisonProgrammeService maisonProgrammeService = new MaisonProgrammeService(networkConfig);
                 MaisonProgrammes maisonProgrammes = maisonProgrammeService.select_all_program();
                 programmes.clear();
                 programmes.add(maisonProgrammes);
@@ -1573,7 +1566,8 @@ public class Application {
                     }
                 }
             }
-            try {MaisonProgrammeLumiereService maisonProgrammeLumiereService = new MaisonProgrammeLumiereService(networkConfig);
+            try {
+                MaisonProgrammeLumiereService maisonProgrammeLumiereService = new MaisonProgrammeLumiereService(networkConfig);
                 MaisonProgrammesLumieres maisonProgrammesLumieres = maisonProgrammeLumiereService.select_all_Light_program();
                 programmesLumieres.clear();
                 programmesLumieres.add(maisonProgrammesLumieres);
@@ -1600,7 +1594,8 @@ public class Application {
                     cardLayout.show(mainPanel, "ViewProgramsPanel");
                 }
             }
-            try {MaisonProgrammeFenetreService maisonProgrammeFenetreService = new MaisonProgrammeFenetreService(networkConfig);
+            try {
+                MaisonProgrammeFenetreService maisonProgrammeFenetreService = new MaisonProgrammeFenetreService(networkConfig);
                 MaisonProgrammesFenetres maisonProgrammesFenetres = maisonProgrammeFenetreService.select_all_Window_program();
                 programmesFenetres.clear();
                 programmesFenetres.add(maisonProgrammesFenetres);
@@ -1631,7 +1626,8 @@ public class Application {
         });
 
         btnViewAutomations.addActionListener(e -> {
-            try {MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
+            try {
+                MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
                 MaisonAutomatisations maisonAutomatisations = maisonAutomatisationService.select_all_automation();
                 automatisations.clear();
                 automatisations.add(maisonAutomatisations);
@@ -1652,7 +1648,7 @@ public class Application {
                     for (MaisonAutomatisation auto : maisonauto.getMaisonAutomatisations()) {
                         Object[] row = {
                                 auto.getNomAutomatisation(),
-                                auto.getTypeProgramme() ,
+                                auto.getTypeProgramme(),
                                 auto.getTypeCapteur(),
                                 auto.getEtatAutomatisation()
                         };
@@ -1664,7 +1660,8 @@ public class Application {
         });
 
         btnVoirCapteurs.addActionListener(e -> {
-            try {MaisonCapteurService maisonCapteurService = new MaisonCapteurService(networkConfig);
+            try {
+                MaisonCapteurService maisonCapteurService = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurs = maisonCapteurService.selectAllCapteurs();
                 System.out.println(maisonCapteurs);
                 capteurs.clear();
@@ -1730,7 +1727,9 @@ public class Application {
                             };
 //                        System.out.println(room.getCapteurPiece());
                             tableModelRoom.addRow(row);
-                        } else { continue; }
+                        } else {
+                            continue;
+                        }
                     }
                 }
             }
@@ -1767,7 +1766,7 @@ public class Application {
         btnEnregistrerEtatCapteur.addActionListener(e -> {
             String cap_select = cbCapteursExistants.getSelectedItem().toString();
             String etat_select = cbEtatCapteur_ChangerEtat.getSelectedItem().toString();
-            int i = 0 ;
+            int i = 0;
             try {
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
                 MaisonCapteurs maisonCapteurFind = maisonCapteurServiceFind.selectAllCapteurs();
@@ -1776,7 +1775,7 @@ public class Application {
 
                 for (MaisonCapteurs capt : capteurs) {
                     for (MaisonCapteur cap : capt.getCapteurs()) {
-                        if (cap.getName().equals(cap_select)){
+                        if (cap.getName().equals(cap_select)) {
                             cap.setEtat(etat_select);
                             update_delete_Capteur.updateCapteur(cap);
                             JOptionPane.showMessageDialog(frame, "Changement d'état enregistré avec succès!");
@@ -1818,7 +1817,7 @@ public class Application {
         btnEnregistrerEtatAutomatisation.addActionListener(e -> {
             String auto_select = cbAutomatisationsExistantes.getSelectedItem().toString();
             String etat_auto_select = cbEtatAutomatisation_ChangerEtat.getSelectedItem().toString();
-            int i = 0 ;
+            int i = 0;
             try {
                 MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
                 MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationService.select_all_automation();
@@ -1827,7 +1826,7 @@ public class Application {
 
                 for (MaisonAutomatisations auto : automatisations) {
                     for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
-                        if (aut.getNomAutomatisation().equals(auto_select)){
+                        if (aut.getNomAutomatisation().equals(auto_select)) {
                             aut.setEtatAutomatisation(etat_auto_select);
                             update_delete_automatisation.updateAutomation(aut);
                             JOptionPane.showMessageDialog(frame, "Changement d'état enregistré avec succès!");
@@ -1845,7 +1844,7 @@ public class Application {
 
         //Bouton Modifier les données d'une pièce
         btnModifierRoom.addActionListener(e -> {
-            StringBuilder sb_room= new StringBuilder();
+            StringBuilder sb_room = new StringBuilder();
             if (rooms.isEmpty()) {
                 sb_room.append("Aucune pièce enregistrée.\n");
             } else {
@@ -1898,7 +1897,7 @@ public class Application {
                     System.out.println(maisonRooms);
                     for (MaisonRoom maisonRoom : maisonRooms.getMaisonRooms()) {
                         System.out.println(maisonRoom);
-                        if (maisonRoom.getName().equals(room_select)){
+                        if (maisonRoom.getName().equals(room_select)) {
                             System.out.println(maisonRoom.getId());
                             maisonRoom.setName(name_select);
                             maisonRoom.setType(type_select);
@@ -1947,7 +1946,7 @@ public class Application {
                 automatisations.add(maisonAutomatisationsFind);
                 for (MaisonAutomatisations auto : automatisations) {
                     for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
-                        if (aut.getNomAutomatisation().equals(auto_select)){
+                        if (aut.getNomAutomatisation().equals(auto_select)) {
                             logger.debug("Suppression de l'automatisation : {}", aut.getNomAutomatisation());
                             update_delete_automatisation.deleteAutomation(aut);
                             JOptionPane.showMessageDialog(frame, "Automatisation supprimé avec succès!");
@@ -1987,7 +1986,8 @@ public class Application {
         });
         btnSimulerAutomatisation.addActionListener(e -> {
             String auto_simule_select = cbAutomatisationsExistantes_Simuler.getSelectedItem().toString();
-            try {MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
+            try {
+                MaisonAutomatisationService maisonAutomatisationService = new MaisonAutomatisationService(networkConfig);
                 MaisonAutomatisations maisonAutomatisations = maisonAutomatisationService.select_all_automation();
                 automatisations.clear();
                 automatisations.add(maisonAutomatisations);
@@ -1998,21 +1998,21 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+            automatisationsNoms.clear();
             for (MaisonAutomatisations maisonauto : automatisations) {
                 for (MaisonAutomatisation auto : maisonauto.getMaisonAutomatisations()) {
                     if (auto_simule_select.equalsIgnoreCase(auto.getTypeCapteur())) {
-                        automatisationsNoms.clear();
                         automatisationsNoms.add(auto.getNomAutomatisation());
                     }
                 }
             }
-                    StringBuilder SbAutoTrigger = new StringBuilder("Automatisations exécutées :\n");
-                    for (String element : automatisationsNoms) {
-                        SbAutoTrigger.append("- ").append(element).append("\n");
-                    }
+            StringBuilder SbAutoTrigger = new StringBuilder("Automatisations exécutées :\n");
+            for (String element : automatisationsNoms) {
+                SbAutoTrigger.append("- ").append(element).append("\n");
+            }
 
-                    // Affichage dans une boîte de dialogue
-                    JOptionPane.showMessageDialog(null, SbAutoTrigger.toString(), "Domotique maison", JOptionPane.INFORMATION_MESSAGE);
+            // Affichage dans une boîte de dialogue
+            JOptionPane.showMessageDialog(null, SbAutoTrigger.toString(), "Domotique maison", JOptionPane.INFORMATION_MESSAGE);
 
             System.out.println(automatisationsNoms);
         });
@@ -2047,7 +2047,7 @@ public class Application {
                 capteurs.add(maisonCapteurFind);
                 for (MaisonCapteurs capt : capteurs) {
                     for (MaisonCapteur cap : capt.getCapteurs()) {
-                        if (cap.getName().equals(cap_select)){
+                        if (cap.getName().equals(cap_select)) {
                             logger.debug("Suppression du capteur : {}", cap.getName());
                             update_delete_Capteur.deleteCapteur(cap);
                             JOptionPane.showMessageDialog(frame, "Capteur supprimé avec succès!");
@@ -2061,9 +2061,31 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-        });
+        try {
+            MaisonAutomatisationService maisonAutomatisationServiceFind = new MaisonAutomatisationService(networkConfig);
+            MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationServiceFind.select_all_automation();
+            automatisations.clear();
+            automatisations.add(maisonAutomatisationsFind);
+            for (MaisonAutomatisations auto : automatisations) {
+                for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
+                    if (aut.getNomAutomatisation().equals(cap_select)) {
+                        logger.debug("Suppression de l'automatisation : {}", aut.getNomAutomatisation());
+                        update_delete_automatisation.deleteAutomation(aut);
+                        JOptionPane.showMessageDialog(frame, "Automatisation supprimé avec succès!");
+                        cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
+                        break;
+                    }
+                }
+            }
+        } catch (InterruptedException ex) {
+            throw new RuntimeException(ex);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+    });
 
-        //Bouton Suppression Pièce
+
+    //Bouton Suppression Pièce
         btnSupprimerRoom.addActionListener(e -> {
             try {
                 roomsNoms.clear();
