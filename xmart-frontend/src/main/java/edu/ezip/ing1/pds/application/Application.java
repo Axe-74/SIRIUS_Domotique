@@ -31,7 +31,7 @@ public class Application {
     public Map<String, String> Lumiere_dic = new LinkedHashMap<>();
     public Map<String, String> JourSemaine_dic = new LinkedHashMap<>();
     public Map<String, String> TypeChauffage_dic = new LinkedHashMap<>();
-    public Map<String, String> TypeCapteur_dic = new HashMap<>();
+    public Map<String, String> TypeCapteur_dic = new LinkedHashMap<>();
     public Map<String, String> TypeRoom_dic = new LinkedHashMap<>();
     public Map<String, String> Fenetre_dic = new LinkedHashMap<>();
     public String valueIDJour= "1";

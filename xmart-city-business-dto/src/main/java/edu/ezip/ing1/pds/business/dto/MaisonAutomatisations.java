@@ -3,25 +3,25 @@ package edu.ezip.ing1.pds.business.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MaisonAutomatisations {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("Maison_automatisations")
-    private  Set<MaisonAutomatisation> maisonAutomatisations = new LinkedHashSet<MaisonAutomatisation>();
+    private List<MaisonAutomatisation> maisonAutomatisations = new ArrayList<>();
 
-    public Set<MaisonAutomatisation> getMaisonAutomatisations() {
+    public List<MaisonAutomatisation> getMaisonAutomatisations() {
         return maisonAutomatisations;
     }
 
-    public void setMaisonAutomatisation(Set<MaisonAutomatisation> maison_automatisations) {
-        this.maisonAutomatisations = maison_automatisations;
+    public void setMaisonAutomatisation(List<MaisonAutomatisation> maisonAutomatisations) {
+        this.maisonAutomatisations = maisonAutomatisations;
     }
 
-    public final MaisonAutomatisations add (final MaisonAutomatisation Maison_Automatisation) {
-        maisonAutomatisations.add(Maison_Automatisation);
+    public final MaisonAutomatisations add(final MaisonAutomatisation maisonAutomatisation) {
+        maisonAutomatisations.add(maisonAutomatisation);
         return this;
     }
 
