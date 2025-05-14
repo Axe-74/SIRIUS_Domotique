@@ -9,6 +9,7 @@ import java.io.IOException;
 import java.util.*;
 
 import edu.ezip.ing1.pds.business.dto.*;
+import edu.ezip.ing1.pds.features.rooms.visualisation2D.VisualisationRooms;
 import edu.ezip.ing1.pds.services.*;
 import edu.ezip.ing1.pds.client.commons.ConfigLoader;
 import edu.ezip.ing1.pds.client.commons.NetworkConfig;
@@ -147,16 +148,18 @@ public class Application {
 
 // Gestion de la maison Menu Panel
         JPanel HouseManagementPanel = new JPanel();
-        HouseManagementPanel.setLayout(new GridLayout(5, 1));
+        HouseManagementPanel.setLayout(new GridLayout(6, 1));
 
         JButton btnNewRoom = new JButton("Nouvelle pièce");
         JButton btnViewRoom = new JButton("Mes pièces");
+        JButton btnVisualiserRoom = new JButton("Visualiser ma maison");
         JButton btnModifierRoom = new JButton("Modifier une pièce");
         JButton btnSupprimerRoom = new JButton("Supprimer une pièce");
         JButton btnBackToMenu_Room = new JButton("Retour");
 
         HouseManagementPanel.add(btnNewRoom);
         HouseManagementPanel.add(btnViewRoom);
+        HouseManagementPanel.add(btnVisualiserRoom);
         HouseManagementPanel.add(btnModifierRoom);
         HouseManagementPanel.add(btnSupprimerRoom);
         HouseManagementPanel.add(btnBackToMenu_Room);
@@ -1734,7 +1737,11 @@ public class Application {
             cardLayout.show(mainPanel, "voirRoomPanel");
         });
 
-
+        btnVisualiserRoom.addActionListener(e -> {
+            VisualisationRooms visualisationRooms = new VisualisationRooms(networkConfig);
+            visualisationRooms.showRooms();
+            cardLayout.show(mainPanel, "visualisationRoomPanel");
+        });
 
         //Bouton Changement Etat Capteur
         btnChangerEtat.addActionListener(e -> {
