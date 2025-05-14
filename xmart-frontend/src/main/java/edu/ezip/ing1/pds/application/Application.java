@@ -28,12 +28,12 @@ public class Application {
     public ArrayList<String> automatisationsNoms = new ArrayList<String>();
     public ArrayList<String> capteursNoms_cE = new ArrayList<>();
     public ArrayList<String> JourSemaine_cE = new ArrayList<>();
-    public Map<String, String> Lumiere_dic = new HashMap<>();
-    public Map<String, String> JourSemaine_dic = new HashMap<>();
-    public Map<String, String> TypeChauffage_dic = new HashMap<>();
+    public Map<String, String> Lumiere_dic = new LinkedHashMap<>();
+    public Map<String, String> JourSemaine_dic = new LinkedHashMap<>();
+    public Map<String, String> TypeChauffage_dic = new LinkedHashMap<>();
     public Map<String, String> TypeCapteur_dic = new HashMap<>();
-    public Map<String, String> TypeRoom_dic = new HashMap<>();
-    public Map<String, String> Fenetre_dic = new HashMap<>();
+    public Map<String, String> TypeRoom_dic = new LinkedHashMap<>();
+    public Map<String, String> Fenetre_dic = new LinkedHashMap<>();
     public String valueIDJour= "1";
     public String valueIDTypeChauffage= "1";
     public String valueIDTypeCapteur = "4";
@@ -913,6 +913,7 @@ public class Application {
 
         //Boutons Automatisations et Programmes
         btnNewAutomations.addActionListener(e -> {
+            txtAutomationName.setText("");
             try {
                 capteursNoms_cE.clear();
                 MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
@@ -991,6 +992,7 @@ public class Application {
             cardLayout.show(mainPanel, "AutomationPanel");
         });
         btnProgram.addActionListener(e -> {
+            txtProgramName.setText("");
             try {
                 roomsNoms.clear();
                 MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
@@ -1058,6 +1060,7 @@ public class Application {
             cardLayout.show(mainPanel, "ProgramPanel");
         });
         btnProgramLight.addActionListener(e -> {
+            txtProgramLightName.setText("");
             try {
                 roomsNoms.clear();
                 MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
@@ -1125,6 +1128,7 @@ public class Application {
             cardLayout.show(mainPanel, "ProgramLightPanel");
         });
         btnProgramWindow.addActionListener(e -> {
+            txtProgramWindowName.setText("");
             try {
                 roomsNoms.clear();
                 MaisonRoomService maisonRoomServiceFind = new MaisonRoomService(networkConfig);
@@ -1175,7 +1179,7 @@ public class Application {
                 System.out.println("Import réussi!");
                 System.out.println(Fenetre);
                 for (MaisonAutomatisation_Para_Fenetres FentereSe : Fenetre)
-                    for (MaisonAutomatisation_Para_Fenetre Fenetre : FentereSe.getMaisonAutomatisation_para_fentres()) {
+                    for (MaisonAutomatisation_Para_Fenetre Fenetre : FentereSe.getMaisonAutomatisation_para_fenetres()) {
 //                        TypeChauffage_cE.add(Chauffage.getNom());
                         Fenetre_dic.put(Fenetre.getNom(),Fenetre.getID_Para_Fenetre().toString());
                     }

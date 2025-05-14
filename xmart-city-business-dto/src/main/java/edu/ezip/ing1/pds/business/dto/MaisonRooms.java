@@ -3,25 +3,25 @@ package edu.ezip.ing1.pds.business.dto;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import com.fasterxml.jackson.annotation.JsonProperty;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.ArrayList;
+import java.util.List;
 
 public class MaisonRooms {
 
     @JsonInclude(JsonInclude.Include.NON_NULL)
     @JsonProperty("MaisonRooms")
-    private  Set<MaisonRoom> maisonRooms = new LinkedHashSet<MaisonRoom>();
+    private List<MaisonRoom> maisonRooms = new ArrayList<>();
 
-    public Set<MaisonRoom> getMaisonRooms() {
+    public List<MaisonRoom> getMaisonRooms() {
         return maisonRooms;
     }
 
-    public void setMaisonRooms(Set<MaisonRoom> maisonRooms) {
+    public void setMaisonRooms(List<MaisonRoom> maisonRooms) {
         this.maisonRooms = maisonRooms;
     }
 
-    public final MaisonRooms add (final MaisonRoom maison_Room) {
-        maisonRooms.add(maison_Room);
+    public final MaisonRooms add(final MaisonRoom maisonRoom) {
+        maisonRooms.add(maisonRoom);
         return this;
     }
 

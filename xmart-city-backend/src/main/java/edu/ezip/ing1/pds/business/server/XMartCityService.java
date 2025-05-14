@@ -45,7 +45,9 @@ public class XMartCityService {
                 "JOIN \n" +
                 "    para_type_chauffage ptc ON p.ID_Para_Type_Chauffage = ptc.ID_Para_Type_Chauffage\n" +
                 "JOIN \n" +
-                "    para_jour_semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
+                "    para_jour_semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine\n" +
+                "ORDER BY \n" +
+                "    p.ID_Programme ASC;"),
         INSERT_PROGRAM("INSERT INTO programmes (Nom_programme,Pieces,ID_Para_Type_Chauffage, Temperature_Piece ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM("SELECT nom_programme FROM programmes"),
 
@@ -64,7 +66,9 @@ public class XMartCityService {
                 "JOIN \n" +
                 "    para_lumiere pl ON p.ID_Para_Lumiere = pl.ID_Para_Lumiere\n" +
                 "JOIN \n" +
-                "    para_jour_semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
+                "    para_jour_semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine\n" +
+                "ORDER BY \n" +
+                "    p.ID_Programme ASC;"),
         INSERT_PROGRAM_LIGHT("INSERT INTO programmes_lumiere (Nom_programme,Pieces,ID_Para_Lumiere, Intensite_Lumiere ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM_LIGHT("SELECT nom_programme FROM programmes"),
 
@@ -83,7 +87,9 @@ public class XMartCityService {
                 "JOIN \n" +
                 "    para_fenetre pf ON p.ID_Para_Fenetre = pf.ID_Para_Fenetre\n" +
                 "JOIN \n" +
-                "    para_jour_semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine;"),
+                "    para_jour_semaine pjs ON p.ID_Para_Jour_Semaine = pjs.ID_Para_Jour_Semaine\n" +
+                "ORDER BY \n" +
+                "    p.ID_Programme ASC;"),
         INSERT_PROGRAM_WINDOW("INSERT INTO programmes_fenetre (Nom_programme,Pieces,ID_Para_Fenetre, Ouverture_Fenetre ,ID_Para_Jour_Semaine, Heure_Debut, Heure_Fin) VALUES (?,?,?, ?, ?, ?, ?)"),
         SELECT_NAME_PROGRAM_WINDOW("SELECT nom_programme FROM programmes"),
 
@@ -98,7 +104,9 @@ public class XMartCityService {
                 "FROM \n" +
                 "   capteurs c \n" +
                 "JOIN \n" +
-                "para_type_capteur ptc ON c.ID_Para_Type_Capteur = ptc.ID_Para_Type_Capteur;"),
+                "para_type_capteur ptc ON c.ID_Para_Type_Capteur = ptc.ID_Para_Type_Capteur\n" +
+                "ORDER BY \n" +
+                "    c.ID_Capteur ASC;"),
         INSERT_CAPTEUR("INSERT INTO capteurs (Nom_Capteur, ID_Para_Type_Capteur, Etat_Capteur, Pieces, Reglage_Capteur) VALUES (?, ?, ?, ?, ?)"),
         UPDATE_CAPTEUR("UPDATE capteurs SET etat_capteur = ? WHERE nom_capteur = ?"),
         DELETE_CAPTEUR("DELETE FROM capteurs WHERE nom_capteur = ?"),
@@ -116,7 +124,9 @@ public class XMartCityService {
                 "JOIN \n" +
                 "    para_type_piece ptp ON p.ID_Para_Type_Piece = ptp.ID_Para_Type_Piece \n" +
                 "LEFT JOIN \n" +
-                "    capteurs c ON p.Nom_Piece = c.Pieces;"),
+                "    capteurs c ON p.Nom_Piece = c.Pieces\n" +
+                "ORDER BY \n" +
+                "    p.ID_Piece ASC;"),
         INSERT_ROOM("INSERT into pieces (Nom_Piece, ID_Para_Type_Piece, Piece_Surface) VALUES (?, ?, ?)"),
         UPDATE_ROOM("UPDATE pieces\n" +
                 "SET Nom_Piece = ?, \n" +
@@ -445,6 +455,7 @@ public class XMartCityService {
             maisonRoom.setSurface(Integer.parseInt(res.getString(4)));
             maisonRoom.setId(Integer.parseInt(res.getString(1)));
             maisonRoom.setCapteur(res.getString(5));
+            System.out.println(maisonRoom.getCapteur());
             maisonRooms.add(maisonRoom);
             System.out.println(maisonRooms);
         }
