@@ -3,7 +3,6 @@ package edu.ezip.ing1.pds.backend;
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.DeserializationFeature;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.databind.SerializationFeature;
 import edu.ezip.commons.LoggingUtils;
 import edu.ezip.ing1.pds.business.server.XMartCityService;
 import edu.ezip.ing1.pds.commons.Request;
