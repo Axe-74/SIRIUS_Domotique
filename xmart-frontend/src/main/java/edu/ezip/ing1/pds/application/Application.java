@@ -1717,19 +1717,14 @@ public class Application {
                 for (MaisonRooms maisonroom : rooms) {
                     for (MaisonRoom room : maisonroom.getMaisonRooms()) {
                         String roomNameDoublon = room.getName();
-                        if (!roomDoublon.contains(roomNameDoublon)) {
-                            roomDoublon.add(roomNameDoublon);
-                            Object[] row = {
-                                    room.getName(),
-                                    room.getType(),
-                                    room.getSurface(),
-                                    room.getCapteur(),
-                            };
+                        Object[] row = {
+                                room.getName(),
+                                room.getType(),
+                                room.getSurface(),
+                                room.getCapteur(),
+                        };
 //                        System.out.println(room.getCapteurPiece());
-                            tableModelRoom.addRow(row);
-                        } else {
-                            continue;
-                        }
+                        tableModelRoom.addRow(row);
                     }
                 }
             }
