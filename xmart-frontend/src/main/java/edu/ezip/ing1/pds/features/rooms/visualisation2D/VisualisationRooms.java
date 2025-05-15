@@ -37,11 +37,13 @@ public class VisualisationRooms {
 
         JFrame frame = new JFrame("Ma maison");
         frame.setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        frame.setLocationRelativeTo(null);
 
         int windowWidth = 500;
         int windowLength = 400;
         frame.setSize(windowWidth, windowLength);
+
+        CardLayout cardLayout = new CardLayout();
+        JPanel mainPanel = new JPanel(cardLayout);
 
         JPanel panel = new JPanel(new GridBagLayout());
         GridBagConstraints gbc = new GridBagConstraints();
@@ -70,12 +72,49 @@ public class VisualisationRooms {
                 gbc.weighty = proportionY;
 
                 JButton btnRoom = new JButton(nameRoom);
+
+                JLabel label;
+
+                JPanel dansRoomPanel = new JPanel(new BorderLayout());
+                if(room.getCapteur() != null) {
+                    JPanel capteurPanel = new JPanel();
+                    capteurPanel.setLayout(new BoxLayout(capteurPanel, BoxLayout.Y_AXIS));
+                    capteurPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
+
+                    JLabel titreLabel = new JLabel("Capteurs dans la pièce");
+                    titreLabel.setFont(new Font("Arial", Font.BOLD, 20));
+                    titreLabel.setBorder(BorderFactory.createEmptyBorder(0, 0, 15, 0));
+                    capteurPanel.add(titreLabel);
+
+                    label = new JLabel(room.getCapteur());
+                    capteurPanel.add(label);
+
+                    dansRoomPanel.add(capteurPanel);
+                } else {
+                    label = new JLabel("Il n'y a pas de capteur dans cette pièce.", SwingConstants.CENTER);
+                    label.setFont(new Font("Arial", Font.BOLD, 15));
+                    dansRoomPanel.add(label);
+                }
+
+                JButton btnRetour = new JButton("Retour");
+                btnRetour.addActionListener(e -> cardLayout.show(mainPanel, "mainPanel"));
+
+                dansRoomPanel.add(btnRetour, BorderLayout.SOUTH);
+
+                mainPanel.add(dansRoomPanel, nameRoom);
+
+                btnRoom.addActionListener(e -> cardLayout.show(mainPanel, nameRoom));
+
                 panel.add(btnRoom, gbc);
+
                 index++;
             }
         }
+        mainPanel.add(panel, "mainPanel");
+        frame.add(mainPanel);
 
-        frame.add(panel);
+        cardLayout.show(mainPanel, "mainPanel");
         frame.setVisible(true);
+        frame.setLocationRelativeTo(null);
     }
 }
