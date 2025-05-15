@@ -2061,28 +2061,34 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
-        try {
-            MaisonAutomatisationService maisonAutomatisationServiceFind = new MaisonAutomatisationService(networkConfig);
-            MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationServiceFind.select_all_automation();
-            automatisations.clear();
-            automatisations.add(maisonAutomatisationsFind);
-            for (MaisonAutomatisations auto : automatisations) {
-                for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
-                    if (aut.getNomAutomatisation().equals(cap_select)) {
-                        logger.debug("Suppression de l'automatisation : {}", aut.getNomAutomatisation());
-                        update_delete_automatisation.deleteAutomation(aut);
-                        JOptionPane.showMessageDialog(frame, "Automatisation supprimé avec succès!");
-                        cardLayout.show(mainPanel, "Automations_and_ProgramsPanel");
-                        break;
+            Boolean autofind = false;
+            try {
+                MaisonAutomatisationService maisonAutomatisationServiceFind = new MaisonAutomatisationService(networkConfig);
+                MaisonAutomatisations maisonAutomatisationsFind = maisonAutomatisationServiceFind.select_all_automation();
+                automatisations.clear();
+                automatisations.add(maisonAutomatisationsFind);
+                for (MaisonAutomatisations auto : automatisations) {
+                    for (MaisonAutomatisation aut : auto.getMaisonAutomatisations()) {
+                        if (aut.getTypeCapteur().equals(cap_select)) {
+                            logger.debug("Suppression de l'automatisation : {}", aut.getNomAutomatisation());
+                            update_delete_automatisation.deleteAutomation(aut);
+                            autofind = true;
+                        }
                     }
                 }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
             }
-        } catch (InterruptedException ex) {
-            throw new RuntimeException(ex);
-        } catch (IOException ex) {
-            throw new RuntimeException(ex);
-        }
-    });
+            if (autofind = true) {
+                JOptionPane.showMessageDialog(frame, "Automatisation(s) supprimée(s) avec succès!");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Aucune automatisation trouvée pour ce capteur.");
+            }
+            cardLayout.show(mainPanel, "SupprimerCapteurPanel");
+
+        });
 
 
     //Bouton Suppression Pièce
