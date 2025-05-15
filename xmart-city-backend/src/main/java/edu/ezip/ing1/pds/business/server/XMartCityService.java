@@ -113,18 +113,20 @@ public class XMartCityService {
 
 
         //ROOM
-        SELECT_ALL_ROOMS("SELECT \n" +
+        SELECT_ALL_ROOMS("SELECT DISTINCT \n" +
                 "    p.ID_Piece,\n" +
                 "    p.Nom_Piece,\n" +
                 "    ptp.Nom AS Type_Piece,\n" +
                 "    p.Piece_Surface, \n" +
-                "    c.Nom_Capteur\n " +
+                "    GROUP_CONCAT(c.Nom_Capteur SEPARATOR ', ') AS Capteurs \n " +
                 "FROM \n" +
                 "    pieces p\n" +
                 "JOIN \n" +
                 "    para_type_piece ptp ON p.ID_Para_Type_Piece = ptp.ID_Para_Type_Piece \n" +
                 "LEFT JOIN \n" +
-                "    capteurs c ON p.Nom_Piece = c.Pieces\n" +
+                "    capteurs c ON p.Nom_Piece = c.Pieces \n" +
+                "GROUP BY \n" +
+                "    p.ID_Piece, p.Nom_Piece, ptp.Nom, p.Piece_Surface \n" +
                 "ORDER BY \n" +
                 "    p.ID_Piece ASC;"),
         INSERT_ROOM("INSERT into pieces (Nom_Piece, ID_Para_Type_Piece, Piece_Surface) VALUES (?, ?, ?)"),
