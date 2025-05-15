@@ -27,7 +27,7 @@ public class MaisonCapteur {
     }
     public final PreparedStatement build(PreparedStatement preparedStatement)
             throws SQLException, NoSuchFieldException, IllegalAccessException {
-        return buildPreparedStatement(preparedStatement, nameCapteur, typeCapteur,etat, pieceCapteur);
+        return buildPreparedStatement(preparedStatement, String.valueOf(idCapteur), nameCapteur, typeCapteur,etat, pieceCapteur, String.valueOf(reglageCapteur));
     }
     public MaisonCapteur(String nameCapteur, String typeCapteur, String pieceCapteur, String etat, int idCapteur, float reglageCapteur) {
         this.nameCapteur = nameCapteur;

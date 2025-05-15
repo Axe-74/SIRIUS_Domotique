@@ -375,7 +375,7 @@ public class XMartCityService {
             capteur.setTypecapteur(res.getString(3));
             capteur.setEtat(res.getString(4));
             capteur.setPieceCapteur(res.getString(5));
-            capteur.setReglageCapteur(res.getInt(6));
+            capteur.setReglageCapteur(res.getFloat(6));
             capteurs.add(capteur);
             System.out.println("id: " + capteur.getIdCapteur());
             System.out.println("name: " + capteur.getName());

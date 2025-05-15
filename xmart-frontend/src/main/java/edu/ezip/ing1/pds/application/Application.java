@@ -1688,6 +1688,7 @@ public class Application {
                                 capt.getEtat()
                         };
                         System.out.println(capt.getPieceCapteur());
+                        System.out.println(capt.getReglageCapteur());
                         tableModelCapteur.addRow(row);
                     }
                 }
@@ -2081,7 +2082,7 @@ public class Application {
             } else {
                 JOptionPane.showMessageDialog(frame, "Aucune automatisation trouvée pour ce capteur.");
             }
-            cardLayout.show(mainPanel, "SupprimerCapteurPanel");
+            cardLayout.show(mainPanel, "CapteursPanel");
 
         });
 
@@ -2120,7 +2121,6 @@ public class Application {
                             logger.debug("Suppression de la pièce : {}", maisonRoom.getName());
                             update_delete_room.deleteRoom(maisonRoom);
                             JOptionPane.showMessageDialog(frame, "Pièce supprimée avec succès!");
-                            cardLayout.show(mainPanel, "HouseManagementPanel");
                             break;
                         }
                     }
@@ -2130,6 +2130,32 @@ public class Application {
             } catch (IOException ex) {
                 throw new RuntimeException(ex);
             }
+            Boolean autofind = false;
+            try {
+                MaisonCapteurService maisonCapteurServiceFind = new MaisonCapteurService(networkConfig);
+                MaisonCapteurs maisonCapteursFind = maisonCapteurServiceFind.selectAllCapteurs();
+                capteurs.clear();
+                capteurs.add(maisonCapteursFind);
+                for (MaisonCapteurs capt : capteurs) {
+                    for (MaisonCapteur cap : capt.getCapteurs()) {
+                        if (cap.getPieceCapteur().equals(room_select)) {
+                            logger.debug("Suppression du capteur : {}", cap.getName());
+                            update_delete_Capteur.deleteCapteur(cap);
+                            autofind = true;
+                        }
+                    }
+                }
+            } catch (InterruptedException ex) {
+                throw new RuntimeException(ex);
+            } catch (IOException ex) {
+                throw new RuntimeException(ex);
+            }
+            if (autofind = true) {
+                JOptionPane.showMessageDialog(frame, "Capteur(s) lié(s) supprimé(s) avec succès!");
+            } else {
+                JOptionPane.showMessageDialog(frame, "Aucun capteur trouvé pour cette pièce.");
+            }
+            cardLayout.show(mainPanel, "HouseManagementPanel");
         });
 
 
