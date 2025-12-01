@@ -1,5 +1,5 @@
 databaseName: "domotique_test"
-host: "172.31.253.220"
+host: "172.31.253.1"
 port: 3306
 username : "sirius"
 password: "domotique"
